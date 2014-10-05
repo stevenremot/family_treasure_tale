@@ -1,4 +1,4 @@
-title=family_treasure_tale
+title=family_treasure
 author=yourgameauthor
 api=1
 orientation=landscape

@@ -1,4 +1,4 @@
-#fake Makefile for family_treasure_tale, to support the common
+#fake Makefile for family_treasure, to support the common
 # ./configure;make;make install
 
 PYTHON = python
@@ -29,15 +29,15 @@ testall:
 
 clean:
 	rm -rf build dist MANIFEST .coverage
-	rm -f family_treasure_tale/*~
-	rm -rf bin develop-eggs eggs parts .installed.cfg family_treasure_tale.egg-info
+	rm -f family_treasure/*~
+	rm -rf bin develop-eggs eggs parts .installed.cfg family_treasure.egg-info
 	find . -name *.pyc -exec rm {} \;
 	find . -name *.swp -exec rm {} \;
 	$(PYTHON) setup.py clean
 
 # push changes
 push:
-	#bzr push lp:family_treasure_tale
+	#bzr push lp:family_treasure
 	svn commit
 
 # commit changes
@@ -49,7 +49,7 @@ commit:
 upload:
 	make clean
 	#if you have your gpg key set up... sign your release.
-	#$(PYTHON) setup.py sdist upload --sign --identity="Your Name <youremail@example.com>" 
+	#$(PYTHON) setup.py sdist upload --sign --identity="Your Name <youremail@example.com>"
 	$(PYTHON) setup.py sdist upload
 
 sdist:
@@ -66,5 +66,3 @@ showdocs:
 coverage:
 	coverage run run_tests.py
 	coverage report -m
-
-

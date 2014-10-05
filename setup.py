@@ -10,7 +10,7 @@ import os
 # the goods are placed in the dist dir for you to .zip up or whatever...
 
 
-APP_NAME = 'family_treasure_tale'
+APP_NAME = 'family_treasure'
 DESCRIPTION = open('README.txt').read()
 CHANGES = open('CHANGES.txt').read()
 TODO = open('TODO.txt').read()
@@ -24,7 +24,7 @@ METADATA = {
     'description':      'Protect the family\'s treasure hidden in the room.',
     'author':           'Steven Rémot, Alexandre Kazmierowski',
     #'author_email':     '',
-    'url':              'http://pyweek.org/e/family_treasure_tale',
+    'url':              'http://pyweek.org/e/family_treasure',
     'classifiers':      [
             'Development Status :: 4 - Beta',
             'Intended Audience :: End Users/Desktop',
@@ -75,11 +75,11 @@ cmdclass = {}
 PACKAGEDATA = {
     'cmdclass':    cmdclass,
 
-    'package_dir': {'family_treasure_tale': 'family_treasure_tale',
+    'package_dir': {'family_treasure': 'family_treasure',
                    },
-    'packages': ['family_treasure_tale',
+    'packages': ['family_treasure',
                 ],
-    'scripts': ['scripts/family_treasure_tale'],
+    'scripts': ['scripts/family_treasure'],
 }
 
 PACKAGEDATA.update(METADATA)
@@ -118,7 +118,7 @@ def add_files(dest,generator):
             dest.append(filename)
 
 # define what is our data
-_DATA_DIR = os.path.join('family_treasure_tale', 'data')
+_DATA_DIR = os.path.join('family_treasure', 'data')
 data = []
 add_files(data,os.walk(_DATA_DIR))
 
@@ -127,7 +127,7 @@ add_files(data,os.walk(_DATA_DIR))
 
 #data_dirs = [os.path.join(f2.replace(_DATA_DIR, 'data'), '*') for f2 in data]
 data_dirs = [os.path.join(f2.replace(_DATA_DIR, 'data')) for f2 in data]
-PACKAGEDATA['package_data'] = {'family_treasure_tale': data_dirs}
+PACKAGEDATA['package_data'] = {'family_treasure': data_dirs}
 
 
 
@@ -137,7 +137,7 @@ data.extend(glob.glob('*.txt'))
 #data.append('MANIFEST.in')
 # define what is our source
 src = []
-add_files(src,os.walk('family_treasure_tale'))
+add_files(src,os.walk('family_treasure'))
 src.extend(glob.glob('*.py'))
 
 
