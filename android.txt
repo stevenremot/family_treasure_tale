@@ -1,0 +1,4 @@
+title=family_treasure_tale
+author=yourgameauthor
+api=1
+orientation=landscape
