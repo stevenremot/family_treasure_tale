@@ -4,7 +4,7 @@ Entry in [PyWeek #19](http://www.pyweek.org/19/)
 
 URL: http://pyweek.org/e/family_treasure
 
-Team: YOUR TEAM NAME (leave the "Team: bit")
+Team: The Family's treasure tale
 
 Members: Alexandre Kazmierowski, Steven Rémot
 
