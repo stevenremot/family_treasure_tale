@@ -107,7 +107,7 @@ class GraphicsSystem(object):
 
         while entities:
             layer_entities = [e for e in entities
-                              if e.get_component(Renderable).layer == layer]
+                              if e.get_component(Renderable).layer <= layer]
             self.draw_entity_layer(layer_entities)
             entities = [e for e in entities if e not in layer_entities]
             layer += 1
@@ -134,5 +134,6 @@ class GraphicsSystem(object):
             layer = entity.get_component(Renderable).layer
             if min_layer is None or min_layer > layer:
                 min_layer = layer
+
 
         return layer
