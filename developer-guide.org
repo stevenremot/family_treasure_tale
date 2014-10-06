@@ -21,3 +21,46 @@
     # along with The Family's treasure tale.  If not, see
     # <http://www.gnu.org/licenses/>.
   #+END_SRC
+* Entity Component System
+** World creation
+
+   #+BEGIN_SRC python
+   from ecs import World
+   world = World()
+   #+END_SRC
+
+** Components
+
+   Components are simple python classes. Their type is given by their
+   class.
+
+** Entities
+*** Creation
+
+    #+BEGIN_SRC python
+    entity = world.entity()
+    #+END_SRC
+
+*** Adding component
+
+    #+BEGIN_SRC python
+      from geometry import Positionable
+      # ...
+      x, y = 10, 20
+      entity.add_component(
+          Positionable(x, y)
+      )
+
+      # Several components at one time
+      entity.add_components(
+          Renderable('image.png'),
+          Clickable(lambda: print "Hello")
+      )
+    #+END_SRC
+
+*** Requesting world
+
+    #+BEGIN_SRC python
+      for entity in world.get_entities([Positionable, Renderable]):
+          print entity.get_component(Positionable).x
+    #+END_SRC
