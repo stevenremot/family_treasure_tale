@@ -64,3 +64,40 @@
       for entity in world.get_entities([Positionable, Renderable]):
           print entity.get_component(Positionable).x
     #+END_SRC
+* Graphics
+** Creating a renderable component
+
+   First of all, to be renderable, an entity must be positionable. If
+   it is not the case, the entity simply won't be rendered.
+
+   Then, to create à renderable entity :
+
+   #+BEGIN_SRC python
+     from graphics import Renderable
+
+     # entity creation ...
+
+     entity.add_component(
+         Renderable(render_func)
+     )
+   #+END_SRC
+
+   Where /render_func/ is a function that contains the directives to
+   draw the entity. It takes a Brush object as parameter. See the
+   Brush class in [[file:family_treasure/graphics.py][graphics.py]] to learn its methods.
+
+   *Important*: The position provided by the Positionable component of
+   the entity is already injected in the Brush, so the drawing in the
+   rendering function must be relative to it.
+
+** Adding methods to Brush
+
+   When a method is missing in the Brush class (e.g. drawing images or
+   hearts or whatever), don't hesitate to add methods to it. Some
+   considerations :
+
+   - in Brush, /self.screen/ is a Screen object, so the pygame screen
+     surface can be accessed using /self.screen.pygame_screen/.
+   - do not forget to take in account the base position that has been
+     injected to the Brush. the properties /x/ and /y/ will return
+     them.
