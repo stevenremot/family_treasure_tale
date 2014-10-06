@@ -42,7 +42,17 @@ class Game:
         test_entity.add_components(
             Positionable(10, 10, 30, 15),
             Renderable(
-                lambda brush: brush.draw_rect((255, 255, 255), (0, 0), (30, 15))
+                lambda brush: brush.draw_rect((255, 255, 255), (0, 0), (30, 15)),
+                1
+            )
+        )
+
+        test_entity2 = world.entity()
+        test_entity2.add_components(
+            Positionable(20, 15, 30, 15),
+            Renderable(
+                lambda brush: brush.draw_rect((255, 0, 0), (0, 0), (30, 15)),
+                0
             )
         )
 

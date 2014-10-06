@@ -80,10 +80,14 @@ class Renderable(object):
     It encapsulates a render function that contains the draw
     instructions. The render function takes a Brush as parameter.
 
+    As some entities must be rendered on top of others, the Renderable
+    component also has a layer number. A higher layer will be drawn on
+    top of a lower layer.
     """
 
-    def __init__(self, render_func):
+    def __init__(self, render_func, layer):
         self.render_func = render_func
+        self.layer = layer
 
 class GraphicsSystem(object):
     """System in charge of drawing entities on the screen.
@@ -97,11 +101,38 @@ class GraphicsSystem(object):
         """Draw the renderable entities on the screen.
         """
         self.screen.fill((0, 0, 0))
-        for entity in self.world.get_entities([Positionable, Renderable]):
+        entities = self.world.get_entities([Positionable, Renderable])
+
+        layer = self.get_minimal_layer(entities)
+
+        while entities:
+            layer_entities = [e for e in entities
+                              if e.get_component(Renderable).layer == layer]
+            self.draw_entity_layer(layer_entities)
+            entities = [e for e in entities if e not in layer_entities]
+            layer += 1
+
+        self.screen.flip()
+
+    def draw_entity_layer(self, entities):
+        """Draw all the entities in the list, in their index order.
+        """
+        for entity in entities:
             positionable = entity.get_component(Positionable)
             renderable = entity.get_component(Renderable)
 
             renderable.render_func(
                 Brush(self.screen, (positionable.x, positionable.y))
             )
-        self.screen.flip()
+
+    def get_minimal_layer(self, entities):
+        """Return the minimal layer of the entities' renderable components.
+        """
+        min_layer = None
+
+        for entity in entities:
+            layer = entity.get_component(Renderable).layer
+            if min_layer is None or min_layer > layer:
+                min_layer = layer
+
+        return layer
