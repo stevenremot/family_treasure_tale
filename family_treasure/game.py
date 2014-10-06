@@ -1,4 +1,5 @@
 import pygame, sys
+from graphics import Screen
 
 class Game:
     """Basic game launcher class
@@ -14,7 +15,7 @@ class Game:
     def run(self):
         """Execute the game loop"""
         pygame.init()
-        screen = pygame.display.set_mode(self.window_size)
+        screen = Screen(self.window_size)
         clock = pygame.time.Clock()
 
         while 1:
@@ -24,9 +25,9 @@ class Game:
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     #TODO: call ClickSystem
                     print("Someone clicked")
-            
+
             #TODO: call GraphicsSystem
             screen.fill((0,0,0))
-            pygame.display.flip()
+            screen.flip()
 
             clock.tick(self.fps)
