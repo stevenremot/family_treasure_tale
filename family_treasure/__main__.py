@@ -1,4 +1,5 @@
+import game
 
 def main():
-    """ your app starts here
-    """
+    app = game.Game(60,(800,600))
+    app.run()
