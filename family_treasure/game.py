@@ -64,6 +64,15 @@ class Game:
             )
         )
 
+        test_entity3 = world.entity()
+        test_entity3.add_components(
+            Positionable(50, 50, 0, 0),
+            Renderable(
+                lambda brush: brush.draw_text("Yo !", (0, 0, 255), 30),
+                0
+            )
+        )
+
         graphics_system = GraphicsSystem(world, screen)
         mouse_system = MouseSystem(world)
         

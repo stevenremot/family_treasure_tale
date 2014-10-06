@@ -61,7 +61,7 @@ class Brush(object):
 
         color: (r, g, b)
         pos: (x, y)
-        size: (x, h)
+        size: (w, h)
         """
         pygame.draw.rect(
             self.screen.pygame_screen,
@@ -73,6 +73,18 @@ class Brush(object):
                 size[1]
             )
         )
+
+    def draw_text(self, text, color, font_size):
+        """Draw a text
+
+        color: (r, g, b)
+        """
+        font = pygame.font.Font(None, font_size)
+        text_surface = font.render(text, True, color)
+        text_rect = text_surface.get_rect().move(self.x, self.y)
+        self.screen.pygame_screen.blit(text_surface, text_rect)
+        
+        
 
 class Renderable(object):
     """A component for entities that can be drawn on the screen.
