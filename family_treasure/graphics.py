@@ -15,6 +15,7 @@
 # <http://www.gnu.org/licenses/>.
 
 import pygame
+from geometry import Positionable
 
 class Screen(object):
     """Represents the game screen.
@@ -28,15 +29,79 @@ class Screen(object):
         """
         self.pygame_screen.fill(color)
 
-    def do_in_pygame(self, render_func):
-        """Apply render_func to the pygame screen.
-
-        render_func is a function that takes a pygame screen as
-        parameter.
-        """
-        render_func(self.pygame_screen)
-
     def flip(self):
+
         """Update screen with previously applied draw operations.
         """
         pygame.display.flip()
+
+class Brush(object):
+    """A helper class to draw things on screen.
+    """
+
+    def __init__(self, screen, pos):
+        """Initialization
+
+        screen: Object of type Screen
+        pos: (x, y)
+        """
+        self.screen = screen
+        self.pos = pos
+
+    @property
+    def x(self):
+        return self.pos[0]
+
+    @property
+    def y(self):
+        return self.pos[1]
+
+    def draw_rect(self, color, pos, size):
+        """Draw a rectangle
+
+        color: (r, g, b)
+        pos: (x, y)
+        size: (x, h)
+        """
+        pygame.draw.rect(
+            self.screen.pygame_screen,
+            color,
+            pygame.Rect(
+                pos[0] + self.x,
+                pos[1] + self.y,
+                size[0],
+                size[1]
+            )
+        )
+
+class Renderable(object):
+    """A component for entities that can be drawn on the screen.
+
+    It encapsulates a render function that contains the draw
+    instructions. The render function takes a Brush as parameter.
+
+    """
+
+    def __init__(self, render_func):
+        self.render_func = render_func
+
+class GraphicsSystem(object):
+    """System in charge of drawing entities on the screen.
+    """
+
+    def __init__(self, world, screen):
+        self.world = world
+        self.screen = screen
+
+    def draw_entities(self):
+        """Draw the renderable entities on the screen.
+        """
+        self.screen.fill((0, 0, 0))
+        for entity in self.world.get_entities([Positionable, Renderable]):
+            positionable = entity.get_component(Positionable)
+            renderable = entity.get_component(Renderable)
+
+            renderable.render_func(
+                Brush(self.screen, (positionable.x, positionable.y))
+            )
+        self.screen.flip()
