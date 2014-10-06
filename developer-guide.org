@@ -78,13 +78,16 @@
      # entity creation ...
 
      entity.add_component(
-         Renderable(render_func)
+         Renderable(render_func, layer)
      )
    #+END_SRC
 
    Where /render_func/ is a function that contains the directives to
    draw the entity. It takes a Brush object as parameter. See the
    Brush class in [[file:family_treasure/graphics.py][graphics.py]] to learn its methods.
+
+   The layer is a number that tells which entity will be drawn over
+   which other. A higher layer will be drawn over a lower layer.
 
    *Important*: The position provided by the Positionable component of
    the entity is already injected in the Brush, so the drawing in the
