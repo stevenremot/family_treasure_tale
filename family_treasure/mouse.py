@@ -11,7 +11,10 @@
 # along with The Family's treasure tale. If not, see
 # <http://www.gnu.org/licenses/>.
 
-from Geometry import Positionable
+from geometry import Positionable
+
+class Button:
+    LEFT, RIGHT = range(2)
 
 class Clickable(object):
     """ Component for entities that react when they are clicked """
@@ -43,7 +46,7 @@ interactions with the mouse """
             positionable = entity.get_component(Positionable)
             clickable = entity.get_component(Clickable)
 
-            if positionable.contains(pos):
+            if positionable.contains(pos) and clickable.button == button:
                 clickable.callback()
 
     def on_mouse_moved(self, pos):
@@ -53,10 +56,10 @@ interactions with the mouse """
             positionable = entity.get_component(Positionable)
             hoverable = entity.get_component(Hoverable)
             
-            if positionable.contains(pos) and !hoverable.is_hovered:
+            if positionable.contains(pos) and not hoverable.is_hovered:
                 hoverable.is_hovered = True
                 hoverable.callback_hovered()
                 
-            if !positionable.contains(pos) and hoverable.is_hovered:
+            if not positionable.contains(pos) and hoverable.is_hovered:
                 hoverable.is_hovered = False
                 hoverable.callback_unhovered()
