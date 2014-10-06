@@ -19,6 +19,13 @@ from geometry import Positionable
 from graphics import Screen, Renderable, GraphicsSystem
 from tile import TileSpace, TilePositionable, TileSystem
 from ecs import World
+from mouse import Button, Clickable, MouseSystem
+
+def to_mouse_button(b):
+    if b == 1:
+        return Button.LEFT
+    elif b == 3:
+        return Button.RIGHT
 
 class Game:
     """Basic game launcher class
@@ -51,7 +58,8 @@ class Game:
                 lambda brush: brush.draw_rect((255, 255, 255), (0, 0), (30, 15)),
                 1
             ),
-            TilePositionable("space", (1, 1), 0)
+            TilePositionable("space", (1, 1), 0),
+            Clickable(lambda : sys.stdout.write("clicked \n"), Button.LEFT)
         )
 
         test_entity2 = world.entity()
@@ -66,14 +74,15 @@ class Game:
 
         graphics_system = GraphicsSystem(world, screen)
         tile_system = TileSystem(world, 1)
+        mouse_system = MouseSystem(world)
 
         while 1:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    #TODO: call ClickSystem
-                    print("Someone clicked")
+                        mouse_system.on_mouse_down(event.pos,
+                                                   to_mouse_button(event.button))
 
             tile_system.update_tile_positions()
             graphics_system.draw_entities()

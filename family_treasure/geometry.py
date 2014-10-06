@@ -65,3 +65,9 @@ class Positionable(object):
     @property
     def pygame_rect(self):
         return self.rect
+
+    def contains(self, x, y):
+        return self.rect.collidepoint(x, y)
+
+    def contains(self, pos):
+        return self.rect.collidepoint(pos)
