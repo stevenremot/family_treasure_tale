@@ -16,9 +16,9 @@
 
 import pygame, sys
 from geometry import Positionable, get_text_positionable
-from graphics import Screen, Renderable, GraphicsSystem
+from graphics import Screen, Renderable, Colorable, GraphicsSystem
 from ecs import World
-from mouse import Button, Clickable, MouseSystem
+from mouse import Button, Clickable, Hoverable, MouseSystem
 
 def to_mouse_button(b):
     if b == 1:
@@ -31,9 +31,24 @@ def create_text_entity(world, text, color, font_size, x=0, y=0, layer=0, font_ty
     entity = world.entity()
     entity.add_components(
         get_text_positionable(text, font_size, x, y, font_type),
+        Colorable(color),
         Renderable(
-            lambda brush: brush.draw_text(text, color, font_size, font_type),
+            lambda brush, color: brush.draw_text(text, color, font_size, font_type),
             layer
+        )
+    )
+    return entity
+
+def create_hoverable_text_entity(world, text, color1, color2, font_size, x=0, y=0, layer=0, font_type=None):
+    """ Create a text entity with color2 when hovered and color1 elsewhere
+    Return the created entity
+    """
+    entity = create_text_entity(
+        world, text, color1, font_size, x, y, layer, font_type)
+    entity.add_component(
+        Hoverable(
+            lambda: entity.get_component(Colorable).set_color(color2),
+            lambda: entity.get_component(Colorable).set_color(color1)
         )
     )
     return entity
@@ -82,10 +97,11 @@ def create_title_screen(world):
         60,
         50,
         150)
-    start = create_text_entity(
+    start = create_hoverable_text_entity(
         world,
         "Start",
-        (200, 200, 200),
+        (160, 160, 160),
+        (255, 255, 255),
         40,
         200,
         300)
@@ -94,10 +110,11 @@ def create_title_screen(world):
             lambda: gamescreen_transition(world, create_ingame_screen),
             Button.LEFT)
     )
-    exit = create_text_entity(
+    exit = create_hoverable_text_entity(
         world,
         "Exit",
-        (200, 200, 200),
+        (160, 160, 160),
+        (255, 255, 255),
         40,
         200,
         400)
@@ -147,8 +164,12 @@ class Game:
                 if event.type == pygame.QUIT:
                     sys.exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                        mouse_system.on_mouse_down(event.pos,
-                                                   to_mouse_button(event.button))
+                    mouse_system.on_mouse_down(
+                        event.pos,
+                        to_mouse_button(event.button)
+                    )
+                elif event.type == pygame.MOUSEMOTION:
+                    mouse_system.on_mouse_motion(event.pos)
 
             graphics_system.draw_entities()
 

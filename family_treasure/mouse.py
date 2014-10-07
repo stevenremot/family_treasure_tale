@@ -49,7 +49,7 @@ interactions with the mouse """
             if positionable.contains(pos) and clickable.button == button:
                 clickable.callback()
 
-    def on_mouse_moved(self, pos):
+    def on_mouse_motion(self, pos):
         """ Called when the mouse was moved into the (x,y) position.
         Search for a hoverable entity and thus, call the adequate callback """
         for entity in self.world.get_entities([Positionable, Hoverable]):
