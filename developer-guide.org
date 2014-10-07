@@ -106,25 +106,25 @@
      them.
 
 ** Drawing text
-   
+
    The Brush is able to draw text from pygame.font functions.
    Some considerations are to be taken if you want to create a text entity :
 
-   - You must create the positionable component with the function 
+   - You must create the positionable component with the function
    /get_text_positionable/ which let pygame compute the width and height of
    the positionable component.
    - You can give the text a colorable component. This component is designed
    for monochrome entities whose color can be changed by events.
-   - You can use the util functions /create_text_entity/ and 
+   - You can use the util functions /create_text_entity/ and
    /create_hoverable_text_entity/ from [[file:family_treasure/game.py][game.py]]. The second creates a text
    entity whose color changes when it is hovered.
-   
+
 * Mouse
 ** Creating a clickable component
    First of all, to be clickable, the entity must be positionable.
 
    Then, to create a clickable entity:
-   
+
    #+BEGIN_SRC python
      from graphics import Clickable
 
@@ -133,7 +133,7 @@
      entity.add_component(
          Clickable(callback, button)
      )
-   #+END_SRC#
+   #+END_SRC
 
    Where /callback/ is the callback function called when the entity is
    clicked. It accepts no arguments.
@@ -144,7 +144,7 @@
    First of all, to be hoverable, the entity must be positionable.
 
    Then, to create a hoverable entity:
-   
+
    #+BEGIN_SRC python
      from mouse import Clickable
 
@@ -153,7 +153,7 @@
      entity.add_component(
          Hoverable(callback_hovered, callback_unhovered)
      )
-   #+END_SRC#
+   #+END_SRC
 
    Where /callback_hovered/ and /callback_unhovered/ are functions called
    respectively when the mouse get in and out the entity. They accept no
@@ -168,9 +168,9 @@
    Then, a menu screen will be define by several renderable and clickable
    entities.
 
-   To get from one gamescreen to another, you can append a 
+   To get from one gamescreen to another, you can append a
    /gamescreen_transition/ function to a clickable component:
-   
+
    #+BEGIN_SRC python
      from ecs import World
      from mouse import Clickable, Button
@@ -183,7 +183,7 @@
                   Button.LEFT
                   )
      )
-   #+END_SRC#
+   #+END_SRC
 
    Currently the /gamescreen_transition/ delete all the entities of the world
    and create the entities for the new game screen. It is a hard transition.
@@ -194,11 +194,11 @@
 
    #+BEGIN_SRC python
      from ecs import World
-     
+
      def create_mygamescreen(world):
          my_first_entity = world.entity()
          my_fist_entity.add_components( ... )
 
          ...
-    
-   #+END_SRC#
+
+   #+END_SRC
