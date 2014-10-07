@@ -15,7 +15,21 @@
 # <http://www.gnu.org/licenses/>.
 
 from room import create_room
+from building import Room, Building
+from minimap import create_minimap
 
 def create_ingame_screen(world):
     """ Create entities for the ingame screen """
     create_room(world)
+
+    building = Building(
+        [
+            Room((0, 0), []),
+            Room((0, 30), []),
+            Room((30, 0), []),
+            Room((30, 30), [])
+        ],
+        (30, 30)
+    )
+
+    create_minimap(world, (700, 50), building)
