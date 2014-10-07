@@ -16,31 +16,52 @@
 
 from geometry import Positionable
 from graphics import Renderable
+from tile import TileSpace, TilePositionable
+from building import toggle_room
 
-class Minimap:
-    """Object in charge of drawing a minimap on the screen.
+class RoomSwitcher:
+    """In charge of switching from a room to another room.
     """
-    def __init__(self, building):
-        self.building = building
+    def __init__(self, world, initial_room):
+        self.world = world
+        self.current_room = initial_room
+        toggle_room(initial_room)
+
+    def toggle_to_room(self, room):
+        toggle_room(self.current_room)
+        toggle_room(room)
+        self.current_room = room
+
+class RoomWidget:
+    """In charge of rendering a room in the minimap an handling its
+    inputs.
+    """
+    def __init__(self, room, room_size):
+        self.room = room
+        self.room_size = room_size
 
     def draw(self, brush):
-        """Render the minimap on the screen using a brush.
-        """
-        for room in self.building.rooms:
-            brush.draw_rect(
-                (255, 255, 255),
-                room.position,
-                self.building.room_size,
-                True
-            )
+        brush.draw_rect(
+            (255, 255, 255),
+            (0, 0),
+            self.room_size,
+            1
+        )
 
 def create_minimap(world, pos, building):
-    """Create a new minimap entity based on the building and return it.
+    """Create a new minimap based on the building.
     """
-    minimap = Minimap(building)
-    minimap_entity = world.entity()
-    minimap_entity.add_components(
+    minimap_tileset = world.entity()
+    minimap_tileset.add_components(
         Positionable(pos[0], pos[1], 0, 0),
-        Renderable(minimap.draw, 200)
+        TileSpace("minimap", (1, 1))
     )
-    return minimap_entity
+
+    for room in building.rooms:
+        room_widget = RoomWidget(room, building.room_size)
+        room_entity = world.entity()
+        room_entity.add_components(
+            Positionable(0, 0, 0, 0),
+            Renderable(room_widget.draw, 1),
+            TilePositionable("minimap", room.position, 1)
+        )
