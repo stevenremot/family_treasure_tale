@@ -89,10 +89,9 @@ class TileSystem(object):
         renderable = entity.get_component(Renderable)
 
         left = tile_space["x"] + tile_component.x * tile_space["ratio"][0]
-        bottom = tile_space["y"] + (tile_component.y + 1) * tile_space["ratio"][1]
-
+        top = tile_space["y"] + tile_component.y * tile_space["ratio"][1]
         positionable.x = left
-        positionable.y = bottom - positionable.height
+        positionable.y = top
 
         renderable.layer = tile_component.y * self.layers_per_cell + tile_component.layer
 
