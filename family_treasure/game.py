@@ -21,6 +21,7 @@ from graphics import Screen, GraphicsSystem
 from ecs import World
 from mouse import MouseSystem, to_mouse_button
 from title_screen import create_title_screen
+from animation import AnimationSystem
 
 class Game:
     """Basic game launcher class
@@ -46,6 +47,9 @@ class Game:
         graphics_system = GraphicsSystem(world, screen)
         tile_system = TileSystem(world, 1)
         mouse_system = MouseSystem(world)
+        animation_system = AnimationSystem(world)
+
+        clock.tick(self.fps)
 
         while 1:
             for event in pygame.event.get():
@@ -59,7 +63,9 @@ class Game:
                 elif event.type == pygame.MOUSEMOTION:
                     mouse_system.on_mouse_motion(event.pos)
 
+            clock.tick(self.fps)
+            time_elapsed = float(clock.get_time()) / 1000.0
+
+            animation_system.update(time_elapsed)
             tile_system.update_tile_positions()
             graphics_system.draw_entities()
-
-            clock.tick(self.fps)
