@@ -18,6 +18,7 @@ from geometry import Positionable
 from graphics import Renderable
 from tile import TileSpace, TilePositionable
 from building import toggle_room
+from mouse import Hoverable
 
 class RoomSwitcher:
     """In charge of switching from a room to another room.
@@ -40,11 +41,18 @@ class RoomWidget:
         self.room = room
         self.room_size = room_size
         self.switcher = switcher
+        self.hovered = False
 
     def draw(self, brush):
         if self.switcher.current_room is self.room:
             brush.draw_rect(
                 (192, 192, 0),
+                (0, 0),
+                self.room_size
+            )
+        elif self.hovered:
+            brush.draw_rect(
+                (128, 128, 128),
                 (0, 0),
                 self.room_size
             )
@@ -55,6 +63,9 @@ class RoomWidget:
             self.room_size,
             1
         )
+
+    def toggle_hover(self):
+        self.hovered = not self.hovered
 
 def create_minimap(world, pos, building):
     """Create a new minimap based on the building.
@@ -71,7 +82,8 @@ def create_minimap(world, pos, building):
         room_widget = RoomWidget(room, building.room_size, switcher)
         room_entity = world.entity()
         room_entity.add_components(
-            Positionable(0, 0, 0, 0),
+            Positionable(0, 0, building.room_size[0], building.room_size[1]),
             Renderable(room_widget.draw, 1),
-            TilePositionable("minimap", room.position, 1)
+            TilePositionable("minimap", room.position, 1),
+            Hoverable(room_widget.toggle_hover, room_widget.toggle_hover)
         )
