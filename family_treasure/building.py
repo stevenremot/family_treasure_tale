@@ -64,7 +64,7 @@ class Building:
         self.rooms = rooms
         self.room_size = room_size
 
-def toggle_room(room, world):
+def toggle_room(world, room):
     """Toggle activation of all the activated entities of the room.
     """
     for entity in room.activated_entities:

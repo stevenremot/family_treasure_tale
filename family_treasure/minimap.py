@@ -25,22 +25,30 @@ class RoomSwitcher:
     def __init__(self, world, initial_room):
         self.world = world
         self.current_room = initial_room
-        toggle_room(initial_room)
+        toggle_room(self.world, initial_room)
 
     def toggle_to_room(self, room):
-        toggle_room(self.current_room)
-        toggle_room(room)
+        toggle_room(self.world, self.current_room)
+        toggle_room(self.world, room)
         self.current_room = room
 
 class RoomWidget:
     """In charge of rendering a room in the minimap an handling its
     inputs.
     """
-    def __init__(self, room, room_size):
+    def __init__(self, room, room_size, switcher):
         self.room = room
         self.room_size = room_size
+        self.switcher = switcher
 
     def draw(self, brush):
+        if self.switcher.current_room is self.room:
+            brush.draw_rect(
+                (192, 192, 0),
+                (0, 0),
+                self.room_size
+            )
+
         brush.draw_rect(
             (255, 255, 255),
             (0, 0),
@@ -57,8 +65,10 @@ def create_minimap(world, pos, building):
         TileSpace("minimap", (1, 1))
     )
 
+    switcher = RoomSwitcher(world, building.rooms[0])
+
     for room in building.rooms:
-        room_widget = RoomWidget(room, building.room_size)
+        room_widget = RoomWidget(room, building.room_size, switcher)
         room_entity = world.entity()
         room_entity.add_components(
             Positionable(0, 0, 0, 0),
