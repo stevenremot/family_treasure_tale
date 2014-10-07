@@ -61,7 +61,7 @@ class Brush(object):
 
         color: (r, g, b)
         pos: (x, y)
-        size: (x, h)
+        size: (w, h)
         """
         pygame.draw.rect(
             self.screen.pygame_screen,
@@ -74,6 +74,18 @@ class Brush(object):
             )
         )
 
+    def draw_text(self, text, color, font_size, font_type=None):
+        """Draw a text
+
+        color: (r, g, b)
+        """
+        font = pygame.font.Font(font_type, font_size)
+        text_surface = font.render(text, True, color)
+        text_rect = text_surface.get_rect().move(self.x, self.y)
+        self.screen.pygame_screen.blit(text_surface, text_rect)
+        
+        
+
 class Renderable(object):
     """A component for entities that can be drawn on the screen.
 
@@ -82,12 +94,25 @@ class Renderable(object):
 
     As some entities must be rendered on top of others, the Renderable
     component also has a layer number. A higher layer will be drawn on
-    top of a lower layer.
+    top of a lower layer. 
     """
 
     def __init__(self, render_func, layer):
         self.render_func = render_func
         self.layer = layer
+
+class Colorable(object):
+    """A component for monochrome renderable entities.
+    It encapsulates their color"""
+
+    def __init__(self, c):
+        """ c = (r,g,b) 
+        """
+        self.color = c
+
+    def set_color(self, c):
+        self.color = c
+    
 
 class GraphicsSystem(object):
     """System in charge of drawing entities on the screen.
@@ -120,10 +145,17 @@ class GraphicsSystem(object):
         for entity in entities:
             positionable = entity.get_component(Positionable)
             renderable = entity.get_component(Renderable)
-
-            renderable.render_func(
-                Brush(self.screen, (positionable.x, positionable.y))
-            )
+            
+            if entity.has_component(Colorable):
+                colorable = entity.get_component(Colorable)
+                renderable.render_func(
+                    Brush(self.screen, (positionable.x, positionable.y)),
+                          colorable.color
+                      )
+            else:
+                renderable.render_func(
+                    Brush(self.screen, (positionable.x, positionable.y))
+                )
 
     def get_minimal_layer(self, entities):
         """Return the minimal layer of the entities' renderable components.

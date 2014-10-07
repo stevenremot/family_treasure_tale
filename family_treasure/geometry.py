@@ -71,3 +71,14 @@ class Positionable(object):
 
     def contains(self, pos):
         return self.rect.collidepoint(pos)
+
+def get_text_positionable(text, font_size, x=0, y=0, font_type=None):
+    """ Use pygame to compute the width and height of a text entity """
+    font = pygame.font.Font(font_type, font_size)
+    pygame_rect = font.render(text, False, (255, 0, 0)).get_rect().move(x, y)
+    return Positionable(
+        pygame_rect.left,
+        pygame_rect.top,
+        pygame_rect.width, 
+        pygame_rect.height
+    )
