@@ -17,43 +17,17 @@
 import pygame, sys
 
 from tile import TileSpace, TilePositionable, TileSystem
-from geometry import Positionable, get_text_positionable
-from graphics import Screen, Renderable, Colorable, GraphicsSystem
+from geometry import Positionable
+from graphics import Screen, Renderable, GraphicsSystem
 from ecs import World
-from mouse import Button, Clickable, Hoverable, MouseSystem
+from mouse import Button, Clickable, MouseSystem
+from text import create_text_entity, create_hoverable_text_entity
 
 def to_mouse_button(b):
     if b == 1:
         return Button.LEFT
     elif b == 3:
         return Button.RIGHT
-
-def create_text_entity(world, text, color, font_size, x=0, y=0, layer=0, font_type=None):
-    """ Create a text entity and returns it """
-    entity = world.entity()
-    entity.add_components(
-        get_text_positionable(text, font_size, x, y, font_type),
-        Colorable(color),
-        Renderable(
-            lambda brush, color: brush.draw_text(text, color, font_size, font_type),
-            layer
-        )
-    )
-    return entity
-
-def create_hoverable_text_entity(world, text, color1, color2, font_size, x=0, y=0, layer=0, font_type=None):
-    """ Create a text entity with color2 when hovered and color1 elsewhere
-    Return the created entity
-    """
-    entity = create_text_entity(
-        world, text, color1, font_size, x, y, layer, font_type)
-    entity.add_component(
-        Hoverable(
-            lambda: entity.get_component(Colorable).set_color(color2),
-            lambda: entity.get_component(Colorable).set_color(color1)
-        )
-    )
-    return entity
 
 def gamescreen_transition(world, create_gamescreen_func):
     """ Remove all the world's entities and setup a new gamescreen"""
