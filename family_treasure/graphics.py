@@ -14,7 +14,7 @@
 # along with The Family's treasure tale.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-import pygame
+import pygame, data
 from geometry import Positionable
 
 class Screen(object):
@@ -84,6 +84,12 @@ class Brush(object):
         text_rect = text_surface.get_rect().move(self.x, self.y)
         self.screen.pygame_screen.blit(text_surface, text_rect)
         
+    def draw_image(self, filename):
+        """ Draw an image
+        """
+        surface = pygame.image.load(data.filepath(filename))
+        rect = surface.get_rect().move(self.x, self.y)
+        self.screen.pygame_screen.blit(surface, rect)
         
 
 class Renderable(object):
