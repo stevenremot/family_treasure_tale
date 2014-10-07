@@ -74,12 +74,12 @@ class Brush(object):
             )
         )
 
-    def draw_text(self, text, color, font_size):
+    def draw_text(self, text, color, font_size, font_type=None):
         """Draw a text
 
         color: (r, g, b)
         """
-        font = pygame.font.Font(None, font_size)
+        font = pygame.font.Font(font_type, font_size)
         text_surface = font.render(text, True, color)
         text_rect = text_surface.get_rect().move(self.x, self.y)
         self.screen.pygame_screen.blit(text_surface, text_rect)

@@ -15,7 +15,7 @@
 # <http://www.gnu.org/licenses/>.
 
 import pygame, sys
-from geometry import Positionable
+from geometry import Positionable, get_text_positionable
 from graphics import Screen, Renderable, GraphicsSystem
 from ecs import World
 from mouse import Button, Clickable, MouseSystem
@@ -25,6 +25,50 @@ def to_mouse_button(b):
         return Button.LEFT
     elif b == 3:
         return Button.RIGHT
+
+def create_text_entity(world, text, color, font_size, x=0, y=0, layer=0, font_type=None):
+    """ Create a text entity and returns it """
+    entity = world.entity()
+    entity.add_components(
+        get_text_positionable(text, font_size, x, y, font_type),
+        Renderable(
+            lambda brush: brush.draw_text(text, color, font_size, font_type),
+            layer
+        )
+    )
+    return entity
+
+def create_ingame_screen(world):
+    """ Create entities for the ingame screen """
+    test_entity = world.entity()
+    test_entity.add_components(
+        Positionable(10, 10, 30, 15),
+        Renderable(
+            lambda brush: brush.draw_rect((255, 255, 255), (0, 0), (30, 15)),
+            1
+        ),
+        Clickable(lambda : sys.stdout.write("clicked \n"), Button.LEFT)
+        )
+
+    test_entity2 = world.entity()
+    test_entity2.add_components(
+        Positionable(20, 15, 30, 15),
+        Renderable(
+            lambda brush: brush.draw_rect((255, 0, 0), (0, 0), (30, 15)),
+            0
+        )
+    )
+
+    test_entity3 = create_text_entity(world, "Yo !", (0, 0, 255), 30, 50, 50)
+
+def create_title_screen(world):
+    title = create_text_entity(
+        world,
+        "The Family's Treasure Tale",
+        (255, 255, 255),
+        50,
+        50,
+        150)
 
 class Game:
     """Basic game launcher class
@@ -45,33 +89,7 @@ class Game:
         clock = pygame.time.Clock()
 
         world = World()
-        test_entity = world.entity()
-        test_entity.add_components(
-            Positionable(10, 10, 30, 15),
-            Renderable(
-                lambda brush: brush.draw_rect((255, 255, 255), (0, 0), (30, 15)),
-                1
-            ),
-            Clickable(lambda : sys.stdout.write("clicked \n"), Button.LEFT)
-        )
-
-        test_entity2 = world.entity()
-        test_entity2.add_components(
-            Positionable(20, 15, 30, 15),
-            Renderable(
-                lambda brush: brush.draw_rect((255, 0, 0), (0, 0), (30, 15)),
-                0
-            )
-        )
-
-        test_entity3 = world.entity()
-        test_entity3.add_components(
-            Positionable(50, 50, 0, 0),
-            Renderable(
-                lambda brush: brush.draw_text("Yo !", (0, 0, 255), 30),
-                0
-            )
-        )
+        create_ingame_screen(world)
 
         graphics_system = GraphicsSystem(world, screen)
         mouse_system = MouseSystem(world)
