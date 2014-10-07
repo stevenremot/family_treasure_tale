@@ -33,7 +33,7 @@ class Hoverable(object):
         self.callback_hovered = callback_hovered
         self.callback_unhovered = callback_unhovered
         self.is_hovered = False
-    
+
 
 class MouseSystem(object):
     """ System called when mouse events are catched. It manages entities
@@ -58,11 +58,18 @@ interactions with the mouse """
         for entity in self.world.get_entities([Positionable, Hoverable]):
             positionable = entity.get_component(Positionable)
             hoverable = entity.get_component(Hoverable)
-            
+
             if positionable.contains(pos) and not hoverable.is_hovered:
                 hoverable.is_hovered = True
                 hoverable.callback_hovered()
-                
+
             if not positionable.contains(pos) and hoverable.is_hovered:
                 hoverable.is_hovered = False
                 hoverable.callback_unhovered()
+
+
+def to_mouse_button(b):
+    if b == 1:
+        return Button.LEFT
+    elif b == 3:
+        return Button.RIGHT
