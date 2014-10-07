@@ -20,11 +20,13 @@ from graphics import Renderable
 
 def create_room(
         world,
-        outer_positionable = Positionable(50, 50, 600, 500),
+        outer_positionable = Positionable(0, 0, 600, 500),
         inner_positionable = Positionable(100, 100, 500, 400),
         outer_resolution = (50, 50),
         inner_resolution = (50, 50),
-        ground_sprite = "basic_ground_tile.png"
+        ground_sprite = "basic_ground_tile.png",
+        wall_sprite = "wall_tile",
+        corner_sprite = "corner_tile"
 ):
     """ Create the entities of the room
     outer_positionable: describes the area of the room, walls included
@@ -42,8 +44,8 @@ def create_room(
 
     w, h = inner_resolution
 
-    for i in range(inner_positionable.width / inner_resolution[0]):
-        for j in range(inner_positionable.height / inner_resolution[1]):
+    for i in range(inner_positionable.width / w):
+        for j in range(inner_positionable.height / h):
             e = world.entity()
             e.add_components(
                 Positionable(0, 0, w, h),
@@ -53,5 +55,91 @@ def create_room(
                 ),
                 TilePositionable("ground", (i,j), 0)
                 )
+            
+    #wall
+    tile_wall = world.entity()
+    tile_wall.add_components(
+        outer_positionable,
+        TileSpace("wall", outer_resolution)
+    )
+    w, h = outer_resolution
+    w_max = outer_positionable.width / w
+    h_max = outer_positionable.height / h
+    #corners
+    tl = world.entity()
+    tl.add_components(
+        Positionable(0, 0, 2*w, 2*h),
+        Renderable(
+            lambda brush: brush.draw_image(corner_sprite+"_tl.png"),
+            0
+        ),
+        TilePositionable("wall", (0,0), 0)
+    )
+    tr = world.entity()
+    tr.add_components(
+        Positionable(0, 0, 2*w, 2*h),
+        Renderable(
+            lambda brush: brush.draw_image(corner_sprite+"_tr.png"),
+            0
+        ),
+        TilePositionable("wall", (w_max,0), 0)
+    )
+    bl = world.entity()
+    bl.add_components(
+        Positionable(0, 0, 2*w, 2*h),
+        Renderable(
+            lambda brush: brush.draw_image(corner_sprite+"_bl.png"),
+            0
+        ),
+        TilePositionable("wall", (0,h_max), 0)
+    )
+    br = world.entity()
+    br.add_components(
+        Positionable(0, 0, 2*w, 2*h),
+        Renderable(
+            lambda brush: brush.draw_image(corner_sprite+"_br.png"),
+            0
+        ),
+        TilePositionable("wall", (w_max,h_max), 0)
+    )
 
-    print "Todo!"
+    #walls
+    for i in range(2, w_max):
+        t = world.entity()
+        t.add_components(
+            Positionable(0, 0, w, 2*h),
+            Renderable(
+                lambda brush: brush.draw_image(wall_sprite+"_t.png"),
+                0
+            ),
+            TilePositionable("wall", (i,0), 0)
+        )
+        b = world.entity()
+        b.add_components(
+            Positionable(0, 0, w, 2*h),
+            Renderable(
+                lambda brush: brush.draw_image(wall_sprite+"_b.png"),
+                0
+            ),
+            TilePositionable("wall", (i,h_max), 0)
+        )
+         
+    for j in range(2, h_max):
+        l = world.entity()
+        l.add_components(
+            Positionable(0, 0, 2*w, h),
+            Renderable(
+                lambda brush: brush.draw_image(wall_sprite+"_l.png"),
+                0
+            ),
+            TilePositionable("wall", (0,j), 0)
+        )
+        r = world.entity()
+        r.add_components(
+            Positionable(0, 0, 2*w, h),
+            Renderable(
+                lambda brush: brush.draw_image(wall_sprite+"_r.png"),
+                0
+            ),
+            TilePositionable("wall", (w_max,j), 0)
+        )
