@@ -22,6 +22,7 @@ from graphics import Screen, Renderable, GraphicsSystem
 from ecs import World
 from mouse import Button, Clickable, MouseSystem
 from text import create_text_entity, create_hoverable_text_entity
+from room import create_room
 
 def to_mouse_button(b):
     if b == 1:
@@ -36,45 +37,7 @@ def gamescreen_transition(world, create_gamescreen_func):
 
 def create_ingame_screen(world):
     """ Create entities for the ingame screen """
-
-    tile_entity = world.entity()
-    tile_entity.add_components(
-        Positionable(15, 15, 0, 0),
-        TileSpace("space", (15, 15))
-    )
-
-    test_entity = world.entity()
-    test_entity.add_components(
-        Positionable(0, 0, 30, 15),
-        Renderable(
-            lambda brush: brush.draw_rect((255, 255, 255), (0, 0), (30, 15)),
-            1
-        ),
-        TilePositionable("space", (1, 1), 0),
-        Clickable(
-            lambda : gamescreen_transition(world, create_gameover_screen),
-            Button.LEFT
-        )
-    )
-
-    test_entity2 = world.entity()
-    test_entity2.add_components(
-        Positionable(20, 15, 15, 30),
-        Renderable(
-            lambda brush: brush.draw_image("basic_ground_tile.png"),
-            0
-        ),
-        TilePositionable("space", (3, 2), 0)
-    )
-
-    create_text_entity(
-        world,
-        "Click the white rectangle to lose :-)",
-        (0, 0, 255),
-        30,
-        50,
-        50
-    )
+    create_room(world)
 
 def create_title_screen(world):
     create_text_entity(
