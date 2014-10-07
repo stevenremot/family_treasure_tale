@@ -14,14 +14,7 @@
 # along with The Family's treasure tale.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-class Activable:
-    """Components for entities that can be enabled and disabled.
-    """
-    def __init__(self, activated = True):
-        self.activated = activated
-
-    def toggle(self):
-        self.activated = not self.activated
+from ecs import Activable
 
 class MiniMapRenderable:
 

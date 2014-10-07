@@ -135,7 +135,17 @@ class World(object):
         """ Remove all entities """
         self.entities[:] = []
 
-            
+
+
+class Activable:
+    """Components for entities that can be enabled and disabled.
+    """
+    def __init__(self, activated = True):
+        self.activated = activated
+
+    def toggle(self):
+        self.activated = not self.activated
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()

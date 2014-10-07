@@ -18,13 +18,27 @@ from room import create_room
 from building import Room, Building
 from minimap import create_minimap
 
+# -----
+from geometry import Positionable
+from tile import TilePositionable
+from graphics import Renderable
+from ecs import Activable
+
 def create_ingame_screen(world):
     """ Create entities for the ingame screen """
     create_room(world)
 
+    rect = world.entity()
+    rect.add_components(
+        Positionable(0, 0, 0, 0),
+        Renderable(lambda brush: brush.draw_rect((255, 0, 0), (0, 0), (50, 50)), 1),
+        TilePositionable("ground", (3, 3), 1),
+        Activable(False)
+    )
+
     building = Building(
         [
-            Room((0, 0), []),
+            Room((0, 0), [rect]),
             Room((0, 30), []),
             Room((30, 0), []),
             Room((30, 30), [])

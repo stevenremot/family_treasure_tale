@@ -15,7 +15,9 @@
 # <http://www.gnu.org/licenses/>.
 
 import pygame, data
+
 from geometry import Positionable
+from ecs import Activable
 
 class Screen(object):
     """Represents the game screen.
@@ -154,19 +156,25 @@ class GraphicsSystem(object):
         """Draw all the entities in the list, in their index order.
         """
         for entity in entities:
-            positionable = entity.get_component(Positionable)
-            renderable = entity.get_component(Renderable)
+            if self.is_entity_activated(entity):
+                positionable = entity.get_component(Positionable)
+                renderable = entity.get_component(Renderable)
 
-            if entity.has_component(Colorable):
-                colorable = entity.get_component(Colorable)
-                renderable.render_func(
-                    Brush(self.screen, (positionable.x, positionable.y)),
-                          colorable.color
-                      )
-            else:
-                renderable.render_func(
-                    Brush(self.screen, (positionable.x, positionable.y))
-                )
+                if entity.has_component(Colorable):
+                    colorable = entity.get_component(Colorable)
+                    renderable.render_func(
+                        Brush(self.screen, (positionable.x, positionable.y)),
+                              colorable.color
+                          )
+                else:
+                    renderable.render_func(
+                        Brush(self.screen, (positionable.x, positionable.y))
+                    )
+
+    def is_entity_activated(self, entity):
+        """Return true if the entity is activated.
+        """
+        return not entity.has_component(Activable) or entity.get_component(Activable).activated
 
     def get_minimal_layer(self, entities):
         """Return the minimal layer of the entities' renderable components.
