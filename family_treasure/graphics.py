@@ -15,7 +15,9 @@
 # <http://www.gnu.org/licenses/>.
 
 import pygame, data
+
 from geometry import Positionable
+from ecs import Activable
 
 class Screen(object):
     """Represents the game screen.
@@ -56,7 +58,7 @@ class Brush(object):
     def y(self):
         return self.pos[1]
 
-    def draw_rect(self, color, pos, size):
+    def draw_rect(self, color, pos, size, stroked=False):
         """Draw a rectangle
 
         color: (r, g, b)
@@ -71,7 +73,8 @@ class Brush(object):
                 pos[1] + self.y,
                 size[0],
                 size[1]
-            )
+            ),
+            1 if stroked else 0
         )
 
     def draw_text(self, text, color, font_size, font_type=None):
@@ -83,14 +86,18 @@ class Brush(object):
         text_surface = font.render(text, True, color)
         text_rect = text_surface.get_rect().move(self.x, self.y)
         self.screen.pygame_screen.blit(text_surface, text_rect)
-        
+
     def draw_image(self, filename):
         """ Draw an image
         """
         surface = pygame.image.load(data.filepath(filename))
         rect = surface.get_rect().move(self.x, self.y)
         self.screen.pygame_screen.blit(surface, rect)
-        
+
+    def get_translated(self, dx, dy):
+        """Return a new brush with an offset of dx, dy.
+        """
+        return Brush(self.screen, (self.x + dx, self.y + dy))
 
 class Renderable(object):
     """A component for entities that can be drawn on the screen.
@@ -100,7 +107,7 @@ class Renderable(object):
 
     As some entities must be rendered on top of others, the Renderable
     component also has a layer number. A higher layer will be drawn on
-    top of a lower layer. 
+    top of a lower layer.
     """
 
     def __init__(self, render_func, layer):
@@ -112,13 +119,13 @@ class Colorable(object):
     It encapsulates their color"""
 
     def __init__(self, c):
-        """ c = (r,g,b) 
+        """ c = (r,g,b)
         """
         self.color = c
 
     def set_color(self, c):
         self.color = c
-    
+
 
 class GraphicsSystem(object):
     """System in charge of drawing entities on the screen.
@@ -149,19 +156,25 @@ class GraphicsSystem(object):
         """Draw all the entities in the list, in their index order.
         """
         for entity in entities:
-            positionable = entity.get_component(Positionable)
-            renderable = entity.get_component(Renderable)
-            
-            if entity.has_component(Colorable):
-                colorable = entity.get_component(Colorable)
-                renderable.render_func(
-                    Brush(self.screen, (positionable.x, positionable.y)),
-                          colorable.color
-                      )
-            else:
-                renderable.render_func(
-                    Brush(self.screen, (positionable.x, positionable.y))
-                )
+            if self.is_entity_activated(entity):
+                positionable = entity.get_component(Positionable)
+                renderable = entity.get_component(Renderable)
+
+                if entity.has_component(Colorable):
+                    colorable = entity.get_component(Colorable)
+                    renderable.render_func(
+                        Brush(self.screen, (positionable.x, positionable.y)),
+                              colorable.color
+                          )
+                else:
+                    renderable.render_func(
+                        Brush(self.screen, (positionable.x, positionable.y))
+                    )
+
+    def is_entity_activated(self, entity):
+        """Return true if the entity is activated.
+        """
+        return not entity.has_component(Activable) or entity.get_component(Activable).activated
 
     def get_minimal_layer(self, entities):
         """Return the minimal layer of the entities' renderable components.
