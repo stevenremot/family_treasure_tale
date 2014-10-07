@@ -131,6 +131,11 @@ class World(object):
         """
         return [e for e in self.entities if e.has_components(components)]
 
+    def clear(self):
+        """ Remove all entities """
+        self.entities[:] = []
+
+            
 if __name__ == "__main__":
     import doctest
     doctest.testmod()

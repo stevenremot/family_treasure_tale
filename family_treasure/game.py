@@ -38,6 +38,11 @@ def create_text_entity(world, text, color, font_size, x=0, y=0, layer=0, font_ty
     )
     return entity
 
+def gamescreen_transition(world, create_gamescreen_func):
+    """ Remove all the world's entities and setup a new gamescreen"""
+    world.clear()
+    create_gamescreen_func(world)
+
 def create_ingame_screen(world):
     """ Create entities for the ingame screen """
     test_entity = world.entity()
@@ -47,8 +52,10 @@ def create_ingame_screen(world):
             lambda brush: brush.draw_rect((255, 255, 255), (0, 0), (30, 15)),
             1
         ),
-        Clickable(lambda : sys.stdout.write("clicked \n"), Button.LEFT)
-        )
+        Clickable(
+            lambda : gamescreen_transition(world, create_gameover_screen),
+            Button.LEFT)
+    )
 
     test_entity2 = world.entity()
     test_entity2.add_components(
@@ -59,16 +66,57 @@ def create_ingame_screen(world):
         )
     )
 
-    test_entity3 = create_text_entity(world, "Yo !", (0, 0, 255), 30, 50, 50)
+    test_entity3 = create_text_entity(
+        world,
+        "Click the white rectangle to lose :-)",
+        (0, 0, 255),
+        30,
+        50,
+        50)
 
 def create_title_screen(world):
     title = create_text_entity(
         world,
         "The Family's Treasure Tale",
         (255, 255, 255),
-        50,
+        60,
         50,
         150)
+    start = create_text_entity(
+        world,
+        "Start",
+        (200, 200, 200),
+        40,
+        200,
+        300)
+    start.add_component(
+        Clickable(
+            lambda: gamescreen_transition(world, create_ingame_screen),
+            Button.LEFT)
+    )
+    exit = create_text_entity(
+        world,
+        "Exit",
+        (200, 200, 200),
+        40,
+        200,
+        400)
+    exit.add_component(Clickable(lambda: sys.exit(), Button.LEFT))
+
+def create_gameover_screen(world):
+    gameover = create_text_entity(
+        world,
+        "Game Over",
+        (255, 0, 0),
+        100,
+        250,
+        250)
+    gameover.add_component(
+        Clickable(
+            lambda: gamescreen_transition(world, create_title_screen),
+            Button.LEFT)
+    )
+        
 
 class Game:
     """Basic game launcher class
@@ -89,7 +137,7 @@ class Game:
         clock = pygame.time.Clock()
 
         world = World()
-        create_ingame_screen(world)
+        create_title_screen(world)
 
         graphics_system = GraphicsSystem(world, screen)
         mouse_system = MouseSystem(world)
