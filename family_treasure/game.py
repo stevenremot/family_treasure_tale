@@ -87,7 +87,7 @@ def create_ingame_screen(world):
     test_entity2.add_components(
         Positionable(20, 15, 15, 30),
         Renderable(
-            lambda brush: brush.draw_rect((255, 0, 0), (0, 0), (15, 30)),
+            lambda brush: brush.draw_image("basic_ground_tile.png"),
             0
         ),
         TilePositionable("space", (3, 2), 0)
