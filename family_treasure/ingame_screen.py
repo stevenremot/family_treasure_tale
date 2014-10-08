@@ -37,7 +37,7 @@ def create_ingame_screen(world, scheduler):
     boy.add_components(
         Positionable(0, 0, 40, 80),
         Renderable(
-            lambda brush: brush.draw_image("boy.png"),
+            lambda brush: brush.draw_image("boy_t_idle.png"),
             2
         ),
         TilePositionable("ground", (3, 1), 2),
@@ -45,7 +45,7 @@ def create_ingame_screen(world, scheduler):
         Clickable(
             lambda: banimable.add_animations(
                 TileMoveAnimation((0,5), 5),
-                SpriteAnimation(5, 3, ["move_1.png", "move_2.png"])
+                SpriteAnimation(5, 3, ["boy_t_move_1.png", "boy_t_move_2.png"])
             ),
             Button.LEFT
         )

@@ -47,6 +47,7 @@ class Game:
         create_title_screen(world, scheduler)
 
         graphics_system = GraphicsSystem(world, screen)
+        graphics_system.load_charset("boy.png", (30,60))
         tile_system = TileSystem(world, 1)
         mouse_system = MouseSystem(world)
         animation_system = AnimationSystem(world)

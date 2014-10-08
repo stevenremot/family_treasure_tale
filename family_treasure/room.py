@@ -180,7 +180,7 @@ def create_room(
         boy.add_components(
             Positionable(0, 0, 40, 80),
             Renderable(
-                lambda brush: brush.draw_image("boy_back.png"),
+                lambda brush: brush.draw_image("boy_b_idle.png"),
                 2
             ),
             TilePositionable("ground", (3, 6), 2)
@@ -189,7 +189,7 @@ def create_room(
         boy.add_components(
             Positionable(0, 0, 40, 80),
             Renderable(
-                lambda brush: brush.draw_image("boy_left.png"),
+                lambda brush: brush.draw_image("boy_l_idle.png"),
                 2
             ),
             TilePositionable("ground", (5, 1), 2)
@@ -198,7 +198,7 @@ def create_room(
         boy.add_components(
             Positionable(0, 0, 40, 80),
             Renderable(
-                lambda brush: brush.draw_image("boy_right.png"),
+                lambda brush: brush.draw_image("boy_r_idle.png"),
                 2
             ),
             TilePositionable("ground", (1, 6), 2)
