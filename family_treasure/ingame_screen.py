@@ -17,6 +17,7 @@
 from room import create_room
 from building import Room, Building
 from minimap import create_minimap
+from sky import create_sky_effect
 
 # -----
 from geometry import Positionable
@@ -102,3 +103,12 @@ def create_ingame_screen(world, scheduler):
     )
 
     create_minimap(world, (700, 50), building)
+
+    sky = create_sky_effect(
+        world,
+        (0, 0),
+        (700, 550),
+        300
+    )
+
+    scheduler.at(3).call(sky.to_night)

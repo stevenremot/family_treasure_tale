@@ -97,7 +97,7 @@ class ColorAnimation:
                 float(colorable.color[0]),
                 float(colorable.color[1]),
                 float(colorable.color[2]),
-                colorable.color[3] if len(colorable.color) == 4 else 255
+                float(colorable.color[3]) if len(colorable.color) == 4 else 255
             )
 
             self.color_vector = (
@@ -117,7 +117,8 @@ class ColorAnimation:
         colorable.color = (
             float(self.current_color[0]),
             float(self.current_color[1]),
-            float(self.current_color[2])
+            float(self.current_color[2]),
+            float(self.current_color[3])
         )
 
         self.remaining_duration -= elapsed_time
