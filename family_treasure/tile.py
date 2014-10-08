@@ -56,9 +56,17 @@ class TilePositionable(object):
     def x(self):
         return self.pos[0]
 
+    @x.setter
+    def x(self, x):
+        self.pos = (x, self.pos[1])
+
     @property
     def y(self):
         return self.pos[1]
+
+    @y.setter
+    def y(self, y):
+        self.pos = (self.pos[0], y)
 
 class TileSystem(object):
     """System in charge of updating on-screen position of tile objects.

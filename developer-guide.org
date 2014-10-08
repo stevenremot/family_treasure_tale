@@ -202,3 +202,34 @@
          ...
 
    #+END_SRC
+* Animations
+
+  The animation system allows one to create linear animation that
+  applies on an entity. To accept animations, an entity must have an
+  animable component :
+
+  #+BEGIN_SRC python
+    from animation import Animable
+
+    # entity creation ...
+
+    animable = Animable()
+    entity.add_component(animable)
+  #+END_SRC
+
+** Tile movement
+
+   This animation allows an entity to move according to its tile
+   position. For example, to move a TilePositionable entity to 2 units
+   right and 5 units bottom in 2 seconds, write :
+
+   #+BEGIN_SRC python
+   animable.add_animation(TileMoveAnimation((2, 5), 2)
+   #+END_SRC
+
+** Creating an animation
+
+   An animation is just an object with a method /update/, that takes
+   the target entity and the time elapsed since the last call, and
+   returns False if the animation is not finished yet. See
+   /TileMoveAnimation/ in [[file:family_treasure/animation.py][animation.py]] for an example.
