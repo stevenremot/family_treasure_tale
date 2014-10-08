@@ -143,3 +143,14 @@ def create_room(
             ),
             TilePositionable("wall", (w_max,j), 0)
         )
+
+        #furniture
+        table = world.entity()
+        table.add_components(
+            Positionable(0, 0, 150, 100),
+            Renderable(
+                lambda brush: brush.draw_image("table_textured.png"),
+                0
+            ),
+            TilePositionable("ground", (1, 4), 1)
+        )
