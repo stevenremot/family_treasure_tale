@@ -15,6 +15,7 @@
 # <http://www.gnu.org/licenses/>.
 
 from tile import TilePositionable
+from graphics import Renderable
 
 class TileMoveAnimation:
     """An animation that applies a certain tile translation to an entity in a
@@ -37,6 +38,31 @@ class TileMoveAnimation:
         self.remaining_duration -= elapsed_time
         return self.remaining_duration > 1e-6
 
+class SpriteAnimation:
+    """An animation that switches between different sprites
+    """
+
+    def __init__(self, duration, fps, sprite_list):
+        self.remaining_duration = float(duration)
+        self.change_sprite_delay = 1 / float(fps)
+        self.sprite_list = sprite_list
+        self.current_sprite = 0
+        self.current_step = 0
+
+    def update(self, entity, elapsed_time):
+        self.current_step += elapsed_time
+        if self.current_step > self.change_sprite_delay:
+            self.current_sprite += 1
+            if self.current_sprite == len(self.sprite_list):
+                self.current_sprite = 0
+            renderable = entity.get_component(Renderable)
+            renderable.render_func = lambda brush: brush.draw_image(
+                self.sprite_list[self.current_sprite])
+            self.current_step = 0
+        
+        self.remaining_duration -= elapsed_time
+        return self.remaining_duration > 1e-6
+
 class Animable:
     """Component for entities that can carry animations.
     """
@@ -46,6 +72,10 @@ class Animable:
 
     def add_animation(self, animation):
         self.animations.append(animation)
+
+    def add_animations(self, *animations):
+        for a in animations:
+            self.animations.append(a)                                  
 
     def remove_animation(self, animation):
         self.animations.remove(animation)

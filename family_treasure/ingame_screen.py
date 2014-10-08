@@ -24,7 +24,7 @@ from tile import TilePositionable
 from graphics import Renderable
 from ecs import Activable
 from mouse import Clickable, Button
-from animation import TileMoveAnimation, Animable
+from animation import TileMoveAnimation, SpriteAnimation, Animable
 
 
 def create_ingame_screen(world):
@@ -32,16 +32,21 @@ def create_ingame_screen(world):
     create_room(world)
 
     animable = Animable()
-
-    rect = world.entity()
-    rect.add_components(
-        Positionable(0, 0, 50, 50),
-        Renderable(lambda brush: brush.draw_rect((255, 0, 0), (0, 0), (50, 50)), 1),
-        TilePositionable("ground", (3, 3), 1),
-        Activable(False),
+    
+    boy = world.entity()
+    boy.add_components(
+        Positionable(0, 0, 40, 80),
+        Renderable(
+            lambda brush: brush.draw_image("boy.png"),
+            2
+        ),
+        TilePositionable("ground", (3, 1), 2),
         animable,
         Clickable(
-            lambda: animable.add_animation(TileMoveAnimation((5, 0), 5)),
+            lambda: animable.add_animations(
+                TileMoveAnimation((0,5), 5),
+                SpriteAnimation(5, 3, ["move_1.png", "move_2.png"])
+            ),
             Button.LEFT
         )
     )
@@ -60,7 +65,7 @@ def create_ingame_screen(world):
 
     building = Building(
         [
-            Room((0, 0), [rect, char_rect]),
+            Room((0, 0), [char_rect]),
             Room((0, 30), []),
             Room((30, 0), []),
             Room((30, 30), [])

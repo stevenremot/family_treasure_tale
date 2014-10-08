@@ -165,12 +165,41 @@ def create_room(
             TilePositionable("ground", (2,6), 1)
         )
 
-        bookshelf = world.entity()
-        bookshelf.add_components(
-            Positionable(0, 0, 50, 100),
+        for i in range(2,5):
+            bookshelf = world.entity()
+            bookshelf.add_components(
+                Positionable(0, 0, 50, 100),
+                Renderable(
+                    lambda brush: brush.draw_image("bookshelf.png"),
+                    1
+                ),
+                TilePositionable("ground", (i,-1.5), 1)
+            )
+
+        boy = world.entity()
+        boy.add_components(
+            Positionable(0, 0, 40, 80),
             Renderable(
-                lambda brush: brush.draw_image("bookshelf.png"),
-                1
+                lambda brush: brush.draw_image("boy_back.png"),
+                2
             ),
-            TilePositionable("ground", (3,-1.5), 1)
+            TilePositionable("ground", (3, 6), 2)
+        )
+        boy = world.entity()
+        boy.add_components(
+            Positionable(0, 0, 40, 80),
+            Renderable(
+                lambda brush: brush.draw_image("boy_left.png"),
+                2
+            ),
+            TilePositionable("ground", (5, 1), 2)
+        )
+        boy = world.entity()
+        boy.add_components(
+            Positionable(0, 0, 40, 80),
+            Renderable(
+                lambda brush: brush.draw_image("boy_right.png"),
+                2
+            ),
+            TilePositionable("ground", (1, 6), 2)
         )
