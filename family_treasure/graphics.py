@@ -41,14 +41,16 @@ class Brush(object):
     """A helper class to draw things on screen.
     """
 
-    def __init__(self, screen, pos):
+    def __init__(self, screen, pos, sprite_dict):
         """Initialization
 
         screen: Object of type Screen
         pos: (x, y)
+        sprite_dict: a dicitionary of pygame.Surface indexed by sprite names
         """
         self.screen = screen
         self.pos = pos
+        self.sprite_dict = sprite_dict
 
     @property
     def x(self):
@@ -89,8 +91,15 @@ class Brush(object):
 
     def draw_image(self, filename):
         """ Draw an image
+        Use pygame.image.load when the sprite has not been loaded
+        Then, get the pygame.Surface in the sprite dictionary
         """
-        surface = pygame.image.load(data.filepath(filename))
+        if filename in self.sprite_dict:
+            surface = self.sprite_dict[filename]
+        else:
+            surface = pygame.image.load(data.filepath(filename))
+            self.sprite_dict[filename] = surface
+        
         rect = surface.get_rect().move(self.x, self.y)
         self.screen.pygame_screen.blit(surface, rect)
 
@@ -134,6 +143,7 @@ class GraphicsSystem(object):
     def __init__(self, world, screen):
         self.world = world
         self.screen = screen
+        self.sprite_dict = {}
 
     def draw_entities(self):
         """Draw the renderable entities on the screen.
@@ -159,17 +169,17 @@ class GraphicsSystem(object):
             if self.is_entity_activated(entity):
                 positionable = entity.get_component(Positionable)
                 renderable = entity.get_component(Renderable)
+                brush = Brush(
+                    self.screen,
+                    (positionable.x, positionable.y),
+                    self.sprite_dict
+                )
 
                 if entity.has_component(Colorable):
                     colorable = entity.get_component(Colorable)
-                    renderable.render_func(
-                        Brush(self.screen, (positionable.x, positionable.y)),
-                              colorable.color
-                          )
+                    renderable.render_func(brush, colorable.color)
                 else:
-                    renderable.render_func(
-                        Brush(self.screen, (positionable.x, positionable.y))
-                    )
+                    renderable.render_func(brush)
 
     def is_entity_activated(self, entity):
         """Return true if the entity is activated.
