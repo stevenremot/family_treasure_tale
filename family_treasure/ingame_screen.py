@@ -23,6 +23,7 @@ from geometry import Positionable
 from tile import TilePositionable
 from graphics import Renderable
 from ecs import Activable
+from animation import Animable
 
 def create_ingame_screen(world):
     """ Create entities for the ingame screen """
@@ -36,9 +37,21 @@ def create_ingame_screen(world):
         Activable(False)
     )
 
+    char_rect = world.entity()
+    char_rect.add_components(
+        Positionable(0, 0, 0, 0),
+        Renderable(lambda brush: brush.draw_rect((0, 0, 255), (0, 0), (40, 80)), 1),
+        TilePositionable("ground", (5, 3), 1),
+        Activable(False)
+    )
+    animable = Animable()
+    char_rect.add_component(animable)
+    animable.add_animation(TileMoveAnimation((2.5, 3), 2))
+    
+
     building = Building(
         [
-            Room((0, 0), [rect]),
+            Room((0, 0), [rect, char_rect]),
             Room((0, 30), []),
             Room((30, 0), []),
             Room((30, 30), [])
