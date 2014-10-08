@@ -47,7 +47,7 @@ class Game:
         create_title_screen(world, scheduler)
 
         graphics_system = GraphicsSystem(world, screen)
-        tile_system = TileSystem(world, 1)
+        tile_system = TileSystem(world, 5)
         mouse_system = MouseSystem(world)
         animation_system = AnimationSystem(world)
 

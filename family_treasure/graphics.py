@@ -14,10 +14,12 @@
 # along with The Family's treasure tale.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-import pygame, data
+import pygame
+import data
 
 from geometry import Positionable
 from ecs import Activable
+
 
 class Screen(object):
     """Represents the game screen.
@@ -36,6 +38,7 @@ class Screen(object):
         """Update screen with previously applied draw operations.
         """
         pygame.display.flip()
+
 
 class Brush(object):
     """A helper class to draw things on screen.
@@ -99,7 +102,7 @@ class Brush(object):
         else:
             surface = pygame.image.load(data.filepath(filename)).convert_alpha()
             self.sprite_dict[filename] = surface
-        
+
         rect = surface.get_rect().move(self.x, self.y)
         self.screen.pygame_screen.blit(surface, rect)
 
@@ -122,6 +125,7 @@ class Renderable(object):
     def __init__(self, render_func, layer):
         self.render_func = render_func
         self.layer = layer
+
 
 class Colorable(object):
     """A component for monochrome renderable entities.
@@ -150,21 +154,7 @@ class GraphicsSystem(object):
         """
         self.screen.fill((0, 0, 0))
         entities = self.world.get_entities([Positionable, Renderable])
-
-        layer = self.get_minimal_layer(entities)
-
-        while entities:
-            layer_entities = [e for e in entities
-                              if e.get_component(Renderable).layer <= layer]
-            self.draw_entity_layer(layer_entities)
-            entities = [e for e in entities if e not in layer_entities]
-            layer += 1
-
-        self.screen.flip()
-
-    def draw_entity_layer(self, entities):
-        """Draw all the entities in the list, in their index order.
-        """
+        entities.sort(key=lambda e: e.get_component(Renderable).layer)
         for entity in entities:
             if self.is_entity_activated(entity):
                 positionable = entity.get_component(Positionable)
@@ -181,20 +171,9 @@ class GraphicsSystem(object):
                 else:
                     renderable.render_func(brush)
 
+        self.screen.flip()
+
     def is_entity_activated(self, entity):
         """Return true if the entity is activated.
         """
         return not entity.has_component(Activable) or entity.get_component(Activable).activated
-
-    def get_minimal_layer(self, entities):
-        """Return the minimal layer of the entities' renderable components.
-        """
-        min_layer = None
-
-        for entity in entities:
-            layer = entity.get_component(Renderable).layer
-            if min_layer is None or min_layer > layer:
-                min_layer = layer
-
-
-        return layer

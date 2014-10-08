@@ -32,7 +32,7 @@ def create_ingame_screen(world, scheduler):
     create_room(world)
 
     banimable = Animable()
-    
+
     boy = world.entity()
     boy.add_components(
         Positionable(0, 0, 40, 80),
@@ -40,7 +40,7 @@ def create_ingame_screen(world, scheduler):
             lambda brush: brush.draw_image("boy.png"),
             2
         ),
-        TilePositionable("ground", (3, 1), 2),
+        TilePositionable("ground", (3, 2), 4),
         banimable,
         Clickable(
             lambda: banimable.add_animations(
@@ -74,7 +74,7 @@ def create_ingame_screen(world, scheduler):
 
     char_rect = world.entity()
     char_rect.add_components(
-        Positionable(0, 0, 0, 0),
+        Positionable(0, 0, 40, 80),
         Renderable(lambda brush: brush.draw_rect((0, 0, 255), (0, 0), (40, 80)), 1),
         TilePositionable("ground", (5, 3), 1),
         Activable(False),

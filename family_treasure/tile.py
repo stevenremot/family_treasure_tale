@@ -14,8 +14,10 @@
 # along with The Family's treasure tale.  If not, see
 # <http://www.gnu.org/licenses/>.
 
+from math import floor
 from geometry import Positionable
 from graphics import Renderable
+
 
 class TileSpace(object):
     """Component for an entity that represents a tile space.
@@ -36,6 +38,7 @@ class TileSpace(object):
         """
         self.name = name
         self.ratio = ratio
+
 
 class TilePositionable(object):
     """Component for entities that have a position in a tile system.
@@ -68,6 +71,7 @@ class TilePositionable(object):
     def y(self, y):
         self.pos = (self.pos[0], y)
 
+
 class TileSystem(object):
     """System in charge of updating on-screen position of tile objects.
     """
@@ -97,11 +101,12 @@ class TileSystem(object):
         renderable = entity.get_component(Renderable)
 
         left = tile_space["x"] + tile_component.x * tile_space["ratio"][0]
-        top = tile_space["y"] + tile_component.y * tile_space["ratio"][1]
+        top = tile_space["y"] + tile_component.y * tile_space["ratio"][1] - positionable.height
         positionable.x = left
         positionable.y = top
 
-        renderable.layer = tile_component.y * self.layers_per_cell + tile_component.layer
+        cell_layer = tile_component.y * self.layers_per_cell
+        renderable.layer = cell_layer + tile_component.layer
 
     def get_tile_spaces(self):
         """Return a dictionary whose keys are space names, and values are
