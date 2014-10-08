@@ -33,6 +33,7 @@ def create_ingame_screen(world, scheduler):
     create_room(world)
 
     banimable = Animable()
+    anim_list = ["boy_t_idle.png","boy_t_move_1.png", "boy_t_move_2.png"]
 
     boy = world.entity()
     boy.add_components(
@@ -46,7 +47,7 @@ def create_ingame_screen(world, scheduler):
         Clickable(
             lambda: banimable.add_animations(
                 TileMoveAnimation((0,5), 5),
-                SpriteAnimation(5, 3, ["boy_t_move_1.png", "boy_t_move_2.png"])
+                SpriteAnimation(5, 3, anim_list)
             ),
             Button.LEFT
         )

@@ -42,6 +42,8 @@ class TileMoveAnimation:
 
 class SpriteAnimation:
     """An animation that switches between different sprites
+    sprite_list[0] is the idle sprite
+    sprite_list[1,..] are the move sprites
     """
 
     def __init__(self, duration, fps, sprite_list):
@@ -50,19 +52,34 @@ class SpriteAnimation:
         self.sprite_list = sprite_list
         self.current_sprite = 0
         self.current_step = 0
+        self.has_started = False
 
     def update(self, entity, elapsed_time):
+        update_renderable = False
+
+        if not self.has_started:
+            self.current_sprite = 1
+            update_renderable = True
+            self.has_started = True
+
         self.current_step += elapsed_time
         if self.current_step > self.change_sprite_delay:
             self.current_sprite += 1
             if self.current_sprite == len(self.sprite_list):
                 self.current_sprite = 0
-            renderable = entity.get_component(Renderable)
-            renderable.render_func = lambda brush: brush.draw_image(
-                self.sprite_list[self.current_sprite])
             self.current_step = 0
+            update_renderable = True
 
         self.remaining_duration -= elapsed_time
+        if self.remaining_duration < 1e-6:
+            self.current_sprite = 0
+            update_renderable = True
+
+        if update_renderable:
+            renderable = entity.get_component(Renderable)
+            renderable.render_func = lambda brush: brush.draw_image(
+                self.sprite_list[self.current_sprite])            
+
         return self.remaining_duration > 1e-6
 
 
