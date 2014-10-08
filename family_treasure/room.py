@@ -150,7 +150,17 @@ def create_room(
             Positionable(0, 0, 150, 100),
             Renderable(
                 lambda brush: brush.draw_image("table_textured.png"),
-                0
+                1
             ),
             TilePositionable("ground", (1, 4), 1)
+        )
+
+        stool = world.entity()
+        stool.add_components(
+            Positionable(0, 0, 40, 40),
+            Renderable(
+                lambda brush: brush.draw_image("stool.png"),
+                1
+            ),
+            TilePositionable("ground", (2,6), 1)
         )
