@@ -70,17 +70,26 @@ class Brush(object):
         pos: (x, y)
         size: (w, h)
         """
-        pygame.draw.rect(
-            self.screen.pygame_screen,
-            color,
-            pygame.Rect(
-                pos[0] + self.x,
-                pos[1] + self.y,
-                size[0],
-                size[1]
-            ),
-            1 if stroked else 0
-        )
+        if stroked:
+            pygame.draw.rect(
+                self.screen.pygame_screen,
+                color,
+                pygame.Rect(
+                    pos[0] + self.x,
+                    pos[1] + self.y,
+                    size[0],
+                    size[1]
+                ),
+                1
+            )
+        else:
+            s = pygame.Surface(size, pygame.SRCALPHA)
+            s.fill(color)
+            self.screen.pygame_screen.blit(
+                s,
+                (pos[0] + self.x, pos[1] + self.y)
+            )
+
 
     def draw_text(self, text, color, font_size, font_type=None):
         """Draw a text
@@ -111,6 +120,7 @@ class Brush(object):
         """
         return Brush(self.screen, (self.x + dx, self.y + dy))
 
+
 class Renderable(object):
     """A component for entities that can be drawn on the screen.
 
@@ -132,7 +142,7 @@ class Colorable(object):
     It encapsulates their color"""
 
     def __init__(self, c):
-        """ c = (r,g,b)
+        """ c = (r,g,b[, a])
         """
         self.color = c
 

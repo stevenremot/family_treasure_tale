@@ -75,7 +75,7 @@ def create_ingame_screen(world, scheduler):
     char_rect = world.entity()
     char_rect.add_components(
         Positionable(0, 0, 40, 80),
-        Colorable((0, 0, 255)),
+        Colorable((0, 0, 255, 128)),
         Renderable(lambda brush, color: brush.draw_rect(
             color, (0, 0), (40, 80)
         ), 1),
