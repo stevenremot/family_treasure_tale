@@ -19,7 +19,7 @@ from text import create_text_entity, create_hoverable_text_entity
 from mouse import Clickable, Button
 from game_screen import transition as gamescreen_transition
 
-def create_title_screen(world):
+def create_title_screen(world, scheduler):
     from ingame_screen import create_ingame_screen
 
     create_text_entity(
@@ -41,7 +41,7 @@ def create_title_screen(world):
     )
     start.add_component(
         Clickable(
-            lambda: gamescreen_transition(world, create_ingame_screen),
+            lambda: gamescreen_transition(world, scheduler, create_ingame_screen),
             Button.LEFT
         )
     )
