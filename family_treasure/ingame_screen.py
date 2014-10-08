@@ -21,10 +21,10 @@ from minimap import create_minimap
 # -----
 from geometry import Positionable
 from tile import TilePositionable
-from graphics import Renderable
+from graphics import Renderable, Colorable
 from ecs import Activable
 from mouse import Clickable, Button
-from animation import TileMoveAnimation, SpriteAnimation, Animable
+from animation import TileMoveAnimation, SpriteAnimation, Animable, ColorAnimation
 
 
 def create_ingame_screen(world, scheduler):
@@ -75,7 +75,10 @@ def create_ingame_screen(world, scheduler):
     char_rect = world.entity()
     char_rect.add_components(
         Positionable(0, 0, 40, 80),
-        Renderable(lambda brush: brush.draw_rect((0, 0, 255), (0, 0), (40, 80)), 1),
+        Colorable((0, 0, 255)),
+        Renderable(lambda brush, color: brush.draw_rect(
+            color, (0, 0), (40, 80)
+        ), 1),
         TilePositionable("ground", (5, 3), 1),
         Activable(False),
         Animable()
@@ -85,7 +88,7 @@ def create_ingame_screen(world, scheduler):
     scheduler.at(2.5).animate(char_rect, TileMoveAnimation((0, -2), 0.5))
     scheduler.at(2.5).when(lambda: clicked[0]).animate(
         char_rect,
-        TileMoveAnimation((-1, 0), 0.5)
+        ColorAnimation((0, 255, 0), 1)
     )
 
     building = Building(

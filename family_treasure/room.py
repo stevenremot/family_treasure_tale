@@ -51,11 +51,11 @@ def create_room(
             e.add_components(
                 Positionable(0, 0, w, h),
                 Renderable(
-                    lambda brush: brush.draw_image(ground_sprite),
+                    lambda brush: brush.draw_image(ground_sprite, (0, 50)),
                     0
                 ),
-                TilePositionable("ground", (i, j+1), 0)
-                )
+                TilePositionable("ground", (i, j), 0)
+            )
 
     # wall
     tile_wall = world.entity()

@@ -92,7 +92,7 @@ class Brush(object):
         text_rect = text_surface.get_rect().move(self.x, self.y)
         self.screen.pygame_screen.blit(text_surface, text_rect)
 
-    def draw_image(self, filename):
+    def draw_image(self, filename, offset=(0, 0)):
         """ Draw an image
         Use pygame.image.load when the sprite has not been loaded
         Then, get the pygame.Surface in the sprite dictionary
@@ -103,7 +103,7 @@ class Brush(object):
             surface = pygame.image.load(data.filepath(filename)).convert_alpha()
             self.sprite_dict[filename] = surface
 
-        rect = surface.get_rect().move(self.x, self.y)
+        rect = surface.get_rect().move(self.x + offset[0], self.y + offset[1])
         self.screen.pygame_screen.blit(surface, rect)
 
     def get_translated(self, dx, dy):
