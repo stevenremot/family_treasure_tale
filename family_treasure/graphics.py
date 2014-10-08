@@ -14,10 +14,12 @@
 # along with The Family's treasure tale.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-import pygame, data
+import pygame
+import data
 
 from geometry import Positionable
 from ecs import Activable
+
 
 class Screen(object):
     """Represents the game screen.
@@ -36,6 +38,7 @@ class Screen(object):
         """Update screen with previously applied draw operations.
         """
         pygame.display.flip()
+
 
 class Brush(object):
     """A helper class to draw things on screen.
@@ -67,17 +70,26 @@ class Brush(object):
         pos: (x, y)
         size: (w, h)
         """
-        pygame.draw.rect(
-            self.screen.pygame_screen,
-            color,
-            pygame.Rect(
-                pos[0] + self.x,
-                pos[1] + self.y,
-                size[0],
-                size[1]
-            ),
-            1 if stroked else 0
-        )
+        if stroked:
+            pygame.draw.rect(
+                self.screen.pygame_screen,
+                color,
+                pygame.Rect(
+                    pos[0] + self.x,
+                    pos[1] + self.y,
+                    size[0],
+                    size[1]
+                ),
+                1
+            )
+        else:
+            s = pygame.Surface(size, pygame.SRCALPHA)
+            s.fill(color)
+            self.screen.pygame_screen.blit(
+                s,
+                (pos[0] + self.x, pos[1] + self.y)
+            )
+
 
     def draw_text(self, text, color, font_size, font_type=None):
         """Draw a text
@@ -89,7 +101,7 @@ class Brush(object):
         text_rect = text_surface.get_rect().move(self.x, self.y)
         self.screen.pygame_screen.blit(text_surface, text_rect)
 
-    def draw_image(self, filename):
+    def draw_image(self, filename, offset=(0, 0)):
         """ Draw an image
         Use pygame.image.load when the sprite has not been loaded
         Then, get the pygame.Surface in the sprite dictionary
@@ -99,14 +111,15 @@ class Brush(object):
         else:
             surface = pygame.image.load(data.filepath(filename)).convert_alpha()
             self.sprite_dict[filename] = surface
-        
-        rect = surface.get_rect().move(self.x, self.y)
+
+        rect = surface.get_rect().move(self.x + offset[0], self.y + offset[1])
         self.screen.pygame_screen.blit(surface, rect)
 
     def get_translated(self, dx, dy):
         """Return a new brush with an offset of dx, dy.
         """
         return Brush(self.screen, (self.x + dx, self.y + dy))
+
 
 class Renderable(object):
     """A component for entities that can be drawn on the screen.
@@ -123,12 +136,13 @@ class Renderable(object):
         self.render_func = render_func
         self.layer = layer
 
+
 class Colorable(object):
     """A component for monochrome renderable entities.
     It encapsulates their color"""
 
     def __init__(self, c):
-        """ c = (r,g,b)
+        """ c = (r,g,b[, a])
         """
         self.color = c
 
@@ -150,21 +164,7 @@ class GraphicsSystem(object):
         """
         self.screen.fill((0, 0, 0))
         entities = self.world.get_entities([Positionable, Renderable])
-
-        layer = self.get_minimal_layer(entities)
-
-        while entities:
-            layer_entities = [e for e in entities
-                              if e.get_component(Renderable).layer <= layer]
-            self.draw_entity_layer(layer_entities)
-            entities = [e for e in entities if e not in layer_entities]
-            layer += 1
-
-        self.screen.flip()
-
-    def draw_entity_layer(self, entities):
-        """Draw all the entities in the list, in their index order.
-        """
+        entities.sort(key=lambda e: e.get_component(Renderable).layer)
         for entity in entities:
             if self.is_entity_activated(entity):
                 positionable = entity.get_component(Positionable)
@@ -180,6 +180,8 @@ class GraphicsSystem(object):
                     renderable.render_func(brush, colorable.color)
                 else:
                     renderable.render_func(brush)
+
+        self.screen.flip()
 
     def is_entity_activated(self, entity):
         """Return true if the entity is activated.
@@ -265,4 +267,3 @@ class GraphicsSystem(object):
             surface = charset_surface.subsurface(rect)
             name = name_without_extention+"_r_move_"+str(n)+extension
             self.sprite_dict[name] = surface
-

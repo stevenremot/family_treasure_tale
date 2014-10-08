@@ -18,12 +18,13 @@ from geometry import Positionable
 from tile import TileSpace, TilePositionable
 from graphics import Renderable
 
+
 def create_room(
         world,
-        outer_positionable = Positionable(0, 0, 600, 500),
-        inner_positionable = Positionable(100, 100, 500, 400),
-        outer_resolution = (50, 50),
-        inner_resolution = (50, 50),
+        outer_positionable=Positionable(0, 50, 600, 500),
+        inner_positionable=Positionable(100, 100, 500, 400),
+        outer_resolution=(50, 50),
+        inner_resolution=(50, 50),
         ground_sprite = "basic_ground_tile.png",
         wall_sprite = "wall_tile",
         corner_sprite = "corner_tile"
@@ -35,7 +36,7 @@ def create_room(
     inner_resolution: tile resolution of the ground
     """
 
-    #ground
+    # ground
     tile_ground = world.entity()
     tile_ground.add_components(
         inner_positionable,
@@ -50,13 +51,13 @@ def create_room(
             e.add_components(
                 Positionable(0, 0, w, h),
                 Renderable(
-                    lambda brush: brush.draw_image(ground_sprite),
+                    lambda brush: brush.draw_image(ground_sprite, (0, 50)),
                     0
                 ),
-                TilePositionable("ground", (i,j), 0)
-                )
-            
-    #wall
+                TilePositionable("ground", (i, j), 0)
+            )
+
+    # wall
     tile_wall = world.entity()
     tile_wall.add_components(
         outer_positionable,
@@ -65,7 +66,7 @@ def create_room(
     w, h = outer_resolution
     w_max = outer_positionable.width / w
     h_max = outer_positionable.height / h
-    #corners
+    # corners
     tl = world.entity()
     tl.add_components(
         Positionable(0, 0, 2*w, 2*h),
@@ -73,7 +74,7 @@ def create_room(
             lambda brush: brush.draw_image(corner_sprite+"_tl.png"),
             0
         ),
-        TilePositionable("wall", (0,0), 0)
+        TilePositionable("wall", (0, 1), 0)
     )
     tr = world.entity()
     tr.add_components(
@@ -82,7 +83,7 @@ def create_room(
             lambda brush: brush.draw_image(corner_sprite+"_tr.png"),
             0
         ),
-        TilePositionable("wall", (w_max,0), 0)
+        TilePositionable("wall", (w_max, 1), 0)
     )
     bl = world.entity()
     bl.add_components(
@@ -91,7 +92,7 @@ def create_room(
             lambda brush: brush.draw_image(corner_sprite+"_bl.png"),
             0
         ),
-        TilePositionable("wall", (0,h_max), 0)
+        TilePositionable("wall", (0, h_max), 0)
     )
     br = world.entity()
     br.add_components(
@@ -100,10 +101,10 @@ def create_room(
             lambda brush: brush.draw_image(corner_sprite+"_br.png"),
             0
         ),
-        TilePositionable("wall", (w_max,h_max), 0)
+        TilePositionable("wall", (w_max, h_max), 0)
     )
 
-    #walls
+    # walls
     for i in range(2, w_max):
         t = world.entity()
         t.add_components(
@@ -112,7 +113,7 @@ def create_room(
                 lambda brush: brush.draw_image(wall_sprite+"_t.png"),
                 0
             ),
-            TilePositionable("wall", (i,0), 0)
+            TilePositionable("wall", (i, 1), 0)
         )
         b = world.entity()
         b.add_components(
@@ -121,9 +122,9 @@ def create_room(
                 lambda brush: brush.draw_image(wall_sprite+"_b.png"),
                 0
             ),
-            TilePositionable("wall", (i,h_max), 0)
+            TilePositionable("wall", (i, h_max), 0)
         )
-         
+
     for j in range(2, h_max):
         l = world.entity()
         l.add_components(
@@ -132,7 +133,7 @@ def create_room(
                 lambda brush: brush.draw_image(wall_sprite+"_l.png"),
                 0
             ),
-            TilePositionable("wall", (0,j), 0)
+            TilePositionable("wall", (0, j), 0)
         )
         r = world.entity()
         r.add_components(
@@ -141,10 +142,10 @@ def create_room(
                 lambda brush: brush.draw_image(wall_sprite+"_r.png"),
                 0
             ),
-            TilePositionable("wall", (w_max,j), 0)
+            TilePositionable("wall", (w_max, j), 0)
         )
 
-        #furniture
+        # furniture
         table = world.entity()
         table.add_components(
             Positionable(0, 0, 150, 100),
@@ -152,7 +153,7 @@ def create_room(
                 lambda brush: brush.draw_image("table_textured.png"),
                 1
             ),
-            TilePositionable("ground", (1, 4), 1)
+            TilePositionable("ground", (1, 5), 1)
         )
 
         stool = world.entity()
@@ -162,10 +163,10 @@ def create_room(
                 lambda brush: brush.draw_image("stool.png"),
                 1
             ),
-            TilePositionable("ground", (2,6), 1)
+            TilePositionable("ground", (2, 6), 1)
         )
 
-        for i in range(2,5):
+        for i in range(2, 5):
             bookshelf = world.entity()
             bookshelf.add_components(
                 Positionable(0, 0, 50, 100),
@@ -173,7 +174,7 @@ def create_room(
                     lambda brush: brush.draw_image("bookshelf.png"),
                     1
                 ),
-                TilePositionable("ground", (i,-1.5), 1)
+                TilePositionable("ground", (i, 1), 1)
             )
 
         boy = world.entity()
@@ -183,7 +184,7 @@ def create_room(
                 lambda brush: brush.draw_image("boy_b_idle.png"),
                 2
             ),
-            TilePositionable("ground", (3, 6), 2)
+            TilePositionable("ground", (3, 7), 2)
         )
         boy = world.entity()
         boy.add_components(
@@ -192,7 +193,7 @@ def create_room(
                 lambda brush: brush.draw_image("boy_l_idle.png"),
                 2
             ),
-            TilePositionable("ground", (5, 1), 2)
+            TilePositionable("ground", (5, 2), 2)
         )
         boy = world.entity()
         boy.add_components(
@@ -201,5 +202,5 @@ def create_room(
                 lambda brush: brush.draw_image("boy_r_idle.png"),
                 2
             ),
-            TilePositionable("ground", (1, 6), 2)
+            TilePositionable("ground", (1, 7), 2)
         )

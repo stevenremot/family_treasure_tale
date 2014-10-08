@@ -48,7 +48,9 @@ class Game:
 
         graphics_system = GraphicsSystem(world, screen)
         graphics_system.load_charset("boy.png", (30,60))
-        tile_system = TileSystem(world, 1)
+
+        tile_system = TileSystem(world, 5)
+
         mouse_system = MouseSystem(world)
         animation_system = AnimationSystem(world)
 

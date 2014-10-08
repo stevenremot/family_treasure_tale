@@ -15,7 +15,8 @@
 # <http://www.gnu.org/licenses/>.
 
 from tile import TilePositionable
-from graphics import Renderable
+from graphics import Renderable, Colorable
+
 
 class TileMoveAnimation:
     """An animation that applies a certain tile translation to an entity in a
@@ -38,6 +39,7 @@ class TileMoveAnimation:
         self.remaining_duration -= elapsed_time
         return self.remaining_duration > 1e-6
 
+
 class SpriteAnimation:
     """An animation that switches between different sprites
     """
@@ -59,11 +61,71 @@ class SpriteAnimation:
             renderable.render_func = lambda brush: brush.draw_image(
                 self.sprite_list[self.current_sprite])
             self.current_step = 0
-        
+
+        self.remaining_duration -= elapsed_time
+        return self.remaining_duration > 1e-6
+
+
+class ColorAnimation:
+    """An animation that makes a transition to a certain color in a given
+    duration.
+
+    The entity must have a Colorable component.
+    """
+    def __init__(self, target_color, duration):
+        self.target_color = target_color
+        if len(self.target_color) < 4:
+            self.target_color = (
+                self.target_color[0],
+                self.target_color[1],
+                self.target_color[2],
+                255
+            )
+
+        self.remaining_duration = duration
+        self.color_vector = None
+        self.current_color = None
+
+    def update(self, entity, elapsed_time):
+        min_time = min(elapsed_time, self.remaining_duration)
+
+        colorable = entity.get_component(Colorable)
+
+        if self.color_vector is None:
+            rem = self.remaining_duration
+            self.current_color = (
+                float(colorable.color[0]),
+                float(colorable.color[1]),
+                float(colorable.color[2]),
+                float(colorable.color[3]) if len(colorable.color) == 4 else 255
+            )
+
+            self.color_vector = (
+                float(self.target_color[0] - colorable.color[0]) / rem,
+                float(self.target_color[1] - colorable.color[1]) / rem,
+                float(self.target_color[2] - colorable.color[2]) / rem,
+                float(self.target_color[3] - colorable.color[3]) / rem if len(colorable.color) == 4 else 0
+            )
+
+        self.current_color = (
+            self.current_color[0] + self.color_vector[0] * min_time,
+            self.current_color[1] + self.color_vector[1] * min_time,
+            self.current_color[2] + self.color_vector[2] * min_time,
+            self.current_color[3] + self.color_vector[3] * min_time
+        )
+
+        colorable.color = (
+            float(self.current_color[0]),
+            float(self.current_color[1]),
+            float(self.current_color[2]),
+            float(self.current_color[3])
+        )
+
         self.remaining_duration -= elapsed_time
         return self.remaining_duration > 1e-6
 
 class Animable:
+
     """Component for entities that can carry animations.
     """
 
@@ -75,10 +137,11 @@ class Animable:
 
     def add_animations(self, *animations):
         for a in animations:
-            self.animations.append(a)                                  
+            self.animations.append(a)
 
     def remove_animation(self, animation):
         self.animations.remove(animation)
+
 
 class AnimationSystem:
     """System in charge of running animations.

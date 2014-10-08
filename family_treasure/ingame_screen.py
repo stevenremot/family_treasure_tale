@@ -17,14 +17,15 @@
 from room import create_room
 from building import Room, Building
 from minimap import create_minimap
+from sky import create_sky_effect
 
 # -----
 from geometry import Positionable
 from tile import TilePositionable
-from graphics import Renderable
+from graphics import Renderable, Colorable
 from ecs import Activable
 from mouse import Clickable, Button
-from animation import TileMoveAnimation, SpriteAnimation, Animable
+from animation import TileMoveAnimation, SpriteAnimation, Animable, ColorAnimation
 
 
 def create_ingame_screen(world, scheduler):
@@ -32,7 +33,7 @@ def create_ingame_screen(world, scheduler):
     create_room(world)
 
     banimable = Animable()
-    
+
     boy = world.entity()
     boy.add_components(
         Positionable(0, 0, 40, 80),
@@ -40,7 +41,7 @@ def create_ingame_screen(world, scheduler):
             lambda brush: brush.draw_image("boy_t_idle.png"),
             2
         ),
-        TilePositionable("ground", (3, 1), 2),
+        TilePositionable("ground", (3, 2), 4),
         banimable,
         Clickable(
             lambda: banimable.add_animations(
@@ -74,8 +75,11 @@ def create_ingame_screen(world, scheduler):
 
     char_rect = world.entity()
     char_rect.add_components(
-        Positionable(0, 0, 0, 0),
-        Renderable(lambda brush: brush.draw_rect((0, 0, 255), (0, 0), (40, 80)), 1),
+        Positionable(0, 0, 40, 80),
+        Colorable((0, 0, 255, 128)),
+        Renderable(lambda brush, color: brush.draw_rect(
+            color, (0, 0), (40, 80)
+        ), 1),
         TilePositionable("ground", (5, 3), 1),
         Activable(False),
         Animable()
@@ -85,7 +89,7 @@ def create_ingame_screen(world, scheduler):
     scheduler.at(2.5).animate(char_rect, TileMoveAnimation((0, -2), 0.5))
     scheduler.at(2.5).when(lambda: clicked[0]).animate(
         char_rect,
-        TileMoveAnimation((-1, 0), 0.5)
+        ColorAnimation((0, 255, 0), 1)
     )
 
     building = Building(
@@ -99,3 +103,12 @@ def create_ingame_screen(world, scheduler):
     )
 
     create_minimap(world, (700, 50), building)
+
+    sky = create_sky_effect(
+        world,
+        (0, 0),
+        (700, 550),
+        300
+    )
+
+    scheduler.at(3).call(sky.to_night)
