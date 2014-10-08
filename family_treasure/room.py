@@ -164,3 +164,13 @@ def create_room(
             ),
             TilePositionable("ground", (2,6), 1)
         )
+
+        bookshelf = world.entity()
+        bookshelf.add_components(
+            Positionable(0, 0, 50, 100),
+            Renderable(
+                lambda brush: brush.draw_image("bookshelf.png"),
+                1
+            ),
+            TilePositionable("ground", (3,-1.5), 1)
+        )
