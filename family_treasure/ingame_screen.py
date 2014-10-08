@@ -27,11 +27,16 @@ from mouse import Clickable, Button
 from animation import TileMoveAnimation, Animable
 
 
-def create_ingame_screen(world):
+def create_ingame_screen(world, scheduler):
     """ Create entities for the ingame screen """
     create_room(world)
 
     animable = Animable()
+    clicked = [False]
+
+    def on_red_click():
+        animable.add_animation(TileMoveAnimation((5, 0), 5))
+        clicked[0] = True
 
     rect = world.entity()
     rect.add_components(
@@ -41,7 +46,7 @@ def create_ingame_screen(world):
         Activable(False),
         animable,
         Clickable(
-            lambda: animable.add_animation(TileMoveAnimation((5, 0), 5)),
+            on_red_click,
             Button.LEFT
         )
     )
@@ -51,12 +56,16 @@ def create_ingame_screen(world):
         Positionable(0, 0, 0, 0),
         Renderable(lambda brush: brush.draw_rect((0, 0, 255), (0, 0), (40, 80)), 1),
         TilePositionable("ground", (5, 3), 1),
-        Activable(False)
+        Activable(False),
+        Animable()
     )
-    animable2 = Animable()
-    char_rect.add_component(animable2)
-    animable2.add_animation(TileMoveAnimation((2.5, 3), 2))
-    
+
+    scheduler.at(0.5).animate(char_rect, TileMoveAnimation((2.5, 3), 2))
+    scheduler.at(2.5).animate(char_rect, TileMoveAnimation((0, -2), 0.5))
+    scheduler.at(2.5).when(lambda: clicked[0]).animate(
+        char_rect,
+        TileMoveAnimation((-1, 0), 0.5)
+    )
 
     building = Building(
         [

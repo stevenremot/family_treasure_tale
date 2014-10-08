@@ -22,6 +22,7 @@ from ecs import World
 from mouse import MouseSystem, to_mouse_button
 from title_screen import create_title_screen
 from animation import AnimationSystem
+from schedule import Scheduler
 
 class Game:
     """Basic game launcher class
@@ -42,7 +43,8 @@ class Game:
         clock = pygame.time.Clock()
 
         world = World()
-        create_title_screen(world)
+        scheduler = Scheduler()
+        create_title_screen(world, scheduler)
 
         graphics_system = GraphicsSystem(world, screen)
         tile_system = TileSystem(world, 1)
@@ -66,6 +68,7 @@ class Game:
             clock.tick(self.fps)
             time_elapsed = float(clock.get_time()) / 1000.0
 
+            scheduler.update(time_elapsed)
             animation_system.update(time_elapsed)
             tile_system.update_tile_positions()
             graphics_system.draw_entities()

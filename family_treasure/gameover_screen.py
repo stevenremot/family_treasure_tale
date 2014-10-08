@@ -19,7 +19,7 @@ from mouse import Clickable, Button
 from game_screen import transition as gamescreen_transition
 from title_screen import create_title_screen
 
-def create_gameover_screen(world):
+def create_gameover_screen(world, scheduler):
     gameover = create_text_entity(
         world,
         "Game Over",
@@ -29,6 +29,6 @@ def create_gameover_screen(world):
         250)
     gameover.add_component(
         Clickable(
-            lambda: gamescreen_transition(world, create_title_screen),
+            lambda: gamescreen_transition(world, scheduler, create_title_screen),
             Button.LEFT)
     )
