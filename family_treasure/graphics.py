@@ -97,7 +97,7 @@ class Brush(object):
         if filename in self.sprite_dict:
             surface = self.sprite_dict[filename]
         else:
-            surface = pygame.image.load(data.filepath(filename))
+            surface = pygame.image.load(data.filepath(filename)).convert_alpha()
             self.sprite_dict[filename] = surface
         
         rect = surface.get_rect().move(self.x, self.y)
