@@ -233,3 +233,29 @@
    the target entity and the time elapsed since the last call, and
    returns False if the animation is not finished yet. See
    /TileMoveAnimation/ in [[file:family_treasure/animation.py][animation.py]] for an example.
+* Scheduling
+
+  The scheduling system allows one to execute a certain task at a
+  pre-defined moment, under a certain condition. A task is basically a
+  function, but a helper to execute an animation is implemented.
+
+  To execute some function at some time, do:
+
+  #+BEGIN_SRC python
+  scheduler.at(1).call(lambda: sys.stdout.write("Triggered\n"))
+  #+END_SRC
+
+  This will write "Triggered" at the first second.
+
+  If you want to write triggered only when /should_write()/ is true,
+  do:
+
+  #+BEGIN_SRC python
+  scheduler.at(1).when(should_write).call(lambda: sys.stdout.write("Triggered\n"))
+  #+END_SRC
+
+  If instead of writing in the console, you want to move an entity, do:
+
+  #+BEGIN_SRC python
+  scheduler.at(1).animate(entity, TileMoveANimation((1, 2), 0.5))
+  #+END_SRC
