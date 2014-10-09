@@ -14,7 +14,8 @@
 # along with The Family's treasure tale.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-import pygame, sys
+import pygame
+import sys
 
 from tile import TileSystem
 from graphics import Screen, GraphicsSystem
@@ -23,6 +24,7 @@ from mouse import MouseSystem, to_mouse_button
 from title_screen import create_title_screen
 from animation import AnimationSystem
 from schedule import Scheduler
+
 
 class Game:
     """Basic game launcher class
@@ -47,7 +49,7 @@ class Game:
         create_title_screen(world, scheduler)
 
         graphics_system = GraphicsSystem(world, screen)
-        graphics_system.load_charset("boy.png", (30,60))
+        graphics_system.load_charset("boy.png", (30, 60))
 
         tile_system = TileSystem(world, 5)
 

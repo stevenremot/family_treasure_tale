@@ -78,7 +78,7 @@ class SpriteAnimation:
         if update_renderable:
             renderable = entity.get_component(Renderable)
             renderable.render_func = lambda brush: brush.draw_image(
-                self.sprite_list[self.current_sprite])            
+                self.sprite_list[self.current_sprite])
 
         return self.remaining_duration > 1e-6
 

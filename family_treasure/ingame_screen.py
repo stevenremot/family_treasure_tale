@@ -22,10 +22,11 @@ from sky import create_sky_effect
 # -----
 from geometry import Positionable
 from tile import TilePositionable
-from graphics import Renderable, Colorable
+from graphics import Renderable
 from ecs import Activable
 from mouse import Clickable, Button
-from animation import TileMoveAnimation, SpriteAnimation, Animable, ColorAnimation
+from animation import TileMoveAnimation, SpriteAnimation, Animable
+from character import CharacterDirection, create_character
 
 def create_building(world, scenario_state):
     up_door = world.entity()
@@ -95,28 +96,23 @@ def create_building(world, scenario_state):
 
     create_minimap(world, (700, 50), building)
 
+
 def create_ingame_screen(world, scheduler):
     """ Create entities for the ingame screen """
     create_room(world)
     scenario_state = {}
 
-    banimable = Animable()
-    anim_list = ["boy_l_idle.png","boy_l_move_1.png", "boy_l_move_2.png"]
+    boy = create_character(
+        world,
+        (0, 7),
+        "boy",
+        CharacterDirection.RIGHT,
+        2.5
+    )
 
-    boy = world.entity()
-    boy.add_components(
-        Positionable(0, 0, 40, 80),
-        Renderable(
-            lambda brush: brush.draw_image("boy_l_idle.png"),
-            2
-        ),
-        TilePositionable("ground", (0, 7), 2),
-        banimable,
+    boy.entity.add_component(
         Clickable(
-            lambda: banimable.add_animations(
-                TileMoveAnimation((5,0), 5),
-                SpriteAnimation(5, 2.5, anim_list)
-            ),
+            lambda: boy.walk(CharacterDirection.RIGHT, 5, 5),
             Button.LEFT
         )
     )
