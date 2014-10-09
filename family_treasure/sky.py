@@ -20,7 +20,7 @@ from animation import Animable, ColorAnimation
 
 day_color = (12, 32, 139, 0)
 night_color = (12, 32, 139, 128)
-duration = 3
+duration = 15
 
 
 class Sky:
