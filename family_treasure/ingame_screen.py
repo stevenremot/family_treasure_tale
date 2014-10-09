@@ -97,25 +97,49 @@ def create_building(world, scenario_state):
     create_minimap(world, (700, 50), building)
 
 
-def create_ingame_screen(world, scheduler):
-    """ Create entities for the ingame screen """
-    create_room(world)
-    scenario_state = {}
+def close_compartment(compartment):
+    renderable = compartment.get_component(Renderable)
+    renderable.render_func = lambda brush: brush.draw_image("compartment.png")
 
-    boy = create_character(
+
+def create_compartment(world, scheduler):
+    compartment = world.entity()
+    compartment.add_components(
+        Positionable(0, 0, 50, 50),
+        Renderable(
+            lambda brush: brush.draw_image("compartment_open.png"),
+            1
+        ),
+        TilePositionable("wall", (2, 0.3), 2)
+    )
+
+    scheduler.at(3.25).call(lambda: close_compartment(compartment))
+
+
+def create_father(world, scheduler):
+    father = create_character(
         world,
-        (0, 7),
+        (0, 4.5),
         "boy",
         CharacterDirection.RIGHT,
         2.5
     )
 
-    boy.entity.add_component(
-        Clickable(
-            lambda: boy.walk(CharacterDirection.RIGHT, 5, 5),
-            Button.LEFT
-        )
-    )
+    scheduler.at(1).call(lambda: father.walk(CharacterDirection.UP, 3.5, 2))
+    scheduler.at(3.5).call(lambda: father.walk(CharacterDirection.DOWN, 2, 1))
+    scheduler.at(4.5).call(lambda: father.walk(CharacterDirection.RIGHT, 8, 4.5))
+    scheduler.at(9).call(lambda: father.walk(CharacterDirection.DOWN, 2, 1))
+    scheduler.at(10).call(lambda: father.walk(CharacterDirection.RIGHT, 1.5, 1))
+    scheduler.at(11).toggle(father.entity)
+
+
+def create_ingame_screen(world, scheduler):
+    """ Create entities for the ingame screen """
+    create_room(world)
+    scenario_state = {}
+
+    create_compartment(world, scheduler)
+    create_father(world, scheduler)
 
     create_building(world, scenario_state)
 
@@ -126,4 +150,4 @@ def create_ingame_screen(world, scheduler):
         300
     )
 
-    scheduler.at(3).call(sky.to_night)
+    scheduler.at(12).call(sky.to_night)
