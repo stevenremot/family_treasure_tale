@@ -27,10 +27,67 @@ from ecs import Activable
 from mouse import Clickable, Button
 from animation import TileMoveAnimation, SpriteAnimation, Animable, ColorAnimation
 
+def create_building(world, scenario_state):
+    up_door = world.entity()
+    up_door.add_components(
+        Positionable(0, 0, 50, 100),
+        Renderable(
+            lambda brush: brush.draw_image("door2.png"),
+            3
+        ),
+        TilePositionable("wall", (3, 1), 3),
+        Activable(False)
+    )
+
+    left_door = world.entity()
+    left_door.add_components(
+        Positionable(0, 0, 50, 100),
+        Renderable(
+            lambda brush: brush.draw_image("door2_l.png"),
+            3
+        ),
+        TilePositionable("wall", (0, 6), 3),
+        Activable(False)
+    )
+
+    down_door = world.entity()
+    down_door.add_components(
+        Positionable(0, 0, 50, 100),
+        Renderable(
+            lambda brush: brush.draw_image("door2_b.png"),
+            3
+        ),
+        TilePositionable("wall", (5, 10), 3),
+        Activable(False)
+    )
+
+    right_door = world.entity()
+    right_door.add_components(
+        Positionable(0, 0, 100, 50),
+        Renderable(
+            lambda brush: brush.draw_image("door2_r.png"),
+            3
+        ),
+        TilePositionable("wall", (12, 6), 3),
+        Activable(False)
+    )
+
+    building = Building(
+        [
+            Room((0, 0), [left_door, right_door, down_door]),
+            Room((0, 30), [up_door]),
+            Room((30, 0), [left_door, down_door]),
+            Room((30, 30), [up_door])
+        ],
+        (30, 30)
+    )
+
+    create_minimap(world, (700, 50), building)
 
 def create_ingame_screen(world, scheduler):
     """ Create entities for the ingame screen """
     create_room(world)
+    scenario_state = {}
 
     banimable = Animable()
     anim_list = ["boy_t_idle.png","boy_t_move_1.png", "boy_t_move_2.png"]
@@ -53,57 +110,7 @@ def create_ingame_screen(world, scheduler):
         )
     )
 
-    animable = Animable()
-
-    clicked = [False]
-
-    def on_red_click():
-        animable.add_animation(TileMoveAnimation((5, 0), 5))
-        clicked[0] = True
-
-    rect = world.entity()
-    rect.add_components(
-        Positionable(0, 0, 50, 50),
-        Renderable(lambda brush: brush.draw_rect((255, 0, 0), (0, 0), (50, 50)), 1),
-        TilePositionable("ground", (3, 3), 1),
-        Activable(False),
-        animable,
-        Clickable(
-            on_red_click,
-            Button.LEFT
-        )
-    )
-
-    char_rect = world.entity()
-    char_rect.add_components(
-        Positionable(0, 0, 40, 80),
-        Colorable((0, 0, 255, 128)),
-        Renderable(lambda brush, color: brush.draw_rect(
-            color, (0, 0), (40, 80)
-        ), 1),
-        TilePositionable("ground", (5, 3), 1),
-        Activable(False),
-        Animable()
-    )
-
-    scheduler.at(0.5).animate(char_rect, TileMoveAnimation((2.5, 3), 2))
-    scheduler.at(2.5).animate(char_rect, TileMoveAnimation((0, -2), 0.5))
-    scheduler.at(2.5).when(lambda: clicked[0]).animate(
-        char_rect,
-        ColorAnimation((0, 255, 0), 1)
-    )
-
-    building = Building(
-        [
-            Room((0, 0), [rect, char_rect]),
-            Room((0, 30), []),
-            Room((30, 0), []),
-            Room((30, 30), [])
-        ],
-        (30, 30)
-    )
-
-    create_minimap(world, (700, 50), building)
+    create_building(world, scenario_state)
 
     sky = create_sky_effect(
         world,

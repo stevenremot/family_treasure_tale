@@ -204,33 +204,3 @@ def create_room(
             ),
             TilePositionable("ground", (1, 7), 2)
         )
-
-        door = world.entity()
-        door.add_components(
-            Positionable(0, 0, 50, 100),
-            Renderable(
-                lambda brush: brush.draw_image("door2.png"),
-                3
-            ),
-            TilePositionable("wall", (3, 1), 3)
-        )
-
-        door = world.entity()
-        door.add_components(
-            Positionable(0, 0, 50, 100),
-            Renderable(
-                lambda brush: brush.draw_image("door2_l.png"),
-                3
-            ),
-            TilePositionable("wall", (0, 6), 3)
-        )
-
-        door = world.entity()
-        door.add_components(
-            Positionable(0, 0, 50, 100),
-            Renderable(
-                lambda brush: brush.draw_image("door2_b.png"),
-                3
-            ),
-            TilePositionable("wall", (5, h_max), 3)
-        )
