@@ -200,7 +200,31 @@ class GraphicsSystem(object):
 
         return layer
 
-    def load_charset(self, filename, sprite_size):
+    def load_charset_row(
+            self,
+            row_number, 
+            row_name,
+            filename, 
+            charset_surface,
+            sprite_size, 
+            sprites_per_row
+    ):
+        w,h = sprite_size
+        partition = filename.partition('.')
+        base_name = partition[0] + "_" + row_name + "_"
+        extension = partition[1] + partition[2]
+
+        rect = pygame.Rect(0, row_number*h, w, h)
+        surface_idle = charset_surface.subsurface(rect)
+        self.sprite_dict[base_name+"idle"+extension] = surface_idle
+
+        for n in range(1, sprites_per_row):
+            rect = pygame.Rect(n*w, row_number*h, w, h)
+            surface = charset_surface.subsurface(rect)
+            name = base_name + "move_" + str(n) + extension
+            self.sprite_dict[name] = surface
+
+    def load_charset(self, filename, sprite_size, row_names = ["t","b","l","r"]):
         """
         Create entries in sprite_dict for the different sprites of the
         charset
@@ -217,53 +241,14 @@ class GraphicsSystem(object):
         sprite_size is the size of a single sprite of the charset
         """
         charset_surface = pygame.image.load(data.filepath(filename)).convert_alpha()
-        partition = filename.partition('.')
-        name_without_extention = partition[0]
-        extension = partition[1] + partition[2]
+        sprites_per_row = charset_surface.get_rect().width / sprite_size[0]
 
-        w, h = sprite_size
-        sprites_per_row = charset_surface.get_rect().width / w
-
-        #first row
-        rect = pygame.Rect(0, 0, w, h)
-        surface_t = charset_surface.subsurface(rect)
-        self.sprite_dict[name_without_extention+"_t_idle"+extension] = surface_t
-
-        for n in range(1, sprites_per_row):
-            rect = pygame.Rect(n*w, 0, w, h)
-            surface = charset_surface.subsurface(rect)
-            name = name_without_extention+"_t_move_"+str(n)+extension
-            self.sprite_dict[name] = surface
-
-        #second row
-        rect = pygame.Rect(0, h, w, h)
-        surface_b = charset_surface.subsurface(rect)
-        self.sprite_dict[name_without_extention+"_b_idle"+extension] = surface_b
-
-        for n in range(1, sprites_per_row):
-            rect = pygame.Rect(n*w, h, w, h)
-            surface = charset_surface.subsurface(rect)
-            name = name_without_extention+"_b_move_"+str(n)+extension
-            self.sprite_dict[name] = surface
-
-        #third row
-        rect = pygame.Rect(0, 2*h, w, h)
-        surface_l = charset_surface.subsurface(rect)
-        self.sprite_dict[name_without_extention+"_l_idle"+extension] = surface_l
-
-        for n in range(1, sprites_per_row):
-            rect = pygame.Rect(n*w, 2*h, w, h)
-            surface = charset_surface.subsurface(rect)
-            name = name_without_extention+"_l_move_"+str(n)+extension
-            self.sprite_dict[name] = surface
-
-        #fourth row
-        rect = pygame.Rect(0, 3*h, w, h)
-        surface_r = charset_surface.subsurface(rect)
-        self.sprite_dict[name_without_extention+"_r_idle"+extension] = surface_r
-
-        for n in range(1, sprites_per_row):
-            rect = pygame.Rect(n*w, 3*h, w, h)
-            surface = charset_surface.subsurface(rect)
-            name = name_without_extention+"_r_move_"+str(n)+extension
-            self.sprite_dict[name] = surface
+        for i in range(len(row_names)):
+            self.load_charset_row(
+                i,
+                row_names[i], 
+                filename, 
+                charset_surface,
+                sprite_size,
+                sprites_per_row
+            )

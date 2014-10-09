@@ -66,7 +66,7 @@ class SpriteAnimation:
         if self.current_step > self.change_sprite_delay:
             self.current_sprite += 1
             if self.current_sprite == len(self.sprite_list):
-                self.current_sprite = 0
+                self.current_sprite = 1
             self.current_step = 0
             update_renderable = True
 
