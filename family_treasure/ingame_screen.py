@@ -72,9 +72,20 @@ def create_building(world, scenario_state):
         Activable(False)
     )
 
+    window = world.entity()
+    window.add_components(
+        Positionable(0, 0, 100, 100),
+        Renderable(
+            lambda brush: brush.draw_image("window.png"),
+            1
+        ),
+        TilePositionable("wall", (7, 1), 1),
+        Activable(False)
+    )
+
     building = Building(
         [
-            Room((0, 0), [left_door, right_door, down_door]),
+            Room((0, 0), [left_door, right_door, down_door, window]),
             Room((0, 30), [up_door]),
             Room((30, 0), [left_door, down_door]),
             Room((30, 30), [up_door])
