@@ -101,21 +101,21 @@ def create_ingame_screen(world, scheduler):
     scenario_state = {}
 
     banimable = Animable()
-    anim_list = ["boy_t_idle.png","boy_t_move_1.png", "boy_t_move_2.png"]
+    anim_list = ["boy_l_idle.png","boy_l_move_1.png", "boy_l_move_2.png"]
 
     boy = world.entity()
     boy.add_components(
         Positionable(0, 0, 40, 80),
         Renderable(
-            lambda brush: brush.draw_image("boy_t_idle.png"),
+            lambda brush: brush.draw_image("boy_l_idle.png"),
             2
         ),
-        TilePositionable("ground", (3, 2), 4),
+        TilePositionable("ground", (0, 7), 2),
         banimable,
         Clickable(
             lambda: banimable.add_animations(
-                TileMoveAnimation((0,5), 5),
-                SpriteAnimation(5, 3, anim_list)
+                TileMoveAnimation((5,0), 5),
+                SpriteAnimation(5, 2.5, anim_list)
             ),
             Button.LEFT
         )
