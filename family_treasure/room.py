@@ -186,6 +186,16 @@ def create_room(
             ),
             TilePositionable("ground", (7, 1), 1)
         )
+        
+        compartment = world.entity()
+        compartment.add_components(
+            Positionable(0, 0, 50, 50),
+            Renderable(
+                lambda brush: brush.draw_image("compartment_open.png"),
+                1
+            ),
+            TilePositionable("wall", (2, 0.3), 10)
+        )
 
         boy = world.entity()
         boy.add_components(
