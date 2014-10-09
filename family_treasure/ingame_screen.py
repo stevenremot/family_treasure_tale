@@ -125,12 +125,12 @@ def create_father(world, scheduler):
         2.5
     )
 
-    scheduler.at(1).call(lambda: father.walk(CharacterDirection.UP, 3.5, 2))
-    scheduler.at(3.5).call(lambda: father.walk(CharacterDirection.DOWN, 2, 1))
-    scheduler.at(4.5).call(lambda: father.walk(CharacterDirection.RIGHT, 8, 4.5))
-    scheduler.at(9).call(lambda: father.walk(CharacterDirection.DOWN, 2, 1))
-    scheduler.at(10).call(lambda: father.walk(CharacterDirection.RIGHT, 1.5, 1))
-    scheduler.at(11).toggle(father.entity)
+    scheduler.at(1).call(lambda: father.walk(CharacterDirection.UP, 3.5, 2))\
+                   .after(2.5).call(lambda: father.walk(CharacterDirection.DOWN, 2, 1))\
+                   .after(1).call(lambda: father.walk(CharacterDirection.RIGHT, 8, 4.5))\
+                   .after(4.5).call(lambda: father.walk(CharacterDirection.DOWN, 2, 1))\
+                   .after(1).call(lambda: father.walk(CharacterDirection.RIGHT, 1.5, 1))\
+                   .after(1).toggle(father.entity)
 
 
 def create_mother(world, scheduler):
@@ -148,12 +148,12 @@ def create_mother(world, scheduler):
     def look_right():
         mother.direction = CharacterDirection.RIGHT
 
-    scheduler.at(1.7).call(look_up)
-    scheduler.at(5.3).call(look_right)
-    scheduler.at(6.5).call(lambda: mother.walk(CharacterDirection.RIGHT, 6, 3.5))
-    scheduler.at(10).call(lambda: mother.walk(CharacterDirection.DOWN, 1, 0.5))
-    scheduler.at(10.5).call(lambda: mother.walk(CharacterDirection.RIGHT, 2.5, 1.5))
-    scheduler.at(12).toggle(mother.entity)
+    scheduler.at(1.7).call(look_up)\
+                     .after(3.5).call(look_right)\
+                     .after(1).call(lambda: mother.walk(CharacterDirection.RIGHT, 6, 3.5))\
+                     .after(3.5).call(lambda: mother.walk(CharacterDirection.DOWN, 1, 0.5))\
+                     .after(0.5).call(lambda: mother.walk(CharacterDirection.RIGHT, 2.5, 1.5))\
+                     .after(1.5).toggle(mother.entity)
 
 
 def create_ingame_screen(world, scheduler):

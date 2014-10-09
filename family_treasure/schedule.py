@@ -25,16 +25,19 @@ class Step:
     def __init__(self, time):
         self.time = time
         self.hooks = []
+        self.chained_steps = []
 
     def call(self, func):
         """Ask to execute func at this step.
         """
         self.hooks.append(func)
+        return self
 
     def animate(self, entity, animation):
         """Ask to execute an animation on an entity at this step.
         """
         self.hooks.append(lambda: self._execute_animation(entity, animation))
+        return self
 
     def _execute_animation(self, entity, animation):
         """Execute animation on entity.
@@ -51,6 +54,7 @@ class Step:
         entity must have the Activable component.
         """
         self.hooks.append(lambda: self.execute_toggle(entity))
+        return self
 
     def execute_toggle(self, entity):
         """Toggle entity.
@@ -62,18 +66,29 @@ class Step:
 
         activable.toggle()
 
-    def run_hooks(self):
+    def run_hooks(self, steps):
         """Run all the hooks defined before.
+
+        Append the chaind steps into steps
         """
         for hook in self.hooks:
             hook()
+
+        steps += self.chained_steps
 
     def when(self, cond_func):
         """Return a new Step object, and register a hook that will execute the
         step only if cond_func() is true on the moment.
         """
         step = Step(0)
-        self.hooks.append(lambda: (step.run_hooks() if cond_func() else None))
+        self.hooks.append(lambda: (step.run_hooks(self.chained_steps) if cond_func() else None))
+        return step
+
+    def after(self, duration):
+        """Declare a hook that will be executed duration after this step.
+        """
+        step = Step(self.time + duration)
+        self.chained_steps.append(step)
         return step
 
 class Scheduler:
@@ -111,5 +126,5 @@ class Scheduler:
         self.time += elapsed_time
         steps_to_execute = [step for step in self.steps if step.time <= self.time]
         for step in steps_to_execute:
-            step.run_hooks()
+            step.run_hooks(self.steps)
         self.steps = [step for step in self.steps if not step in steps_to_execute]
