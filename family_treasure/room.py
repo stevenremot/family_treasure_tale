@@ -74,7 +74,7 @@ def create_room(
             lambda brush: brush.draw_image(corner_sprite+"_tl.png"),
             0
         ),
-        TilePositionable("wall", (0, 1), 0)
+        TilePositionable("wall", (0, 1), -10)
     )
     tr = world.entity()
     tr.add_components(
@@ -83,7 +83,7 @@ def create_room(
             lambda brush: brush.draw_image(corner_sprite+"_tr.png"),
             0
         ),
-        TilePositionable("wall", (w_max, 1), 0)
+        TilePositionable("wall", (w_max, 1), -10)
     )
     bl = world.entity()
     bl.add_components(
@@ -92,7 +92,7 @@ def create_room(
             lambda brush: brush.draw_image(corner_sprite+"_bl.png"),
             0
         ),
-        TilePositionable("wall", (0, h_max), 0)
+        TilePositionable("wall", (0, h_max), -10)
     )
     br = world.entity()
     br.add_components(
@@ -101,7 +101,7 @@ def create_room(
             lambda brush: brush.draw_image(corner_sprite+"_br.png"),
             0
         ),
-        TilePositionable("wall", (w_max, h_max), 0)
+        TilePositionable("wall", (w_max, h_max), -10)
     )
 
     # walls
@@ -113,7 +113,7 @@ def create_room(
                 lambda brush: brush.draw_image(wall_sprite+"_t.png"),
                 0
             ),
-            TilePositionable("wall", (i, 1), 0)
+            TilePositionable("wall", (i, 1), -10)
         )
         b = world.entity()
         b.add_components(
@@ -122,7 +122,7 @@ def create_room(
                 lambda brush: brush.draw_image(wall_sprite+"_b.png"),
                 0
             ),
-            TilePositionable("wall", (i, h_max), 0)
+            TilePositionable("wall", (i, h_max), -10)
         )
 
     for j in range(2, h_max):
@@ -133,7 +133,7 @@ def create_room(
                 lambda brush: brush.draw_image(wall_sprite+"_l.png"),
                 0
             ),
-            TilePositionable("wall", (0, j), 0)
+            TilePositionable("wall", (0, j), -10)
         )
         r = world.entity()
         r.add_components(
@@ -142,7 +142,7 @@ def create_room(
                 lambda brush: brush.draw_image(wall_sprite+"_r.png"),
                 0
             ),
-            TilePositionable("wall", (w_max, j), 0)
+            TilePositionable("wall", (w_max, j), -10)
         )
 
         # furniture
@@ -176,7 +176,7 @@ def create_room(
                 ),
                 TilePositionable("ground", (i, 1), 1)
             )
-            
+
         fireplace = world.entity()
         fireplace.add_components(
             Positionable(0, 0, 100, 100),
@@ -186,7 +186,7 @@ def create_room(
             ),
             TilePositionable("ground", (7, 1), 1)
         )
-        
+
         compartment = world.entity()
         compartment.add_components(
             Positionable(0, 0, 50, 50),
@@ -194,7 +194,7 @@ def create_room(
                 lambda brush: brush.draw_image("compartment_open.png"),
                 1
             ),
-            TilePositionable("wall", (2, 0.3), 10)
+            TilePositionable("wall", (2, 0.3), 2)
         )
 
         boy = world.entity()

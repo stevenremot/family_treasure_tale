@@ -36,7 +36,7 @@ def create_building(world, scenario_state):
             lambda brush: brush.draw_image("door2.png"),
             3
         ),
-        TilePositionable("wall", (3, 1), 3),
+        TilePositionable("wall", (8, 1), 3),
         Activable(False)
     )
 
@@ -58,7 +58,7 @@ def create_building(world, scenario_state):
             lambda brush: brush.draw_image("door2_b.png"),
             3
         ),
-        TilePositionable("wall", (5, 10), 3),
+        TilePositionable("wall", (8, 10), 3),
         Activable(False)
     )
 

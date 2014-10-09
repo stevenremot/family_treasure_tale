@@ -15,6 +15,8 @@
 # <http://www.gnu.org/licenses/>.
 
 from animation import Animable
+from ecs import Activable
+
 
 class Step:
     """Represent a hook in a precise time to execute actions.
@@ -42,6 +44,23 @@ class Step:
             raise "Entity should have an Animable component"
 
         animable.add_animation(animation)
+
+    def toggle(self, entity):
+        """Activate / deactivate an entity at this step.
+
+        entity must have the Activable component.
+        """
+        self.hooks.append(lambda: self.execute_toggle(entity))
+
+    def execute_toggle(self, entity):
+        """Toggle entity.
+        """
+        activable = entity.get_component(Activable)
+
+        if activable is None:
+            raise "Entity should have an Activable component"
+
+        activable.toggle()
 
     def run_hooks(self):
         """Run all the hooks defined before.
