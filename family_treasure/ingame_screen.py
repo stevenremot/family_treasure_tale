@@ -84,6 +84,14 @@ def create_building(world, scenario_state):
         Activable(False)
     )
 
+    def is_active(entity):
+        return entity.get_component(Activable).activated
+
+    scenario_state["has_right_door"] = lambda: is_active(right_door)
+    scenario_state["has_left_door"] = lambda: is_active(left_door)
+    scenario_state["has_up_door"] = lambda: is_active(up_door)
+    scenario_state["has_down_door"] = lambda: is_active(down_door)
+
     building = Building(
         [
             Room((0, 0), [left_door, right_door, down_door, window]),
@@ -116,7 +124,7 @@ def create_compartment(world, scheduler):
     scheduler.at(3.25).call(lambda: close_compartment(compartment))
 
 
-def create_father(world, scheduler):
+def create_father(world, scheduler, scenario_state):
     father = create_character(
         world,
         (0, 4.5),
@@ -125,13 +133,20 @@ def create_father(world, scheduler):
         2.5
     )
 
-    scheduler.at(1).call(lambda: father.walk(CharacterDirection.UP, 3.5, 2))\
+    path = scheduler.at(1).call(lambda: father.walk(CharacterDirection.UP, 3.5, 2))\
                    .after(2.5).call(lambda: father.walk(CharacterDirection.DOWN, 2, 1))\
-                   .after(1).call(lambda: father.walk(CharacterDirection.RIGHT, 8, 4.5))\
-                   .after(4.5).call(lambda: father.walk(CharacterDirection.DOWN, 2, 1))\
-                   .after(1).call(lambda: father.walk(CharacterDirection.RIGHT, 1.5, 1))\
-                   .after(1).toggle(father.entity)
+                   .after(1).call(lambda: father.walk(CharacterDirection.RIGHT, 6, 3))\
+                   .after(3)
 
+    path.when(scenario_state["has_right_door"])\
+        .call(lambda: father.walk(CharacterDirection.RIGHT, 2, 1))\
+        .after(1).call(lambda: father.walk(CharacterDirection.DOWN, 2, 1))\
+        .after(1).call(lambda: father.walk(CharacterDirection.RIGHT, 1.5, 1))\
+        .after(1).toggle(father.entity)
+
+    # path.when(scenario_state["has_up_door"])\
+    #     .call(lambda: father.walk(CharacterDirection.UP, 5, 2.5))\
+    #     .after(2.5).toggle(father.entity)
 
 def create_mother(world, scheduler):
     mother = create_character(
@@ -161,11 +176,11 @@ def create_ingame_screen(world, scheduler):
     create_room(world)
     scenario_state = {}
 
-    create_compartment(world, scheduler)
-    create_father(world, scheduler)
-    create_mother(world, scheduler)
-
     create_building(world, scenario_state)
+
+    create_compartment(world, scheduler)
+    create_father(world, scheduler, scenario_state)
+    create_mother(world, scheduler)
 
     sky = create_sky_effect(
         world,
