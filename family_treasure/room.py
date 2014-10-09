@@ -176,6 +176,16 @@ def create_room(
                 ),
                 TilePositionable("ground", (i, 1), 1)
             )
+            
+        fireplace = world.entity()
+        fireplace.add_components(
+            Positionable(0, 0, 100, 100),
+            Renderable(
+                lambda brush: brush.draw_image("fireplace.png"),
+                1
+            ),
+            TilePositionable("ground", (7, 1), 1)
+        )
 
         boy = world.entity()
         boy.add_components(
