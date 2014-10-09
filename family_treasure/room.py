@@ -186,31 +186,3 @@ def create_room(
             ),
             TilePositionable("ground", (7, 1), 1)
         )
-
-        boy = world.entity()
-        boy.add_components(
-            Positionable(0, 0, 40, 80),
-            Renderable(
-                lambda brush: brush.draw_image("boy_b_idle.png"),
-                2
-            ),
-            TilePositionable("ground", (3, 7), 2)
-        )
-        boy = world.entity()
-        boy.add_components(
-            Positionable(0, 0, 40, 80),
-            Renderable(
-                lambda brush: brush.draw_image("boy_l_idle.png"),
-                2
-            ),
-            TilePositionable("ground", (5, 2), 2)
-        )
-        boy = world.entity()
-        boy.add_components(
-            Positionable(0, 0, 40, 80),
-            Renderable(
-                lambda brush: brush.draw_image("boy_r_idle.png"),
-                2
-            ),
-            TilePositionable("ground", (1, 7), 2)
-        )

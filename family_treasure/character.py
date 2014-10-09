@@ -26,7 +26,7 @@ class CharacterDirection:
     UP = 'b'
 
 
-class Character:
+class Character(object):
     """Helper class for managing a character entity.
     """
     def __init__(self, entity, animation_name, base_direction, fps):

@@ -133,6 +133,29 @@ def create_father(world, scheduler):
     scheduler.at(11).toggle(father.entity)
 
 
+def create_mother(world, scheduler):
+    mother = create_character(
+        world,
+        (1, 4),
+        "boy",
+        CharacterDirection.LEFT,
+        2.5
+    )
+
+    def look_up():
+        mother.direction = CharacterDirection.UP
+
+    def look_right():
+        mother.direction = CharacterDirection.RIGHT
+
+    scheduler.at(1.7).call(look_up)
+    scheduler.at(5.3).call(look_right)
+    scheduler.at(6.5).call(lambda: mother.walk(CharacterDirection.RIGHT, 6, 3.5))
+    scheduler.at(10).call(lambda: mother.walk(CharacterDirection.DOWN, 1, 0.5))
+    scheduler.at(10.5).call(lambda: mother.walk(CharacterDirection.RIGHT, 2.5, 1.5))
+    scheduler.at(12).toggle(mother.entity)
+
+
 def create_ingame_screen(world, scheduler):
     """ Create entities for the ingame screen """
     create_room(world)
@@ -140,6 +163,7 @@ def create_ingame_screen(world, scheduler):
 
     create_compartment(world, scheduler)
     create_father(world, scheduler)
+    create_mother(world, scheduler)
 
     create_building(world, scenario_state)
 
