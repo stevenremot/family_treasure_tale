@@ -137,7 +137,7 @@ def create_mother(world, scheduler):
     mother = create_character(
         world,
         (1, 4),
-        "boy",
+        "burglar",
         CharacterDirection.LEFT,
         2.5
     )

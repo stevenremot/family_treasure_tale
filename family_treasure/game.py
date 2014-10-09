@@ -50,6 +50,7 @@ class Game:
 
         graphics_system = GraphicsSystem(world, screen)
         graphics_system.load_charset("boy.png", (30, 60))
+        graphics_system.load_charset("burglar.png", (30, 60))
 
         tile_system = TileSystem(world, 5)
 
