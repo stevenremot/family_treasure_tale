@@ -165,24 +165,3 @@ def create_room(
             ),
             TilePositionable("ground", (2, 6), 1)
         )
-
-        for i in range(2, 5):
-            bookshelf = world.entity()
-            bookshelf.add_components(
-                Positionable(0, 0, 50, 100),
-                Renderable(
-                    lambda brush: brush.draw_image("bookshelf.png"),
-                    1
-                ),
-                TilePositionable("ground", (i, 1), 1)
-            )
-
-        fireplace = world.entity()
-        fireplace.add_components(
-            Positionable(0, 0, 100, 100),
-            Renderable(
-                lambda brush: brush.draw_image("fireplace.png"),
-                1
-            ),
-            TilePositionable("ground", (8, 1), 1)
-        )
