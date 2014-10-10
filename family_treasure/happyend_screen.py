@@ -21,21 +21,21 @@ from title_screen import create_title_screen
 from data import filepath
 
 
-def create_gameover_screen(world, scheduler):
-    gameover = create_text_entity(
+def create_happyend_screen(world, scheduler):
+    happyend = create_text_entity(
         world,
-        "Game Over",
-        (255, 0, 0),
+        "The treasure is safe !",
+        (0, 205, 0),
         100,
         250,
         250,
         0,
         filepath("bilbo/Bilbo-Regular.otf")
     )
-    gameover.add_component(
+    happyend.add_component(
         Clickable(
             lambda: gamescreen_transition(world, scheduler, create_title_screen),
             Button.LEFT)
     )
-    center_horizontally(gameover)
-    add_cursor_change_hoverable(gameover)
+    center_horizontally(happyend)
+    add_cursor_change_hoverable(happyend)

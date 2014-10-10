@@ -28,6 +28,10 @@ from character import CharacterDirection, create_character
 from game_screen import transition
 from gameover_screen import create_gameover_screen
 from light import Lightable
+from happyend_screen import create_happyend_screen
+from animation import TileMoveAnimation, Animable
+from mouse import Clickable, Button, add_cursor_change_hoverable
+
 
 def create_building(world, scenario_state):
     up_door = world.entity()
@@ -37,7 +41,7 @@ def create_building(world, scenario_state):
             lambda brush: brush.draw_image("door2_t.png"),
             3
         ),
-        TilePositionable("wall", (8, 1), 3),
+        TilePositionable("wall", (8, 1), 1),
         Activable(False)
     )
 
@@ -92,20 +96,36 @@ def create_building(world, scenario_state):
             lambda brush: brush.draw_image("window_l.png"),
             1
         ),
-        TilePositionable("wall", (0, 4), 1),
+        TilePositionable("wall", (0, 3), 1),
         Activable(False)
     )
+
+    down_window_renderable = Renderable(
+        lambda brush: brush.draw_image("window_b.png"),
+        1
+    )
+
+    down_window_toggled = [False]
+
+    def toggle_down_window():
+        down_window_renderable.render_image(
+            "window_b.png" if down_window_toggled[0] else "window_semiopen_b.png",
+            (0, 0) if down_window_toggled[0] else (-24, 0)
+        )
+        down_window_toggled[0] = not down_window_toggled[0]
 
     down_window = world.entity()
     down_window.add_components(
         Positionable(0, 0, 100, 100),
-        Renderable(
-            lambda brush: brush.draw_image("window_b.png"),
-            1
-        ),
+        down_window_renderable,
         TilePositionable("wall", (4, 10), 1),
+        Clickable(
+            toggle_down_window,
+            Button.LEFT
+        ),
         Activable(False)
     )
+    add_cursor_change_hoverable(down_window)
 
     def is_activated(entity):
         return entity.get_component(Activable).activated
@@ -128,6 +148,64 @@ def create_building(world, scenario_state):
     )
 
     scenario_state["minimap"] = create_minimap(world, (700, 50), building)
+
+    for i in range(2, 5):
+        bookshelf = world.entity()
+        bookshelf.add_components(
+            Positionable(0, 0, 50, 100),
+            Renderable(
+                lambda brush: brush.draw_image("bookshelf.png"),
+                1
+            ),
+            TilePositionable("ground", (i, 1), 1)
+        )
+
+        if i == 2:
+            def bookshelf_move(animable, scenario_state, direction, duration):
+                def move():
+                    animable.add_animation(TileMoveAnimation(direction, duration))
+                    scenario_state["bookshelf_moved"] = not scenario_state["bookshelf_moved"]
+                return move
+
+            animable = Animable()
+            scenario_state["bookshelf_moved"] = False
+            scenario_state["bookshelf_move_left"] =\
+                bookshelf_move(animable, scenario_state, (-2, 0), 1)
+            scenario_state["bookshelf_move_right"] =\
+                bookshelf_move(animable, scenario_state, (2, 0), 1)
+            scenario_state["bookshelf_can_move"] = True
+
+            def toggle_bookshelf(bookshelf):
+                def toggle():
+                    if scenario_state["bookshelf_can_move"]:
+                        if scenario_state["bookshelf_moved"]:
+                            scenario_state["bookshelf_move_right"]()
+                        else:
+                            scenario_state["bookshelf_move_left"]()
+
+                return toggle
+
+            bookshelf.add_components(
+                animable,
+                Clickable(
+                    toggle_bookshelf(bookshelf),
+                    Button.LEFT
+                )
+            )
+
+            add_cursor_change_hoverable(bookshelf)
+
+    fireplace = world.entity()
+    fireplace.add_components(
+        Positionable(0, 0, 100, 100),
+        Renderable(
+            lambda brush: brush.draw_image("fireplace.png"),
+            1
+        ),
+        TilePositionable("ground", (8, 1), 1)
+    )
+
+    scenario_state["fireplace"] = fireplace
 
 
 def close_compartment(compartment):
@@ -183,7 +261,7 @@ def create_burglar(world, scenario_state):
     )
     burglar.entity.add_component(
         Lightable(
-            Positionable(-10, 10, 60, 60),
+            Positionable(-20, 10, 60, 60),
             (255, 0, 0, 128)
         )
     )
@@ -198,10 +276,13 @@ def setup_animation(world, scheduler, scenario_state):
 
     compartment = scenario_state["compartment"]
     window = scenario_state["window"]
+    fireplace = scenario_state["fireplace"]
 
     minimap = scenario_state["minimap"]
 
     sky = scenario_state["sky"]
+
+    scenario_state["fireplace_unlit"] = False
 
     def mother_look_up():
         mother.direction = CharacterDirection.UP
@@ -223,8 +304,18 @@ def setup_animation(world, scheduler, scenario_state):
 
         return setter
 
+    def bookshelf_disable():
+        scenario_state["bookshelf_can_move"] = False
+
+    def bookshelf_enable():
+        scenario_state["bookshelf_can_move"] = True
+
+    def fireplace_unlit():
+        scenario_state["fireplace_unlit"] = True
+
     burglar.entity.get_component(Activable).toggle()
     minimap.disable()
+    bookshelf_disable()
 
     # Introduction
     introduction_end = scheduler\
@@ -235,10 +326,11 @@ def setup_animation(world, scheduler, scenario_state):
         .after(1.4)\
         .set_image(compartment, "compartment_open_chest.png")\
         .call(father_release_chest)\
-        .after(0.1)\
+        .after(0.3)\
         .set_image(compartment, "compartment.png")\
         .after(0.3)\
         .walk(father, CharacterDirection.DOWN, 2, 1)\
+        .call(bookshelf_enable)\
         .after(1)\
         .walk(father, CharacterDirection.RIGHT, 8, 4.5)\
         .after(1)\
@@ -263,7 +355,8 @@ def setup_animation(world, scheduler, scenario_state):
 
     # Burglar comes
     introduction_end\
-        .call(minimap.disable)
+        .call(minimap.disable)\
+        .call(bookshelf_disable)
 
     introduction_end\
         .after(0.6)\
@@ -277,7 +370,10 @@ def setup_animation(world, scheduler, scenario_state):
     introduction_end\
         .when(scenario_state["has_window"])\
         .set_image(window, "window_semiopen.png")\
-        .after(0.5)\
+        .after(0.2)\
+        .set_image(fireplace, "fireplace_down.png")\
+        .call(fireplace_unlit)\
+        .after(0.3)\
         .set_image(window, "window_open.png")\
         .after(0.5)\
         .call(set_pos(burglar.entity, (6, 1)))\
@@ -317,14 +413,36 @@ def setup_animation(world, scheduler, scenario_state):
         .walk(burglar, CharacterDirection.RIGHT, 3, 1.5)\
         .after(2)
 
-    burglar_find_step\
+    burglar_steal_step = burglar_find_step\
+        .when(lambda: not scenario_state["bookshelf_moved"] or not scenario_state["fireplace_unlit"])\
         .walk(burglar, CharacterDirection.LEFT, 3, 0.7)\
         .after(0.7)\
         .call(look(burglar, CharacterDirection.UP))\
         .after(0.2)\
+
+    burglar_steal_step\
+        .when(lambda: not scenario_state["bookshelf_moved"])\
         .set_image(compartment, "compartment_open_chest.png")\
         .after(0.5)\
         .call(lambda: transition(world, scheduler, create_gameover_screen))
+
+    burglar_steal_step\
+        .when(lambda: scenario_state["bookshelf_moved"] and not scenario_state["fireplace_unlit"])\
+        .call(scenario_state["bookshelf_move_right"])\
+        .after(1.5)\
+        .set_image(compartment, "compartment_open_chest.png")\
+        .after(0.5)\
+        .call(lambda: transition(world, scheduler, create_gameover_screen))
+
+    burglar_find_step\
+        .when(lambda: scenario_state["bookshelf_moved"] and scenario_state["fireplace_unlit"])\
+        .walk(burglar, CharacterDirection.RIGHT, 3, 1.5)\
+        .after(1.5)\
+        .walk(burglar, CharacterDirection.UP, 1, 0.5)\
+        .after(0.5)\
+        .toggle(burglar.entity)\
+        .after(0.5)\
+        .call(lambda: transition(world, scheduler, create_happyend_screen))
 
 
 def create_ingame_screen(world, scheduler):
