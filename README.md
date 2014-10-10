@@ -22,7 +22,17 @@ Othewise open a terminal / console and "cd" to the game directory and run:
 
 ## How to play the game
 
-_TODO_
+You are the spirit of the room. The family living in your house got a
+treasure, and hide it inside a "safe" place. Unfortunately, a burglar
+decides to visit this house tonight.
+
+As the spirit of the room, you can move some objects, and event change
+the room's position in the house when no-one is inside. Do your best
+to protect the treasure !
+
+When you can interact with an object, the cursor's shape changes. If
+clicking does not trigger anything, this means this could be done
+later (or sooner) in the game.
 
 ## Development notes
 
