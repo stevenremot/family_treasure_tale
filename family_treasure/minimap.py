@@ -20,6 +20,7 @@ from tile import TileSpace, TilePositionable
 from building import toggle_room
 from mouse import Hoverable, Clickable, Button
 
+
 class RoomSwitcher:
     """In charge of switching from a room to another room.
     """
@@ -33,15 +34,30 @@ class RoomSwitcher:
         toggle_room(self.world, room)
         self.current_room = room
 
+
+class MinimapState:
+    """Handles the state of the minimap.
+    """
+    def __init__(self):
+        self.enabled = True
+
+    def enable(self):
+        self.enabled = True
+
+    def disable(self):
+        self.enabled = False
+
+
 class RoomWidget:
     """In charge of rendering a room in the minimap an handling its
     inputs.
     """
-    def __init__(self, room, room_size, switcher):
+    def __init__(self, room, room_size, switcher, state):
         self.room = room
         self.room_size = room_size
         self.switcher = switcher
         self.hovered = False
+        self.state = state
 
     def draw(self, brush):
         if self.switcher.current_room is self.room:
@@ -50,7 +66,7 @@ class RoomWidget:
                 (0, 0),
                 self.room_size
             )
-        elif self.hovered:
+        elif self.hovered and self.state.enabled:
             brush.draw_rect(
                 (128, 128, 128),
                 (0, 0),
@@ -58,7 +74,7 @@ class RoomWidget:
             )
 
         brush.draw_rect(
-            (255, 255, 255),
+            (255, 255, 255) if self.state.enabled else (128, 128, 128),
             (0, 0),
             self.room_size,
             1
@@ -68,11 +84,17 @@ class RoomWidget:
         self.hovered = not self.hovered
 
     def activate(self):
-        self.switcher.toggle_to_room(self.room)
+        if self.state.enabled:
+            self.switcher.toggle_to_room(self.room)
+
 
 def create_minimap(world, pos, building):
     """Create a new minimap based on the building.
+
+    Return the MinimapState object.
     """
+    state = MinimapState()
+
     minimap_tileset = world.entity()
     minimap_tileset.add_components(
         Positionable(pos[0], pos[1], 0, 0),
@@ -82,7 +104,7 @@ def create_minimap(world, pos, building):
     switcher = RoomSwitcher(world, building.rooms[0])
 
     for room in building.rooms:
-        room_widget = RoomWidget(room, building.room_size, switcher)
+        room_widget = RoomWidget(room, building.room_size, switcher, state)
         room_entity = world.entity()
         room_entity.add_components(
             Positionable(0, 0, building.room_size[0], building.room_size[1]),
@@ -91,3 +113,5 @@ def create_minimap(world, pos, building):
             Hoverable(room_widget.toggle_hover, room_widget.toggle_hover),
             Clickable(room_widget.activate, Button.LEFT)
         )
+
+    return state

@@ -24,9 +24,8 @@ from geometry import Positionable
 from tile import TilePositionable
 from graphics import Renderable
 from ecs import Activable
-from mouse import Clickable, Button
-from animation import TileMoveAnimation, SpriteAnimation, Animable
 from character import CharacterDirection, create_character
+
 
 def create_building(world, scenario_state):
     up_door = world.entity()
@@ -94,7 +93,7 @@ def create_building(world, scenario_state):
         (30, 30)
     )
 
-    create_minimap(world, (700, 50), building)
+    scenario_state["minimap"] = create_minimap(world, (700, 50), building)
 
 
 def close_compartment(compartment):
@@ -102,7 +101,7 @@ def close_compartment(compartment):
     renderable.render_func = lambda brush: brush.draw_image("compartment.png")
 
 
-def create_compartment(world, scheduler):
+def create_compartment(world, scenario_state):
     compartment = world.entity()
     compartment.add_components(
         Positionable(0, 0, 50, 50),
@@ -113,10 +112,10 @@ def create_compartment(world, scheduler):
         TilePositionable("wall", (2, 0.3), 2)
     )
 
-    scheduler.at(3.25).call(lambda: close_compartment(compartment))
+    scenario_state["compartment"] = compartment
 
 
-def create_father(world, scheduler):
+def create_father(world, scenario_state):
     father = create_character(
         world,
         (0, 4.5),
@@ -125,15 +124,10 @@ def create_father(world, scheduler):
         2.5
     )
 
-    scheduler.at(1).call(lambda: father.walk(CharacterDirection.UP, 3.5, 2))\
-                   .after(2.5).call(lambda: father.walk(CharacterDirection.DOWN, 2, 1))\
-                   .after(1).call(lambda: father.walk(CharacterDirection.RIGHT, 8, 4.5))\
-                   .after(4.5).call(lambda: father.walk(CharacterDirection.DOWN, 2, 1))\
-                   .after(1).call(lambda: father.walk(CharacterDirection.RIGHT, 1.5, 1))\
-                   .after(1).toggle(father.entity)
+    scenario_state["father"] = father
 
 
-def create_mother(world, scheduler):
+def create_mother(world, scenario_state):
     mother = create_character(
         world,
         (1, 4),
@@ -142,18 +136,59 @@ def create_mother(world, scheduler):
         2.5
     )
 
+    scenario_state["mother"] = mother
+
     def look_up():
         mother.direction = CharacterDirection.UP
 
     def look_right():
         mother.direction = CharacterDirection.RIGHT
 
-    scheduler.at(1.7).call(look_up)\
-                     .after(3.5).call(look_right)\
-                     .after(1).call(lambda: mother.walk(CharacterDirection.RIGHT, 6, 3.5))\
-                     .after(3.5).call(lambda: mother.walk(CharacterDirection.DOWN, 1, 0.5))\
-                     .after(0.5).call(lambda: mother.walk(CharacterDirection.RIGHT, 2.5, 1.5))\
-                     .after(1.5).toggle(mother.entity)
+
+def setup_animation(scheduler, scenario_state):
+    father = scenario_state["father"]
+    mother = scenario_state["mother"]
+
+    compartment = scenario_state["compartment"]
+
+    minimap = scenario_state["minimap"]
+
+    sky = scenario_state["sky"]
+
+    def mother_look_up():
+        mother.direction = CharacterDirection.UP
+
+    def mother_look_right():
+        mother.direction = CharacterDirection.RIGHT
+
+    scheduler.at(1).call(lambda: father.walk(CharacterDirection.UP, 3.5, 2))\
+                   .after(0.7)\
+                   .call(mother_look_up)\
+                   .call(minimap.disable)\
+                   .after(1.5)\
+                   .call(lambda: close_compartment(compartment))\
+                   .after(0.3)\
+                   .call(lambda: father.walk(CharacterDirection.DOWN, 2, 1))\
+                   .after(1)\
+                   .call(lambda: father.walk(CharacterDirection.RIGHT, 8, 4.5))\
+                   .after(1)\
+                   .call(mother_look_right)\
+                   .after(1)\
+                   .call(lambda: mother.walk(CharacterDirection.RIGHT, 6, 3.5))\
+                   .after(2.5)\
+                   .call(lambda: father.walk(CharacterDirection.DOWN, 2, 1))\
+                   .after(1)\
+                   .call(lambda: father.walk(CharacterDirection.RIGHT, 1.5, 1))\
+                   .call(lambda: mother.walk(CharacterDirection.DOWN, 1, 0.5))\
+                   .after(0.5)\
+                   .call(lambda: mother.walk(CharacterDirection.RIGHT, 2.5, 1.5))\
+                   .after(0.5)\
+                   .toggle(father.entity)\
+                   .after(1)\
+                   .toggle(mother.entity)\
+                   .call(minimap.enable)\
+                   .after(2)\
+                   .call(sky.to_night)
 
 
 def create_ingame_screen(world, scheduler):
@@ -161,9 +196,9 @@ def create_ingame_screen(world, scheduler):
     create_room(world)
     scenario_state = {}
 
-    create_compartment(world, scheduler)
-    create_father(world, scheduler)
-    create_mother(world, scheduler)
+    create_compartment(world, scenario_state)
+    create_father(world, scenario_state)
+    create_mother(world, scenario_state)
 
     create_building(world, scenario_state)
 
@@ -174,4 +209,6 @@ def create_ingame_screen(world, scheduler):
         300
     )
 
-    scheduler.at(12).call(sky.to_night)
+    scenario_state["sky"] = sky
+
+    setup_animation(scheduler, scenario_state)
