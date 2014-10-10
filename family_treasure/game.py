@@ -72,7 +72,7 @@ class Game:
                     mouse_system.on_mouse_motion(event.pos)
 
             clock.tick(self.fps)
-            time_elapsed = float(clock.get_time()) / 1000.0 * 2.0 # Remove multiplicator
+            time_elapsed = float(clock.get_time()) / 1000.0
 
             scheduler.update(time_elapsed)
             animation_system.update(time_elapsed)
