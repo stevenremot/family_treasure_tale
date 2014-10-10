@@ -184,5 +184,5 @@ def create_room(
                 lambda brush: brush.draw_image("fireplace.png"),
                 1
             ),
-            TilePositionable("ground", (7, 1), 1)
+            TilePositionable("ground", (8, 1), 1)
         )

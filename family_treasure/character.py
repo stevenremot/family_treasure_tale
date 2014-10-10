@@ -31,7 +31,7 @@ class Character(object):
     """
     def __init__(self, entity, animation_name, base_direction, fps):
         self.entity = entity
-        self.animation_name = animation_name
+        self._animation_name = animation_name
         self._direction = base_direction
         self.set_idle_image()
         self.fps = fps
@@ -50,6 +50,15 @@ class Character(object):
     @direction.setter
     def direction(self, direction):
         self._direction = direction
+        self.set_idle_image()
+
+    @property
+    def animation_name(self):
+        return self._animation_name
+
+    @animation_name.setter
+    def animation_name(self, name):
+        self._animation_name = name
         self.set_idle_image()
 
     def walk(self, direction, distance, duration):

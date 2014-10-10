@@ -83,6 +83,16 @@ def create_building(world, scenario_state):
         Activable(False)
     )
 
+    def is_activated(entity):
+        return entity.get_component(Activable).activated
+
+    scenario_state["has_window"] = lambda: is_activated(window)
+    scenario_state["has_down_door"] = lambda: is_activated(down_door)
+    scenario_state["has_up_door"] = lambda: is_activated(up_door)
+    scenario_state["has_right_door"] = lambda: is_activated(right_door)
+
+    scenario_state["window"] = window
+
     building = Building(
         [
             Room((0, 0), [left_door, right_door, down_door, window]),
@@ -138,18 +148,26 @@ def create_mother(world, scenario_state):
 
     scenario_state["mother"] = mother
 
-    def look_up():
-        mother.direction = CharacterDirection.UP
 
-    def look_right():
-        mother.direction = CharacterDirection.RIGHT
+def create_burglar(world, scenario_state):
+    burglar = create_character(
+        world,
+        (1, 4),
+        "burglar_lantern",
+        CharacterDirection.LEFT,
+        2.5
+    )
+
+    scenario_state["burglar"] = burglar
 
 
 def setup_animation(scheduler, scenario_state):
     father = scenario_state["father"]
     mother = scenario_state["mother"]
+    burglar = scenario_state["burglar"]
 
     compartment = scenario_state["compartment"]
+    window = scenario_state["window"]
 
     minimap = scenario_state["minimap"]
 
@@ -161,37 +179,92 @@ def setup_animation(scheduler, scenario_state):
     def mother_look_right():
         mother.direction = CharacterDirection.RIGHT
 
-    scheduler.at(1)\
-             .walk(father, CharacterDirection.UP, 3.5, 2)\
-             .after(0.7)\
-             .call(mother_look_up)\
-             .after(1.4)\
-             .set_image(compartment, "compartment_open_chest.png")\
-             .after(0.1)\
-             .set_image(compartment, "compartment.png")\
-             .after(0.3)\
-             .walk(father, CharacterDirection.DOWN, 2, 1)\
-             .after(1)\
-             .walk(father, CharacterDirection.RIGHT, 8, 4.5)\
-             .after(1)\
-             .call(mother_look_right)\
-             .call(minimap.disable)\
-             .after(1)\
-             .walk(mother, CharacterDirection.RIGHT, 6, 3.5)\
-             .after(2.5)\
-             .walk(father, CharacterDirection.DOWN, 2, 1)\
-             .after(1)\
-             .walk(father, CharacterDirection.RIGHT, 1.5, 1)\
-             .walk(mother, CharacterDirection.DOWN, 1, 0.5)\
-             .after(0.5)\
-             .walk(mother, CharacterDirection.RIGHT, 2.5, 1.5)\
-             .after(0.5)\
-             .toggle(father.entity)\
-             .after(1)\
-             .toggle(mother.entity)\
-             .call(minimap.enable)\
-             .after(2)\
-             .call(sky.to_night)
+    def father_release_chest():
+        father.animation_name = "boy"
+
+    def set_pos(entity, pos):
+        def setter():
+            entity.get_component(TilePositionable).pos = pos
+        return setter
+
+    def look(character, direction):
+        def setter():
+            character.direction = direction
+
+        return setter
+
+    burglar.entity.get_component(Activable).toggle()
+    minimap.disable()
+
+    # Introduction
+    introduction_end = scheduler\
+        .at(1)\
+        .walk(father, CharacterDirection.UP, 3.5, 2)\
+        .after(0.7)\
+        .call(look(mother, CharacterDirection.UP))\
+        .after(1.4)\
+        .set_image(compartment, "compartment_open_chest.png")\
+        .call(father_release_chest)\
+        .after(0.1)\
+        .set_image(compartment, "compartment.png")\
+        .after(0.3)\
+        .walk(father, CharacterDirection.DOWN, 2, 1)\
+        .after(1)\
+        .walk(father, CharacterDirection.RIGHT, 8, 4.5)\
+        .after(1)\
+        .call(look(mother, CharacterDirection.RIGHT))\
+        .after(1)\
+        .walk(mother, CharacterDirection.RIGHT, 6, 3.5)\
+        .after(2.5)\
+        .walk(father, CharacterDirection.DOWN, 2, 1)\
+        .after(1)\
+        .walk(father, CharacterDirection.RIGHT, 1.5, 1)\
+        .walk(mother, CharacterDirection.DOWN, 1, 0.5)\
+        .after(0.5)\
+        .walk(mother, CharacterDirection.RIGHT, 2.5, 1.5)\
+        .after(0.5)\
+        .toggle(father.entity)\
+        .after(1)\
+        .toggle(mother.entity)\
+        .call(minimap.enable)\
+        .after(2)\
+        .call(sky.to_night)\
+        .after(5)
+
+    # Burglar comes
+    introduction_end\
+        .call(minimap.disable)
+
+    introduction_end\
+        .after(0.6)\
+        .when(scenario_state["has_up_door"])\
+        .call(set_pos(burglar.entity, (6, 1)))\
+        .call(look(burglar, CharacterDirection.DOWN))\
+        .toggle(burglar.entity)\
+        .after(0.5)\
+        .walk(burglar, CharacterDirection.DOWN, 3, 1.5)
+
+    introduction_end\
+        .when(scenario_state["has_window"])\
+        .call(set_pos(burglar.entity, (6, 1)))\
+        .call(look(burglar, CharacterDirection.DOWN))\
+        .set_image(window, "window_semiopen.png")\
+        .after(0.3)\
+        .set_image(window, "window_open.png")\
+        .after(0.3)\
+        .toggle(burglar.entity)\
+        .after(0.5)\
+        .walk(burglar, CharacterDirection.DOWN, 3, 1.5)
+
+    introduction_end\
+        .after(0.6)\
+        .when(lambda: scenario_state["has_down_door"]() and not scenario_state["has_window"]())\
+        .call(set_pos(burglar.entity, (6, 7)))\
+        .call(look(burglar, CharacterDirection.UP))\
+        .toggle(burglar.entity)\
+        .after(0.5)\
+        .walk(burglar, CharacterDirection.UP, 3, 1.5)
+
 
 
 def create_ingame_screen(world, scheduler):
@@ -202,6 +275,7 @@ def create_ingame_screen(world, scheduler):
     create_compartment(world, scenario_state)
     create_father(world, scenario_state)
     create_mother(world, scenario_state)
+    create_burglar(world, scenario_state)
 
     create_building(world, scenario_state)
 
