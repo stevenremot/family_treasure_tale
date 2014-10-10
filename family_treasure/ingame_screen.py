@@ -74,8 +74,8 @@ def create_building(world, scenario_state):
         Activable(False)
     )
 
-    window = world.entity()
-    window.add_components(
+    up_window = world.entity()
+    up_window.add_components(
         Positionable(0, 0, 100, 100),
         Renderable(
             lambda brush: brush.draw_image("window_t.png"),
@@ -85,22 +85,44 @@ def create_building(world, scenario_state):
         Activable(False)
     )
 
+    left_window = world.entity()
+    left_window.add_components(
+        Positionable(0, 0, 100, 100),
+        Renderable(
+            lambda brush: brush.draw_image("window_l.png"),
+            1
+        ),
+        TilePositionable("wall", (0, 4), 1),
+        Activable(False)
+    )
+
+    down_window = world.entity()
+    down_window.add_components(
+        Positionable(0, 0, 100, 100),
+        Renderable(
+            lambda brush: brush.draw_image("window_b.png"),
+            1
+        ),
+        TilePositionable("wall", (4, 10), 1),
+        Activable(False)
+    )
+
     def is_activated(entity):
         return entity.get_component(Activable).activated
 
-    scenario_state["has_window"] = lambda: is_activated(window)
+    scenario_state["has_window"] = lambda: is_activated(up_window)
     scenario_state["has_down_door"] = lambda: is_activated(down_door)
     scenario_state["has_up_door"] = lambda: is_activated(up_door)
     scenario_state["has_right_door"] = lambda: is_activated(right_door)
 
-    scenario_state["window"] = window
+    scenario_state["window"] = up_window
 
     building = Building(
         [
-            Room((0, 0), [left_door, right_door, down_door, window]),
-            Room((0, 30), [up_door]),
-            Room((30, 0), [left_door, down_door]),
-            Room((30, 30), [up_door])
+            Room((0, 0), [left_door, right_door, down_door, left_window]),
+            Room((0, 30), [up_door, left_window]),
+            Room((30, 0), [left_door, down_door, up_window]),
+            Room((30, 30), [up_door, down_window])
         ],
         (30, 30)
     )
