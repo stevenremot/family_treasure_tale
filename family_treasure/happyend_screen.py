@@ -15,7 +15,7 @@
 # <http://www.gnu.org/licenses/>.
 
 from text import create_text_entity, center_horizontally
-from mouse import Clickable, Button
+from mouse import Clickable, Button, add_cursor_change_hoverable
 from game_screen import transition as gamescreen_transition
 from title_screen import create_title_screen
 from data import filepath
@@ -38,3 +38,4 @@ def create_happyend_screen(world, scheduler):
             Button.LEFT)
     )
     center_horizontally(happyend)
+    add_cursor_change_hoverable(happyend)

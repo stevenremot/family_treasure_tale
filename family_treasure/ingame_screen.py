@@ -95,20 +95,36 @@ def create_building(world, scenario_state):
             lambda brush: brush.draw_image("window_l.png"),
             1
         ),
-        TilePositionable("wall", (0, 4), 1),
+        TilePositionable("wall", (0, 3), 1),
         Activable(False)
     )
+
+    down_window_renderable = Renderable(
+        lambda brush: brush.draw_image("window_b.png"),
+        1
+    )
+
+    down_window_toggled = [False]
+
+    def toggle_down_window():
+        down_window_renderable.render_image(
+            "window_b.png" if down_window_toggled[0] else "window_semiopen_b.png",
+            (0, 0) if down_window_toggled[0] else (-24, 0)
+        )
+        down_window_toggled[0] = not down_window_toggled[0]
 
     down_window = world.entity()
     down_window.add_components(
         Positionable(0, 0, 100, 100),
-        Renderable(
-            lambda brush: brush.draw_image("window_b.png"),
-            1
-        ),
+        down_window_renderable,
         TilePositionable("wall", (4, 10), 1),
+        Clickable(
+            toggle_down_window,
+            Button.LEFT
+        ),
         Activable(False)
     )
+    add_cursor_change_hoverable(down_window)
 
     def is_activated(entity):
         return entity.get_component(Activable).activated
@@ -303,7 +319,7 @@ def setup_animation(world, scheduler, scenario_state):
         .after(1.4)\
         .set_image(compartment, "compartment_open_chest.png")\
         .call(father_release_chest)\
-        .after(0.1)\
+        .after(0.3)\
         .set_image(compartment, "compartment.png")\
         .after(0.3)\
         .walk(father, CharacterDirection.DOWN, 2, 1)\

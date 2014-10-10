@@ -17,7 +17,8 @@
 from geometry import Positionable
 from tile import TileSpace, TilePositionable
 from graphics import Renderable
-
+from animation import TileMoveAnimation, Animable
+from mouse import Clickable, Button, add_cursor_change_hoverable
 
 def create_room(
         world,
@@ -145,23 +146,42 @@ def create_room(
             TilePositionable("wall", (w_max, j), -10)
         )
 
-        # furniture
-        table = world.entity()
-        table.add_components(
-            Positionable(0, 0, 150, 100),
-            Renderable(
-                lambda brush: brush.draw_image("table_textured.png"),
-                1
-            ),
-            TilePositionable("ground", (1, 5), 1)
-        )
+    # furniture
+    table = world.entity()
+    table.add_components(
+        Positionable(0, 0, 150, 100),
+        Renderable(
+            lambda brush: brush.draw_image("table_textured.png"),
+            1
+        ),
+        TilePositionable("ground", (1, 5), 1)
+    )
 
-        stool = world.entity()
-        stool.add_components(
-            Positionable(0, 0, 40, 40),
-            Renderable(
-                lambda brush: brush.draw_image("stool.png"),
-                1
-            ),
-            TilePositionable("ground", (2, 6), 1)
+    stool_animable = Animable()
+    stool_toggled = [False]
+
+    def toggle_stool():
+        if not stool_animable.animations:
+            stool_animable.add_animation(
+                TileMoveAnimation(
+                    (0, 0.5) if stool_toggled[0] else (0, -0.5),
+                    0.2
+                )
+            )
+            stool_toggled[0] = not stool_toggled[0]
+
+    stool = world.entity()
+    stool.add_components(
+        Positionable(0, 0, 40, 40),
+        Renderable(
+            lambda brush: brush.draw_image("stool.png"),
+            1
+        ),
+        TilePositionable("ground", (2, 6), 1),
+        stool_animable,
+        Clickable(
+            toggle_stool,
+            Button.LEFT
         )
+    )
+    add_cursor_change_hoverable(stool)
