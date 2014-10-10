@@ -35,3 +35,4 @@ def create_gameover_screen(world, scheduler):
             lambda: gamescreen_transition(world, scheduler, create_title_screen),
             Button.LEFT)
     )
+    center_horizontally(gameover)
