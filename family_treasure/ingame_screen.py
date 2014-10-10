@@ -165,8 +165,10 @@ def setup_animation(scheduler, scenario_state):
              .walk(father, CharacterDirection.UP, 3.5, 2)\
              .after(0.7)\
              .call(mother_look_up)\
-             .after(1.5)\
-             .call(lambda: close_compartment(compartment))\
+             .after(1.4)\
+             .set_image(compartment, "compartment_open_chest.png")\
+             .after(0.1)\
+             .set_image(compartment, "compartment.png")\
              .after(0.3)\
              .walk(father, CharacterDirection.DOWN, 2, 1)\
              .after(1)\

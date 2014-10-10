@@ -16,7 +16,7 @@
 
 from animation import Animable
 from ecs import Activable
-
+from graphics import Renderable
 
 class Step:
     """Represent a hook in a precise time to execute actions.
@@ -73,6 +73,20 @@ class Step:
             lambda: character.walk(direction, distance, duration)
         )
         return self
+
+    def set_image(self, entity, image):
+        """Set entity's image.
+        """
+        self.hooks.append(lambda: self.execute_set_image(entity, image))
+        return self
+
+    def execute_set_image(self, entity, image):
+        renderable = entity.get_component(Renderable)
+
+        if renderable is None:
+            raise "Entity must be renderable"
+
+        renderable.render_image(image)
 
     def run_hooks(self, steps):
         """Run all the hooks defined before.

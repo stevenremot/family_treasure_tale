@@ -136,6 +136,11 @@ class Renderable(object):
         self.render_func = render_func
         self.layer = layer
 
+    def render_image(self, image, offset=(0, 0)):
+        """A helper function to make renderable render an image.
+        """
+        self.render_func = lambda brush: brush.draw_image(image, offset)
+
 
 class Colorable(object):
     """A component for monochrome renderable entities.
@@ -202,11 +207,11 @@ class GraphicsSystem(object):
 
     def load_charset_row(
             self,
-            row_number, 
+            row_number,
             row_name,
-            filename, 
+            filename,
             charset_surface,
-            sprite_size, 
+            sprite_size,
             sprites_per_row
     ):
         w,h = sprite_size
@@ -228,7 +233,7 @@ class GraphicsSystem(object):
         """
         Create entries in sprite_dict for the different sprites of the
         charset
-        The fake filenames are named: 
+        The fake filenames are named:
         filename_t_idle.png: idle sprite for top->bottom orientation
         filename_t_move_n.png: nth move sprite for top->bottom orientation
 
@@ -246,8 +251,8 @@ class GraphicsSystem(object):
         for i in range(len(row_names)):
             self.load_charset_row(
                 i,
-                row_names[i], 
-                filename, 
+                row_names[i],
+                filename,
                 charset_surface,
                 sprite_size,
                 sprites_per_row
