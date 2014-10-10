@@ -28,7 +28,7 @@ from character import CharacterDirection, create_character
 from game_screen import transition
 from gameover_screen import create_gameover_screen
 from animation import TileMoveAnimation, Animable
-from mouse import Clickable, Button
+from mouse import Clickable, Button, add_cursor_change_hoverable
 
 def create_building(world, scenario_state):
     up_door = world.entity()
@@ -173,6 +173,8 @@ def create_building(world, scenario_state):
                     Button.LEFT
                 )
             )
+
+            add_cursor_change_hoverable(bookshelf)
 
     fireplace = world.entity()
     fireplace.add_components(
