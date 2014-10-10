@@ -49,9 +49,9 @@ class Game:
         create_title_screen(world, scheduler)
 
         graphics_system = GraphicsSystem(world, screen)
-        charsets = ["boy.png","burglar.png", "girl.png"]
+        charsets = {"boy.png": (30,60),"burglar.png": (30,60), "girl.png": (30,60), "boy_chest.png": (40,60)}
         for c in charsets:
-            graphics_system.load_charset(c, (30, 60))
+            graphics_system.load_charset(c, charsets[c])
 
         tile_system = TileSystem(world, 5)
 

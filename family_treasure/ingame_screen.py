@@ -120,7 +120,7 @@ def create_father(world, scheduler):
     father = create_character(
         world,
         (0, 4.5),
-        "boy",
+        "boy_chest",
         CharacterDirection.RIGHT,
         2.5
     )
