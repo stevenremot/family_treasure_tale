@@ -23,7 +23,7 @@ class Step:
     """
 
     def __init__(self, time):
-        self.time = time
+        self.time = float(time)
         self.hooks = []
         self.chained_steps = []
 
@@ -102,7 +102,7 @@ class Step:
         """Return a new Step object, and register a hook that will execute the
         step only if cond_func() is true on the moment.
         """
-        step = Step(0)
+        step = Step(self.time)
         self.hooks.append(
             lambda: (step.run_hooks(self.chained_steps) if cond_func() else None)
         )
@@ -111,7 +111,7 @@ class Step:
     def after(self, duration):
         """Declare a hook that will be executed duration after this step.
         """
-        step = Step(self.time + duration)
+        step = Step(self.time + float(duration))
         self.chained_steps.append(step)
         return step
 
@@ -121,12 +121,12 @@ class Scheduler:
     """
     def __init__(self):
         self.steps = []
-        self.time = 0
+        self.time = 0.0
 
     def reset(self):
         """Reset scheduler.
         """
-        self.time = 0
+        self.time = 0.0
         self.steps[:] = []
 
     def at(self, time):
@@ -148,8 +148,10 @@ class Scheduler:
 
         elapsed_time must be in the same unit of the one used with "at".
         """
-        self.time += elapsed_time
+        self.time += float(elapsed_time)
         steps_to_execute = [step for step in self.steps if step.time <= self.time]
         for step in steps_to_execute:
             step.run_hooks(self.steps)
         self.steps = [step for step in self.steps if not step in steps_to_execute]
+        if steps_to_execute:
+            self.update(.00)

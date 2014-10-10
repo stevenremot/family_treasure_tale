@@ -248,18 +248,18 @@ def setup_animation(world, scheduler, scenario_state):
 
     introduction_end\
         .when(scenario_state["has_window"])\
+        .set_image(window, "window_semiopen.png")\
+        .after(0.5)\
+        .set_image(window, "window_open.png")\
+        .after(0.5)\
         .call(set_pos(burglar.entity, (6, 1)))\
         .call(look(burglar, CharacterDirection.DOWN))\
-        .set_image(window, "window_semiopen.png")\
-        .after(0.3)\
-        .set_image(window, "window_open.png")\
-        .after(0.3)\
         .toggle(burglar.entity)\
         .after(0.5)\
         .walk(burglar, CharacterDirection.DOWN, 3, 1.5)
 
     introduction_end\
-        .after(0.6)\
+        .after(0.8)\
         .when(lambda: scenario_state["has_down_door"]() and not scenario_state["has_window"]())\
         .call(set_pos(burglar.entity, (6, 7)))\
         .call(look(burglar, CharacterDirection.UP))\
