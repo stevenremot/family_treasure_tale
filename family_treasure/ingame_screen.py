@@ -27,8 +27,10 @@ from ecs import Activable
 from character import CharacterDirection, create_character
 from game_screen import transition
 from gameover_screen import create_gameover_screen
+from happyend_screen import create_happyend_screen
 from animation import TileMoveAnimation, Animable
 from mouse import Clickable, Button, add_cursor_change_hoverable
+
 
 def create_building(world, scenario_state):
     up_door = world.entity()
@@ -186,6 +188,8 @@ def create_building(world, scenario_state):
         TilePositionable("ground", (8, 1), 1)
     )
 
+    scenario_state["fireplace"] = fireplace
+
 
 def close_compartment(compartment):
     renderable = compartment.get_component(Renderable)
@@ -249,10 +253,13 @@ def setup_animation(world, scheduler, scenario_state):
 
     compartment = scenario_state["compartment"]
     window = scenario_state["window"]
+    fireplace = scenario_state["fireplace"]
 
     minimap = scenario_state["minimap"]
 
     sky = scenario_state["sky"]
+
+    scenario_state["fireplace_unlit"] = False
 
     def mother_look_up():
         mother.direction = CharacterDirection.UP
@@ -279,6 +286,9 @@ def setup_animation(world, scheduler, scenario_state):
 
     def bookshelf_enable():
         scenario_state["bookshelf_can_move"] = True
+
+    def fireplace_unlit():
+        scenario_state["fireplace_unlit"] = True
 
     burglar.entity.get_component(Activable).toggle()
     minimap.disable()
@@ -337,7 +347,10 @@ def setup_animation(world, scheduler, scenario_state):
     introduction_end\
         .when(scenario_state["has_window"])\
         .set_image(window, "window_semiopen.png")\
-        .after(0.5)\
+        .after(0.2)\
+        .set_image(fireplace, "fireplace_down.png")\
+        .call(fireplace_unlit)\
+        .after(0.3)\
         .set_image(window, "window_open.png")\
         .after(0.5)\
         .call(set_pos(burglar.entity, (6, 1)))\
@@ -378,6 +391,7 @@ def setup_animation(world, scheduler, scenario_state):
         .after(2)
 
     burglar_steal_step = burglar_find_step\
+        .when(lambda: not scenario_state["bookshelf_moved"] or not scenario_state["fireplace_unlit"])\
         .walk(burglar, CharacterDirection.LEFT, 3, 0.7)\
         .after(0.7)\
         .call(look(burglar, CharacterDirection.UP))\
@@ -390,12 +404,22 @@ def setup_animation(world, scheduler, scenario_state):
         .call(lambda: transition(world, scheduler, create_gameover_screen))
 
     burglar_steal_step\
-        .when(lambda: scenario_state["bookshelf_moved"])\
+        .when(lambda: scenario_state["bookshelf_moved"] and not scenario_state["fireplace_unlit"])\
         .call(scenario_state["bookshelf_move_right"])\
         .after(1.5)\
         .set_image(compartment, "compartment_open_chest.png")\
         .after(0.5)\
         .call(lambda: transition(world, scheduler, create_gameover_screen))
+
+    burglar_find_step\
+        .when(lambda: scenario_state["bookshelf_moved"] and scenario_state["fireplace_unlit"])\
+        .walk(burglar, CharacterDirection.RIGHT, 3, 1.5)\
+        .after(1.5)\
+        .walk(burglar, CharacterDirection.UP, 1, 0.5)\
+        .after(0.5)\
+        .toggle(burglar.entity)\
+        .after(0.5)\
+        .call(lambda: transition(world, scheduler, create_happyend_screen))
 
 
 def create_ingame_screen(world, scheduler):
