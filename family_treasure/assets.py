@@ -1,6 +1,6 @@
 from graphics import GraphicsSystem
 
-charsets = {"boy.png": (30,60),"burglar.png": (30,60), "girl.png": (30,60), "boy_chest.png": (40,60)}
+charsets = {"boy.png": (30,60),"burglar.png": (30,60), "girl.png": (30,60), "boy_chest.png": (40,60), "burglar_lantern.png": (30,60)}
 
 orientations = ["wall_tile.png", "door2.png", "window.png", "window_open.png", "window_semiopen.png"]
 
