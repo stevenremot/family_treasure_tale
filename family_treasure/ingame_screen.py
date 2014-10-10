@@ -393,6 +393,8 @@ def setup_animation(world, scheduler, scenario_state):
 
     # Burgler searches randomly
     burglar_find_step = introduction_end\
+        .after(1)\
+        .toggle_light(burglar.entity)\
         .after(3)\
         .walk(burglar, CharacterDirection.RIGHT, 3, 1.5)\
         .after(1.5)\

@@ -56,8 +56,7 @@ class LightSystem:
 
             for entity in self.world.get_entities([Positionable, Lightable]):
                 light = entity.get_component(Lightable)
-                if sky_color[3] > 0 and not light.toggled:
-                    light.toggle()
+
                 if light.toggled:
                     pos = entity.get_component(Positionable)
                     light_rect = pygame.Rect(

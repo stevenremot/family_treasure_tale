@@ -17,6 +17,7 @@
 from animation import Animable
 from ecs import Activable
 from graphics import Renderable
+from light import Lightable
 
 class Step:
     """Represent a hook in a precise time to execute actions.
@@ -88,6 +89,16 @@ class Step:
 
         renderable.render_image(image)
 
+    def toggle_light(self, entity):            
+        self.hooks.append(lambda: self.execute_toggle_light(entity))
+        return self
+
+    def execute_toggle_light(self, entity):
+        lightable = entity.get_component(Lightable)
+        if lightable is None:
+            raise "Entity must be lightable"
+        lightable.toggle()
+        
     def run_hooks(self, steps):
         """Run all the hooks defined before.
 
