@@ -26,7 +26,10 @@ def create_gameover_screen(world, scheduler):
         (255, 0, 0),
         100,
         250,
-        250)
+        250,
+        0,
+        filepath("bilbo/Bilbo-Regular.otf")
+)
     gameover.add_component(
         Clickable(
             lambda: gamescreen_transition(world, scheduler, create_title_screen),

@@ -18,6 +18,7 @@ import sys
 from text import create_text_entity, create_hoverable_text_entity
 from mouse import Clickable, Button
 from game_screen import transition as gamescreen_transition
+from data import filepath
 
 def create_title_screen(world, scheduler):
     from ingame_screen import create_ingame_screen
@@ -26,9 +27,11 @@ def create_title_screen(world, scheduler):
         world,
         "The Family's Treasure Tale",
         (255, 255, 255),
-        60,
+        70,
         50,
-        150
+        150,
+        0,
+        filepath("bilbo/BilboSwashCaps-Regular.otf")
     )
     start = create_hoverable_text_entity(
         world,
@@ -37,7 +40,9 @@ def create_title_screen(world, scheduler):
         (255, 255, 255),
         40,
         200,
-        300
+        300,
+        0,
+        filepath("bilbo/Bilbo-Regular.otf")
     )
     start.add_component(
         Clickable(
@@ -52,6 +57,8 @@ def create_title_screen(world, scheduler):
         (255, 255, 255),
         40,
         200,
-        400
+        400,
+        0,
+        filepath("bilbo/Bilbo-Regular.otf")
     )
     exit.add_component(Clickable(lambda: sys.exit(), Button.LEFT))
