@@ -161,34 +161,35 @@ def setup_animation(scheduler, scenario_state):
     def mother_look_right():
         mother.direction = CharacterDirection.RIGHT
 
-    scheduler.at(1).call(lambda: father.walk(CharacterDirection.UP, 3.5, 2))\
-                   .after(0.7)\
-                   .call(mother_look_up)\
-                   .call(minimap.disable)\
-                   .after(1.5)\
-                   .call(lambda: close_compartment(compartment))\
-                   .after(0.3)\
-                   .call(lambda: father.walk(CharacterDirection.DOWN, 2, 1))\
-                   .after(1)\
-                   .call(lambda: father.walk(CharacterDirection.RIGHT, 8, 4.5))\
-                   .after(1)\
-                   .call(mother_look_right)\
-                   .after(1)\
-                   .call(lambda: mother.walk(CharacterDirection.RIGHT, 6, 3.5))\
-                   .after(2.5)\
-                   .call(lambda: father.walk(CharacterDirection.DOWN, 2, 1))\
-                   .after(1)\
-                   .call(lambda: father.walk(CharacterDirection.RIGHT, 1.5, 1))\
-                   .call(lambda: mother.walk(CharacterDirection.DOWN, 1, 0.5))\
-                   .after(0.5)\
-                   .call(lambda: mother.walk(CharacterDirection.RIGHT, 2.5, 1.5))\
-                   .after(0.5)\
-                   .toggle(father.entity)\
-                   .after(1)\
-                   .toggle(mother.entity)\
-                   .call(minimap.enable)\
-                   .after(2)\
-                   .call(sky.to_night)
+    scheduler.at(1)\
+             .walk(father, CharacterDirection.UP, 3.5, 2)\
+             .after(0.7)\
+             .call(mother_look_up)\
+             .after(1.5)\
+             .call(lambda: close_compartment(compartment))\
+             .after(0.3)\
+             .walk(father, CharacterDirection.DOWN, 2, 1)\
+             .after(1)\
+             .walk(father, CharacterDirection.RIGHT, 8, 4.5)\
+             .after(1)\
+             .call(mother_look_right)\
+             .call(minimap.disable)\
+             .after(1)\
+             .walk(mother, CharacterDirection.RIGHT, 6, 3.5)\
+             .after(2.5)\
+             .walk(father, CharacterDirection.DOWN, 2, 1)\
+             .after(1)\
+             .walk(father, CharacterDirection.RIGHT, 1.5, 1)\
+             .walk(mother, CharacterDirection.DOWN, 1, 0.5)\
+             .after(0.5)\
+             .walk(mother, CharacterDirection.RIGHT, 2.5, 1.5)\
+             .after(0.5)\
+             .toggle(father.entity)\
+             .after(1)\
+             .toggle(mother.entity)\
+             .call(minimap.enable)\
+             .after(2)\
+             .call(sky.to_night)
 
 
 def create_ingame_screen(world, scheduler):

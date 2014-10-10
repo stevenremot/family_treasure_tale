@@ -66,6 +66,14 @@ class Step:
 
         activable.toggle()
 
+    def walk(self, character, direction, distance, duration):
+        """Make entity walk at this step.
+        """
+        self.hooks.append(
+            lambda: character.walk(direction, distance, duration)
+        )
+        return self
+
     def run_hooks(self, steps):
         """Run all the hooks defined before.
 
@@ -81,7 +89,9 @@ class Step:
         step only if cond_func() is true on the moment.
         """
         step = Step(0)
-        self.hooks.append(lambda: (step.run_hooks(self.chained_steps) if cond_func() else None))
+        self.hooks.append(
+            lambda: (step.run_hooks(self.chained_steps) if cond_func() else None)
+        )
         return step
 
     def after(self, duration):
@@ -90,6 +100,7 @@ class Step:
         step = Step(self.time + duration)
         self.chained_steps.append(step)
         return step
+
 
 class Scheduler:
     """Class in charge of register hooks and executing them at the right time.
