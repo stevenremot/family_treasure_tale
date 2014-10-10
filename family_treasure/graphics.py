@@ -88,8 +88,7 @@ class Brush(object):
             self.screen.pygame_screen.blit(
                 s,
                 (pos[0] + self.x, pos[1] + self.y)
-            )
-
+            ) 
 
     def draw_text(self, text, color, font_size, font_type=None):
         """Draw a text
@@ -113,6 +112,10 @@ class Brush(object):
             self.sprite_dict[filename] = surface
 
         rect = surface.get_rect().move(self.x + offset[0], self.y + offset[1])
+        self.screen.pygame_screen.blit(surface, rect)
+
+    def blit(self, surface, rect):
+        """Do things with the pygame way"""
         self.screen.pygame_screen.blit(surface, rect)
 
     def get_translated(self, dx, dy):

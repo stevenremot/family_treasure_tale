@@ -25,7 +25,7 @@ from title_screen import create_title_screen
 from animation import AnimationSystem
 from schedule import Scheduler
 from assets import load_assets
-
+from light import LightSystem
 
 class Game:
     """Basic game launcher class
@@ -57,6 +57,8 @@ class Game:
         mouse_system = MouseSystem(world)
         animation_system = AnimationSystem(world)
 
+        light_system = LightSystem(world)
+
         clock.tick(self.fps)
 
         while 1:
@@ -77,6 +79,7 @@ class Game:
             scheduler.update(time_elapsed)
             animation_system.update(time_elapsed)
             tile_system.update_tile_positions()
+            light_system.update()
             graphics_system.draw_entities()
 
             pygame.display.set_caption(

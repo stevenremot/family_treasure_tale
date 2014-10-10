@@ -22,8 +22,10 @@ day_color = (12, 32, 139, 0)
 night_color = (12, 32, 139, 128)
 duration = 15
 
-
 class Sky:
+    pass
+
+class SkyHelper:
     """Helper class for sky transitions.
     """
     def __init__(self, entity):
@@ -49,7 +51,8 @@ def create_sky_effect(world, pos, size, layer):
             lambda brush, color: brush.draw_rect(color, (0, 0), size),
             layer
         ),
-        Animable()
+        Animable(),
+        Sky()
     )
 
-    return Sky(sky)
+    return SkyHelper(sky)

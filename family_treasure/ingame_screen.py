@@ -27,7 +27,7 @@ from ecs import Activable
 from character import CharacterDirection, create_character
 from game_screen import transition
 from gameover_screen import create_gameover_screen
-
+from light import Lightable
 
 def create_building(world, scenario_state):
     up_door = world.entity()
@@ -181,7 +181,13 @@ def create_burglar(world, scenario_state):
         CharacterDirection.LEFT,
         2.5
     )
-
+    burglar.entity.add_component(
+        Lightable(
+            Positionable(-10, 10, 60, 60),
+            (255, 0, 0, 128)
+        )
+    )
+    
     scenario_state["burglar"] = burglar
 
 
