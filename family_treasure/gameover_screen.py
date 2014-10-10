@@ -14,10 +14,12 @@
 # along with The Family's treasure tale.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-from text import create_text_entity
+from text import create_text_entity, center_horizontally
 from mouse import Clickable, Button
 from game_screen import transition as gamescreen_transition
 from title_screen import create_title_screen
+from data import filepath
+
 
 def create_gameover_screen(world, scheduler):
     gameover = create_text_entity(
@@ -29,7 +31,7 @@ def create_gameover_screen(world, scheduler):
         250,
         0,
         filepath("bilbo/Bilbo-Regular.otf")
-)
+    )
     gameover.add_component(
         Clickable(
             lambda: gamescreen_transition(world, scheduler, create_title_screen),

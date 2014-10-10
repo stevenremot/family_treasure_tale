@@ -25,6 +25,8 @@ from tile import TilePositionable
 from graphics import Renderable
 from ecs import Activable
 from character import CharacterDirection, create_character
+from game_screen import transition
+from gameover_screen import create_gameover_screen
 
 
 def create_building(world, scenario_state):
@@ -161,7 +163,7 @@ def create_burglar(world, scenario_state):
     scenario_state["burglar"] = burglar
 
 
-def setup_animation(scheduler, scenario_state):
+def setup_animation(world, scheduler, scenario_state):
     father = scenario_state["father"]
     mother = scenario_state["mother"]
     burglar = scenario_state["burglar"]
@@ -266,7 +268,7 @@ def setup_animation(scheduler, scenario_state):
         .walk(burglar, CharacterDirection.UP, 3, 1.5)
 
     # Burgler searches randomly
-    introduction_end\
+    burglar_find_step = introduction_end\
         .after(3)\
         .walk(burglar, CharacterDirection.RIGHT, 3, 1.5)\
         .after(1.5)\
@@ -284,7 +286,17 @@ def setup_animation(scheduler, scenario_state):
         .after(0.5)\
         .walk(burglar, CharacterDirection.UP, 3, 1.5)\
         .after(1.5)\
-        .walk(burglar, CharacterDirection.RIGHT, 3, 1.5)
+        .walk(burglar, CharacterDirection.RIGHT, 3, 1.5)\
+        .after(2)
+
+    burglar_find_step\
+        .walk(burglar, CharacterDirection.LEFT, 3, 0.7)\
+        .after(0.7)\
+        .call(look(burglar, CharacterDirection.UP))\
+        .after(0.2)\
+        .set_image(compartment, "compartment_open_chest.png")\
+        .after(0.5)\
+        .call(lambda: transition(world, scheduler, create_gameover_screen))
 
 
 def create_ingame_screen(world, scheduler):
@@ -308,4 +320,4 @@ def create_ingame_screen(world, scheduler):
 
     scenario_state["sky"] = sky
 
-    setup_animation(scheduler, scenario_state)
+    setup_animation(world, scheduler, scenario_state)

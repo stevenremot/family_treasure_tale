@@ -16,6 +16,7 @@
 
 import pygame
 
+
 class Positionable(object):
     """Component for entities that have a position at screen.
     """
@@ -73,4 +74,4 @@ class Positionable(object):
         return self.rect.collidepoint(pos)
 
     def center_horizontally(self, width = 800):
-        self.x = width/2 - self.width/2 
+        self.x = width/2 - self.width/2
