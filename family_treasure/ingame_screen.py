@@ -265,6 +265,26 @@ def setup_animation(scheduler, scenario_state):
         .after(0.5)\
         .walk(burglar, CharacterDirection.UP, 3, 1.5)
 
+    # Burgler searches randomly
+    introduction_end\
+        .after(3)\
+        .walk(burglar, CharacterDirection.RIGHT, 3, 1.5)\
+        .after(1.5)\
+        .walk(burglar, CharacterDirection.UP, 2, 1)\
+        .after(1.5)\
+        .walk(burglar, CharacterDirection.LEFT, 4, 2)\
+        .after(2)\
+        .walk(burglar, CharacterDirection.DOWN, 5, 2.5)\
+        .after(2.5)\
+        .walk(burglar, CharacterDirection.LEFT, 5, 2.5)\
+        .after(2.5)\
+        .walk(burglar, CharacterDirection.UP, 2, 1)\
+        .after(1)\
+        .call(look(burglar, CharacterDirection.RIGHT))\
+        .after(0.5)\
+        .walk(burglar, CharacterDirection.UP, 3, 1.5)\
+        .after(1.5)\
+        .walk(burglar, CharacterDirection.RIGHT, 3, 1.5)
 
 
 def create_ingame_screen(world, scheduler):
