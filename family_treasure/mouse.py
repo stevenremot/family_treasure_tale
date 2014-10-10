@@ -14,6 +14,7 @@
 # along with The Family's treasure tale.  If not, see
 # <http://www.gnu.org/licenses/>.
 
+import pygame
 from geometry import Positionable
 from ecs import Activable
 
@@ -80,3 +81,8 @@ def to_mouse_button(b):
         return Button.LEFT
     elif b == 3:
         return Button.RIGHT
+
+def add_cursor_change_hoverable(entity):
+    hover_func = lambda: pygame.mouse.set_cursor(*pygame.cursors.broken_x)
+    unhover_func = lambda: pygame.mouse.set_cursor(*pygame.cursors.tri_left)
+    entity.add_component(Hoverable(hover_func, unhover_func))

@@ -14,9 +14,11 @@
 # along with The Family's treasure tale.  If not, see
 # <http://www.gnu.org/licenses/>.
 
+import pygame
 
 def transition(world, scheduler, create_gamescreen_func):
     """ Remove all the world's entities and setup a new gamescreen"""
     world.clear()
     scheduler.reset()
     create_gamescreen_func(world, scheduler)
+    pygame.mouse.set_cursor(*pygame.cursors.tri_left)
