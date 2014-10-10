@@ -33,7 +33,7 @@ def create_building(world, scenario_state):
     up_door.add_components(
         Positionable(0, 0, 50, 100),
         Renderable(
-            lambda brush: brush.draw_image("door2.png"),
+            lambda brush: brush.draw_image("door2_t.png"),
             3
         ),
         TilePositionable("wall", (8, 1), 3),
@@ -77,7 +77,7 @@ def create_building(world, scenario_state):
     window.add_components(
         Positionable(0, 0, 100, 100),
         Renderable(
-            lambda brush: brush.draw_image("window.png"),
+            lambda brush: brush.draw_image("window_t.png"),
             1
         ),
         TilePositionable("wall", (7, 1), 1),

@@ -252,3 +252,28 @@ class GraphicsSystem(object):
                 sprite_size,
                 sprites_per_row
             )
+
+    def load_four_orientations(self, filename):
+        """ Create entries in sprite_dict corresponding to the four
+        orientations of the input image.
+        The image is supposed to be some object that is bound
+        to the walls (door, window, etc) and correspond to the
+        top wall version of the sprite.
+        Four pygame.Surface are created and labelled:
+        filename_t.png, filename_b.png, filename_l.png, filename_r.png
+        """
+        partition = filename.partition('.')
+        base_name = partition[0]
+        extension = partition[1] + partition[2]
+
+        top_surface = pygame.image.load(data.filepath(filename)).convert_alpha()
+        self.sprite_dict[base_name + "_t" + extension] = top_surface
+
+        left_surface = pygame.transform.rotate(top_surface, 90)
+        self.sprite_dict[base_name + "_l" + extension] = left_surface
+
+        bottom_surface = pygame.transform.rotate(left_surface, 90)
+        self.sprite_dict[base_name + "_b" + extension] = bottom_surface
+
+        right_surface = pygame.transform.rotate(bottom_surface, 90)
+        self.sprite_dict[base_name + "_r" + extension] = right_surface

@@ -24,6 +24,7 @@ from mouse import MouseSystem, to_mouse_button
 from title_screen import create_title_screen
 from animation import AnimationSystem
 from schedule import Scheduler
+from assets import load_assets
 
 
 class Game:
@@ -49,9 +50,7 @@ class Game:
         create_title_screen(world, scheduler)
 
         graphics_system = GraphicsSystem(world, screen)
-        charsets = {"boy.png": (30,60),"burglar.png": (30,60), "girl.png": (30,60), "boy_chest.png": (40,60)}
-        for c in charsets:
-            graphics_system.load_charset(c, charsets[c])
+        load_assets(graphics_system)
 
         tile_system = TileSystem(world, 5)
 
