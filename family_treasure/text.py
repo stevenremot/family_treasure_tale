@@ -57,10 +57,11 @@ def create_hoverable_text_entity(
     """
     entity = create_text_entity(
         world, text, color1, font_size, x, y, layer, font_type)
+
     entity.add_component(
         Hoverable(
-            lambda: entity.get_component(Colorable).set_color(color2),
-            lambda: entity.get_component(Colorable).set_color(color1)
+            lambda: cursor_hover_func(entity, color2, pygame.cursors.broken_x),
+            lambda: cursor_hover_func(entity, color1, pygame.cursors.tri_left)
         )
     )
     return entity
@@ -78,3 +79,7 @@ def get_text_positionable(text, font_size, x=0, y=0, font_type=None):
 
 def center_horizontally(entity):
     entity.get_component(Positionable).center_horizontally()
+
+def cursor_hover_func(entity, color, cursor):
+        entity.get_component(Colorable).set_color(color)
+        pygame.mouse.set_cursor(*cursor)
