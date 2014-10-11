@@ -32,14 +32,7 @@ METADATA = {
             'Intended Audience :: Information Technology',
             'License :: OSI Approved :: GPL License',
             'Operating System :: OS Independent',
-            # 'Programming Language :: Python :: 2',
-            # 'Programming Language :: Python :: 2.5',
-            # 'Programming Language :: Python :: 2.6',
             'Programming Language :: Python :: 2.7',
-            # 'Programming Language :: Python :: 3',
-            # 'Programming Language :: Python :: 3.0',
-            # 'Programming Language :: Python :: 3.1',
-            # 'Programming Language :: Python :: 3.2',
             'Topic :: Software Development :: Libraries :: pygame',
             'Topic :: Games/Entertainment :: Puzzle',
     ],
@@ -123,23 +116,19 @@ _DATA_DIR = os.path.join('data')
 data = []
 add_files(data,os.walk(_DATA_DIR))
 
-
-
-
 #data_dirs = [os.path.join(f2.replace(_DATA_DIR, 'data'), '*') for f2 in data]
 data_dirs = [os.path.join(f2.replace(_DATA_DIR, 'data')) for f2 in data]
 PACKAGEDATA['package_data'] = {'family_treasure': data_dirs}
 
-
-
-
-
-data.extend(glob.glob('*'))
-#data.append('MANIFEST.in')
+data.extend(glob.glob('*.png'))
+data.extend(glob.glob('*.txt'))
+data.extend(glob.glob('*.md'))
+data.append('MANIFEST.in')
 # define what is our source
 src = []
 add_files(src,os.walk('family_treasure'))
 src.extend(glob.glob('*.py'))
+src.extend(glob.glob('*.pyw'))
 
 
 
