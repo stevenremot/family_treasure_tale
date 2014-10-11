@@ -26,6 +26,9 @@ class Screen(object):
     """
 
     def __init__(self, size):
+        pygame.display.set_icon(
+            pygame.image.load(data.filepath("ftt_icon.png"))
+        )
         self.pygame_screen = pygame.display.set_mode(size)
 
     def fill(self, color):
