@@ -18,8 +18,22 @@ from random import random
 
 from tile import TilePositionable
 from graphics import Renderable, Colorable
+from ecs import Activable
 from light import Lightable
 
+class VanishAnimation:
+    """An animation that desactivate an entity after a given duration
+    """
+    def __init__(self, duration):
+        self.remaining_duration = float(duration)
+
+    def update(self, entity, elapsed_time):
+        self.remaining_duration -= elapsed_time
+
+        if self.remaining_duration < 1e-6:
+            entity.get_component(Activable).toggle()
+        
+        return self.remaining_duration > 1e-6
 
 class TileMoveAnimation:
     """An animation that applies a certain tile translation to an entity in a

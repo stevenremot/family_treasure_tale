@@ -289,11 +289,26 @@ def create_burglar(world, scenario_state):
 
     scenario_state["burglar"] = burglar
 
+def create_bubble(world, scenario_state):
+    bubble = world.entity()
+    bubble.add_components(
+        Positionable(0, 0, 70, 70),
+        Renderable(lambda brush: None, 20),
+        TilePositionable("ground", (0, 0), 20),
+        Activable(),
+        Animable()
+    )
+    bubble.get_component(Activable).toggle()
+
+    scenario_state["bubble"] = bubble
+
 
 def setup_animation(world, scheduler, end_game, scenario_state):
     father = scenario_state["father"]
     mother = scenario_state["mother"]
     burglar = scenario_state["burglar"]
+
+    bubble = scenario_state["bubble"]
 
     compartment = scenario_state["compartment"]
     window = scenario_state["window"]
@@ -341,6 +356,8 @@ def setup_animation(world, scheduler, end_game, scenario_state):
     # Introduction
     introduction_end = scheduler\
         .at(1)\
+        .bubble(father, bubble, "bubble_chest.png", 1)\
+        .after(1)\
         .walk(father, CharacterDirection.UP, 3.5, 2)\
         .after(0.7)\
         .call(look(mother, CharacterDirection.UP))\
@@ -495,6 +512,7 @@ def create_ingame_screen(world, scheduler, end_game):
     create_father(world, scenario_state)
     create_mother(world, scenario_state)
     create_burglar(world, scenario_state)
+    create_bubble(world, scenario_state)
 
     create_building(world, scenario_state)
 

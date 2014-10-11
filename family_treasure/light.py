@@ -54,6 +54,7 @@ class LightSystem:
                 pygame.SRCALPHA
             )
             light_surface.fill(sky_color)
+            #light_surface.set_clip(100, 100, 500, 400)
 
             light_entities = self.world.get_entities([Positionable, Lightable])
             # First pass, outer lights
