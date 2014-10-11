@@ -20,7 +20,7 @@ TODO = open('TODO.txt').read()
 
 METADATA = {
     'name':APP_NAME,
-    'version':          '1.0.0',
+    'version':          '1.1.0',
     'license':          'GPL v3',
     'description':      'Protect the family\'s treasure hidden in the room.',
     'author':           'Steven Rémot, Alexandre Kazmierowski',
