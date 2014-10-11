@@ -476,7 +476,7 @@ def setup_animation(world, scheduler, end_game, scenario_state):
         .when(lambda: not scenario_state["bookshelf_moved"])\
         .set_image(compartment, "compartment_open_chest.png")\
         .after(0.5)\
-        .bubble(burglar, bubble, "bubble_smile.png", 1)\
+        .bubble(burglar, bubble, "bubble_smile_money.png", 1)\
         .after(1)\
         .call(lambda: transition(
             world,
@@ -491,11 +491,13 @@ def setup_animation(world, scheduler, end_game, scenario_state):
         .after(1)\
         .call(scenario_state["bookshelf_move_right"])\
         .after(1.5)\
+        .call(look(burglar, CharacterDirection.UP))\
+        .after(0.1)\
         .bubble(burglar, bubble, "bubble_exclamation.png", 1)\
         .after(1)\
         .set_image(compartment, "compartment_open_chest.png")\
         .after(0.5)\
-        .bubble(burglar, bubble, "bubble_smile.png", 1)\
+        .bubble(burglar, bubble, "bubble_smile_money.png", 1)\
         .after(1)\
         .call(lambda: transition(
             world,
@@ -508,6 +510,10 @@ def setup_animation(world, scheduler, end_game, scenario_state):
         .when(lambda: scenario_state["bookshelf_moved"] and scenario_state["fireplace_unlit"])\
         .walk(burglar, CharacterDirection.RIGHT, 3, 1.5)\
         .after(1.5)\
+        .call(look(burglar, CharacterDirection.UP))\
+        .after(0.1)\
+        .bubble(burglar, bubble, "bubble_cry.png", 1)\
+        .after(1)\
         .walk(burglar, CharacterDirection.UP, 1, 0.5)\
         .after(0.5)\
         .toggle(burglar.entity)\
