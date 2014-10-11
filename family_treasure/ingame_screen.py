@@ -425,7 +425,10 @@ def setup_animation(world, scheduler, end_game, scenario_state):
         .call(look(burglar, CharacterDirection.DOWN))\
         .toggle(burglar.entity)\
         .after(0.5)\
-        .walk(burglar, CharacterDirection.DOWN, 3, 1.5)
+        .walk(burglar, CharacterDirection.DOWN, 3, 1.5)\
+        .after(1.5)\
+        .bubble(burglar, bubble, "bubble_blind.png", 1)\
+    
 
     introduction_end\
         .after(0.8)\
@@ -509,8 +512,6 @@ def setup_animation(world, scheduler, end_game, scenario_state):
         .when(lambda: scenario_state["bookshelf_moved"] and scenario_state["fireplace_unlit"])\
         .walk(burglar, CharacterDirection.RIGHT, 3, 1.5)\
         .after(1.5)\
-        .bubble(burglar, bubble, "bubble_blind.png", 1)\
-        .after(1)\
         .call(look(burglar, CharacterDirection.UP))\
         .after(0.1)\
         .bubble(burglar, bubble, "bubble_cry.png", 1)\
