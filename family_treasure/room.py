@@ -22,6 +22,7 @@ from mouse import Clickable, Button, add_cursor_change_hoverable
 
 def create_room(
         world,
+        sound_system,
         outer_positionable=Positionable(0, 50, 600, 500),
         inner_positionable=Positionable(100, 100, 500, 400),
         outer_resolution=(50, 50),
@@ -169,6 +170,7 @@ def create_room(
                 )
             )
             stool_toggled[0] = not stool_toggled[0]
+            sound_system.play("furniture")
 
     stool = world.entity()
     stool.add_components(

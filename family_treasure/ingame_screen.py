@@ -47,7 +47,7 @@ from mouse import Clickable, Button, add_cursor_change_hoverable
 from sound import SoundSystem
 
 
-def create_building(world, scenario_state):
+def create_building(world, scenario_state, sound_system):
     up_door = world.entity()
     up_door.add_components(
         Positionable(0, 0, 50, 100),
@@ -127,6 +127,7 @@ def create_building(world, scenario_state):
             (0, 0) if down_window_toggled[0] else (-24, 0)
         )
         down_window_toggled[0] = not down_window_toggled[0]
+        sound_system.play("window")
 
     down_window = world.entity()
     down_window.add_components(
@@ -182,6 +183,7 @@ def create_building(world, scenario_state):
                     )
                     scenario_state["bookshelf_moved"] =\
                         not scenario_state["bookshelf_moved"]
+                    sound_system.play("furniture")
 
                 return move
 
@@ -389,6 +391,7 @@ def setup_animation(world, scheduler, end_game, scenario_state, sound_system):
         .set_image(compartment, "compartment_open_chest.png")\
         .call(father_release_chest)\
         .after(0.3)\
+        .call(lambda: sound_system.play("window"))\
         .set_image(compartment, "compartment.png")\
         .after(0.3)\
         .walk(father, CharacterDirection.DOWN, 2, 1)\
@@ -434,11 +437,10 @@ def setup_animation(world, scheduler, end_game, scenario_state, sound_system):
     introduction_end\
         .when(scenario_state["has_window"])\
         .set_image(window, "window_semiopen.png")\
-        .after(0.2)\
-        .toggle_light(fireplace, False)\
-        .set_image(fireplace, "fireplace_down.png")\
-        .call(fireplace_unlit)\
-        .after(0.3)\
+        .call(lambda: sound_system.play("window"))\
+        .after(0.1)\
+        .call(lambda: sound_system.play("wind"))\
+        .after(0.4)\
         .set_image(window, "window_open.png")\
         .after(0.5)\
         .call(set_pos(burglar.entity, (6, 1)))\
@@ -446,7 +448,11 @@ def setup_animation(world, scheduler, end_game, scenario_state, sound_system):
         .toggle(burglar.entity)\
         .after(0.5)\
         .walk(burglar, CharacterDirection.DOWN, 3, 1.5)\
-        .after(1.5)\
+        .after(0.5)\
+        .toggle_light(fireplace, False)\
+        .set_image(fireplace, "fireplace_down.png")\
+        .call(fireplace_unlit)\
+        .after(1)\
         .bubble(burglar, bubble, "bubble_blind.png", 1)\
         .call(pop)
 
@@ -498,6 +504,7 @@ def setup_animation(world, scheduler, end_game, scenario_state, sound_system):
 
     burglar_steal_step\
         .when(lambda: not scenario_state["bookshelf_moved"])\
+        .call(lambda: sound_system.play("window"))\
         .set_image(compartment, "compartment_open_chest.png")\
         .after(0.5)\
         .bubble(burglar, bubble, "bubble_smile_money.png", 1)\
@@ -522,6 +529,7 @@ def setup_animation(world, scheduler, end_game, scenario_state, sound_system):
         .bubble(burglar, bubble, "bubble_exclamation.png", 1)\
         .call(pop)\
         .after(1)\
+        .call(lambda: sound_system.play("window"))\
         .set_image(compartment, "compartment_open_chest.png")\
         .after(0.5)\
         .bubble(burglar, bubble, "bubble_smile_money.png", 1)\
@@ -566,7 +574,7 @@ def create_ingame_screen(world, scheduler, end_game):
         }
     )
 
-    create_room(world)
+    create_room(world, sound_system)
     scenario_state = {}
 
     create_compartment(world, scenario_state)
@@ -575,7 +583,7 @@ def create_ingame_screen(world, scheduler, end_game):
     create_burglar(world, scenario_state)
     create_bubble(world, scenario_state)
 
-    create_building(world, scenario_state)
+    create_building(world, scenario_state, sound_system)
 
     sky = create_sky_effect(
         world,
