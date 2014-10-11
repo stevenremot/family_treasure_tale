@@ -270,13 +270,19 @@
   Make the spec file :
 
   #+BEGIN_SRC sh
-  pyi-makespec -n family_treasure -r -F data run_game.py
+  pyi-makespec -n family_treasure -F run_game.py
   #+END_SRC
+
+  You should also add this line :
+
+  #+BEGIN_SRC python
+  Tree("data", prefix="data"),
+  #+END_SRC
+
+  In the EXE function call.
 
   Compile :
 
   #+BEGIN_SRC sh
   pyinstaller family_treasure.spec
   #+END_SRC
-
-  #+RESULTS:
