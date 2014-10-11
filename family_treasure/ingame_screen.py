@@ -163,8 +163,12 @@ def create_building(world, scenario_state):
         if i == 2:
             def bookshelf_move(animable, scenario_state, direction, duration):
                 def move():
-                    animable.add_animation(TileMoveAnimation(direction, duration))
-                    scenario_state["bookshelf_moved"] = not scenario_state["bookshelf_moved"]
+                    animable.add_animation(
+                        TileMoveAnimation(direction, duration)
+                    )
+                    scenario_state["bookshelf_moved"] =\
+                        not scenario_state["bookshelf_moved"]
+
                 return move
 
             animable = Animable()
@@ -205,7 +209,8 @@ def create_building(world, scenario_state):
         TilePositionable("ground", (8, 1), 1),
         Lightable(
             Positionable(-130, 60, 360, 120),
-            (255, 0, 0, 128)
+            Positionable(-230, 30, 560, 200),
+            (205, 155, 29, 64)
         )
     )
 
@@ -266,10 +271,11 @@ def create_burglar(world, scenario_state):
     burglar.entity.add_component(
         Lightable(
             Positionable(-20, 10, 60, 60),
-            (255, 0, 0, 128)
+            Positionable(-70, -40, 160, 160),
+            (205, 155, 29, 64)
         )
     )
-    
+
     scenario_state["burglar"] = burglar
 
 
