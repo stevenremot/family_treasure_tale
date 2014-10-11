@@ -67,4 +67,9 @@ Upload to the Python Package Index with:
 
 - Window sound from Iwan "qubodup" [http://qubodup.net](http;//qubodup.net)
 - Wind sound from Lanea Zimmerman
-- THe other sounds belong to the public domain
+- The other sounds belong to the public domain
+
+## Font attribution
+
+Font used in the menus: Bilbo by Robert E. Leuschke. This font is licensed with SIL
+Open Font License. [http://openfontlibrary.org/en/font/bilbo](http://openfontlibrary.org/en/font/bilbo)
