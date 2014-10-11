@@ -163,16 +163,17 @@ class FlickerAnimation:
     """An animation to make a light component flicker.
     """
 
-    def __init__(self, fps):
+    def __init__(self, fps, amplitude):
         self.elapsed_time = 0.0
         self.step = 1.0 / float(fps)
-
+        self.amplitude = amplitude
+        
     def update(self, entity, elapsed_time):
         self.elapsed_time += elapsed_time
 
         if self.elapsed_time >= self.step:
             lightable = entity.get_component(Lightable)
-            lightable.flicker = random() * 0.25
+            lightable.flicker = random() * self.amplitude
             self.elapsed_time %= self.step
 
         return True

@@ -201,7 +201,7 @@ def create_building(world, scenario_state):
 
     fireplace_anim = Animable()
     fireplace_anim.add_animation(
-        FlickerAnimation(6)
+        FlickerAnimation(6, 0.3)
     )
 
     fireplace = world.entity()
@@ -276,7 +276,7 @@ def create_burglar(world, scenario_state):
     )
 
     burglar.entity.get_component(Animable).add_animation(
-        FlickerAnimation(6)
+        FlickerAnimation(6, 0.75)
     )
 
     burglar.entity.add_component(
@@ -357,7 +357,11 @@ def setup_animation(world, scheduler, end_game, scenario_state):
     introduction_end = scheduler\
         .at(1)\
         .bubble(father, bubble, "bubble_chest.png", 1)\
-        .after(1)\
+        .after(2)\
+        .bubble(mother, bubble, "bubble_smile.png", 1)\
+        .after(2)\
+        .bubble(father, bubble, "bubble_idea.png", 1)\
+        .after(1.5)\
         .walk(father, CharacterDirection.UP, 3.5, 2)\
         .after(0.7)\
         .call(look(mother, CharacterDirection.UP))\
@@ -454,19 +458,26 @@ def setup_animation(world, scheduler, end_game, scenario_state):
         .walk(burglar, CharacterDirection.UP, 3, 1.5)\
         .after(1.5)\
         .walk(burglar, CharacterDirection.RIGHT, 3, 1.5)\
-        .after(2)
+        .after(2)\
+        .bubble(burglar, bubble, "bubble_question.png", 1)\
+        .after(1)\
 
     burglar_steal_step = burglar_find_step\
         .when(lambda: not scenario_state["bookshelf_moved"] or not scenario_state["fireplace_unlit"])\
         .walk(burglar, CharacterDirection.LEFT, 3, 0.7)\
         .after(0.7)\
         .call(look(burglar, CharacterDirection.UP))\
+        .after(0.1)\
+        .bubble(burglar, bubble, "bubble_exclamation.png", 1)\
+        .after(1)\
         .after(0.2)\
 
     burglar_steal_step\
         .when(lambda: not scenario_state["bookshelf_moved"])\
         .set_image(compartment, "compartment_open_chest.png")\
         .after(0.5)\
+        .bubble(burglar, bubble, "bubble_smile.png", 1)\
+        .after(1)\
         .call(lambda: transition(
             world,
             scheduler,
@@ -476,10 +487,16 @@ def setup_animation(world, scheduler, end_game, scenario_state):
 
     burglar_steal_step\
         .when(lambda: scenario_state["bookshelf_moved"] and not scenario_state["fireplace_unlit"])\
+        .bubble(burglar, bubble, "bubble_question.png", 1)\
+        .after(1)\
         .call(scenario_state["bookshelf_move_right"])\
         .after(1.5)\
+        .bubble(burglar, bubble, "bubble_exclamation.png", 1)\
+        .after(1)\
         .set_image(compartment, "compartment_open_chest.png")\
         .after(0.5)\
+        .bubble(burglar, bubble, "bubble_smile.png", 1)\
+        .after(1)\
         .call(lambda: transition(
             world,
             scheduler,
