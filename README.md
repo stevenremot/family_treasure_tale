@@ -59,3 +59,9 @@ Upload to the Python Package Index with:
    python setup.py register
    python setup.py sdist upload
 ```
+
+## Sounds attributions
+
+- Window sound from Iwan "qubodup" [http://qubodup.net](http;//qubodup.net)
+- Wind sound from Lanea Zimmerman
+- THe other sounds belong to the public domain
