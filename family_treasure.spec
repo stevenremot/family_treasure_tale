@@ -1,6 +1,6 @@
 # -*- mode: python -*-
 a = Analysis(['run_game.py'],
-             pathex=['c:\\Users\\Elodie\\Documents\\Code et tout et tout\\family_treasure_tale'],
+             pathex=['c:\\<...>\\family_treasure_tale'],
              hiddenimports=[],
              hookspath=None,
              runtime_hooks=None)
