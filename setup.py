@@ -116,33 +116,29 @@ _DATA_DIR = os.path.join('data')
 data = []
 add_files(data,os.walk(_DATA_DIR))
 
-
-
-
 #data_dirs = [os.path.join(f2.replace(_DATA_DIR, 'data'), '*') for f2 in data]
 data_dirs = [os.path.join(f2.replace(_DATA_DIR, 'data')) for f2 in data]
 PACKAGEDATA['package_data'] = {'family_treasure': data_dirs}
 
-
-
-
-
-data.extend(glob.glob('*'))
-#data.append('MANIFEST.in')
+data.extend(glob.glob('*.png'))
+data.extend(glob.glob('*.txt'))
+data.extend(glob.glob('*.md'))
+data.append('MANIFEST.in')
 # define what is our source
 src = []
 add_files(src,os.walk('family_treasure'))
 src.extend(glob.glob('*.py'))
+src.extend(glob.glob('*.pyw'))
 
 
 
 
 # build the sdist target
 if cmd not in "py2exe py2app cx_freeze".split():
-    # f = open("MANIFEST.in","w")
-    # for l in data: f.write("include "+l+"\n")
-    # for l in src: f.write("include "+l+"\n")
-    # f.close()
+    f = open("MANIFEST.in","w")
+    for l in data: f.write("include "+l+"\n")
+    for l in src: f.write("include "+l+"\n")
+    f.close()
 
     setup(**PACKAGEDATA)
 

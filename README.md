@@ -9,7 +9,7 @@ Team: The Family's treasure tale
 Members: Alexandre Kazmierowski, Steven Rémot
 
 License: GPL v3, see LICENSE.txt
-n
+
 ## Running the game
 
 On Windows or Mac OS X, locate the "run_game.pyw" file and double-click it.

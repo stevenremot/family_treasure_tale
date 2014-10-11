@@ -33,19 +33,13 @@ include data/corner_tile_br.png
 include data/bilbo/BilboSwashCaps-Regular.otf
 include data/bilbo/Bilbo-Regular.otf
 include data/bilbo/Bilbo SIL OFL Font License 1.1.txt
-include Makefile
+include TODO.txt
 include LICENSE.txt
-include configure
-include family_treasure
-include data
-include scripts
-include MANIFEST
+include android.txt
+include CHANGES.txt
+include BUGS.txt
 include README.md
-include setup.py
-include run_game.py
-include family_treasure.spec
 include MANIFEST.in
-include run_game.pyw
 include family_treasure/minimap.py
 include family_treasure/ingame_screen.py
 include family_treasure/__init__.py
@@ -73,3 +67,4 @@ include family_treasure/sky.py
 include pyweek_upload.py
 include setup.py
 include run_game.py
+include run_game.pyw
