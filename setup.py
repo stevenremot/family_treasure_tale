@@ -120,7 +120,6 @@ add_files(data,os.walk(_DATA_DIR))
 data_dirs = [os.path.join(f2.replace(_DATA_DIR, 'data')) for f2 in data]
 PACKAGEDATA['package_data'] = {'family_treasure': data_dirs}
 
-data.extend(glob.glob('*.png'))
 data.extend(glob.glob('*.txt'))
 data.extend(glob.glob('*.md'))
 data.append('MANIFEST.in')

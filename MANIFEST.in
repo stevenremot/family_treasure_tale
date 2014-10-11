@@ -25,12 +25,19 @@ include data/bubble_chest.png
 include data/table.png
 include data/wall_tile.png
 include data/bubble_idea.png
+include data/ftt_icon.png
 include data/README.txt
 include data/bubble_exclamation.png
 include data/compartment.png
 include data/stool.png
 include data/fireplace.png
 include data/corner_tile_br.png
+include data/sound/furniture-short.ogg
+include data/sound/window.ogg
+include data/sound/cash-register.ogg
+include data/sound/furniture.ogg
+include data/sound/pop.ogg
+include data/sound/wind.ogg
 include data/bilbo/BilboSwashCaps-Regular.otf
 include data/bilbo/Bilbo-Regular.otf
 include data/bilbo/Bilbo SIL OFL Font License 1.1.txt
@@ -48,11 +55,13 @@ include family_treasure/building.py
 include family_treasure/text.py
 include family_treasure/mouse.py
 include family_treasure/character.py
+include family_treasure/sound.py
 include family_treasure/game_screen.py
 include family_treasure/geometry.py
 include family_treasure/tile.py
 include family_treasure/assets.py
 include family_treasure/graphics.py
+include family_treasure/fear.py
 include family_treasure/title_screen.py
 include family_treasure/room.py
 include family_treasure/animation.py
@@ -61,6 +70,7 @@ include family_treasure/gameover_screen.py
 include family_treasure/data.py
 include family_treasure/schedule.py
 include family_treasure/light.py
+include family_treasure/sound_flymake.py
 include family_treasure/happyend_screen.py
 include family_treasure/game.py
 include family_treasure/ecs.py
