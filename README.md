@@ -44,8 +44,11 @@ Creating a source distribution with:
 
 You can generate a Windows standalone executable using
 [Pyinstaller](http://www.pyinstaller.org). Change the path in
-`family_treasure.spec`, or follow the instructions in the developer
-guide to create a new one.
+`family_treasure.spec`. Simply run ;
+
+```sh
+    pyinstaller family_treasure.spec
+```
 
 Upload files to PyWeek with:
 
@@ -59,3 +62,9 @@ Upload to the Python Package Index with:
    python setup.py register
    python setup.py sdist upload
 ```
+
+## Sounds attributions
+
+- Window sound from Iwan "qubodup" [http://qubodup.net](http;//qubodup.net)
+- Wind sound from Lanea Zimmerman
+- THe other sounds belong to the public domain
