@@ -20,6 +20,7 @@ from tile import TilePositionable
 from graphics import Renderable, Colorable
 from ecs import Activable
 from light import Lightable
+from fear import Frightening
 
 class VanishAnimation:
     """An animation that desactivate an entity after a given duration
@@ -54,6 +55,14 @@ class TileMoveAnimation:
         positionable.y += self.movement_per_second[1] * min_time
 
         self.remaining_duration -= elapsed_time
+        
+        if entity.has_component(Frightening):
+            frightening = entity.get_component(Frightening)
+            if not frightening.moving:
+                frightening.moving = True
+            if self.remaining_duration < 1e-6:
+                frightening.moving = False
+
         return self.remaining_duration > 1e-6
 
 
