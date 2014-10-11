@@ -259,3 +259,24 @@
   #+BEGIN_SRC python
   scheduler.at(1).animate(entity, TileMoveANimation((1, 2), 0.5))
   #+END_SRC
+* Building pyinstaller spec
+
+  Install pyinstaller :
+
+  #+BEGIN_SRC sh
+  pip install pyinstaller
+  #+END_SRC
+
+  Make the spec file :
+
+  #+BEGIN_SRC sh
+  pyi-makespec -n family_treasure -r data run_game.py
+  #+END_SRC
+
+  Compile :
+
+  #+BEGIN_SRC sh
+  pyinstaller family_treasure.spec
+  #+END_SRC
+
+  #+RESULTS:
