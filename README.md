@@ -44,8 +44,11 @@ Creating a source distribution with:
 
 You can generate a Windows standalone executable using
 [Pyinstaller](http://www.pyinstaller.org). Change the path in
-`family_treasure.spec`, or follow the instructions in the developer
-guide to create a new one.
+`family_treasure.spec`. Simply run ;
+
+```sh
+    pyinstaller family_treasure.spec
+```
 
 Upload files to PyWeek with:
 
