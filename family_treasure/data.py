@@ -9,6 +9,7 @@ pyglet.resource search path.
 '''
 
 import os
+import sys
 
 data_py = os.path.abspath(os.path.dirname(__file__))
 data_dir = os.path.normpath(os.path.join(data_py, '..', 'data'))
@@ -16,7 +17,10 @@ data_dir = os.path.normpath(os.path.join(data_py, '..', 'data'))
 def filepath(filename):
     '''Determine the path to a file in the data directory.
     '''
-    return os.path.join(data_dir, filename)
+    if hasattr(sys, "_MEIPASS"):
+        return os.path.join(data_dir, filename)
+    else:
+        return os.path.join(data_dir, filename)
 
 def load(filename, mode='rb'):
     '''Open a file in the data directory.
