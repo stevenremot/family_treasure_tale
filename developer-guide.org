@@ -270,7 +270,7 @@
   Make the spec file :
 
   #+BEGIN_SRC sh
-  pyi-makespec -n family_treasure -r data run_game.py
+  pyi-makespec -n family_treasure -r -F data run_game.py
   #+END_SRC
 
   Compile :
