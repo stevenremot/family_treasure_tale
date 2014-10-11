@@ -202,7 +202,11 @@ def create_building(world, scenario_state):
             lambda brush: brush.draw_image("fireplace.png"),
             1
         ),
-        TilePositionable("ground", (8, 1), 1)
+        TilePositionable("ground", (8, 1), 1),
+        Lightable(
+            Positionable(-130, 60, 360, 120),
+            (255, 0, 0, 128)
+        )
     )
 
     scenario_state["fireplace"] = fireplace
@@ -351,7 +355,9 @@ def setup_animation(world, scheduler, scenario_state):
         .call(minimap.enable)\
         .after(2)\
         .call(sky.to_night)\
-        .after(5)
+        .after(1)\
+        .toggle_light(fireplace)\
+        .after(5)\
 
     # Burglar comes
     introduction_end\
@@ -371,6 +377,7 @@ def setup_animation(world, scheduler, scenario_state):
         .when(scenario_state["has_window"])\
         .set_image(window, "window_semiopen.png")\
         .after(0.2)\
+        .toggle_light(fireplace, False)\
         .set_image(fireplace, "fireplace_down.png")\
         .call(fireplace_unlit)\
         .after(0.3)\

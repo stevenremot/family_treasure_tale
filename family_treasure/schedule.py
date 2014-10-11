@@ -89,15 +89,17 @@ class Step:
 
         renderable.render_image(image)
 
-    def toggle_light(self, entity):            
-        self.hooks.append(lambda: self.execute_toggle_light(entity))
+    def toggle_light(self, entity, bool = True):
+        """ Toggle or untoggle light
+        """
+        self.hooks.append(lambda: self.execute_toggle_light(entity, bool))
         return self
 
-    def execute_toggle_light(self, entity):
+    def execute_toggle_light(self, entity, bool = True):
         lightable = entity.get_component(Lightable)
         if lightable is None:
             raise "Entity must be lightable"
-        lightable.toggle()
+        lightable.toggle(bool)
         
     def run_hooks(self, steps):
         """Run all the hooks defined before.

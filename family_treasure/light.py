@@ -32,8 +32,8 @@ class Lightable:
         self.color = color
         self.toggled = False
 
-    def toggle(self):
-        self.toggled = True
+    def toggle(self, bool = True):
+        self.toggled = bool
         
 
 class LightSystem:
