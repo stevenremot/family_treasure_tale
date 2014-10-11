@@ -53,6 +53,7 @@ class LightSystem:
                 pygame.SRCALPHA
             )
             light_surface.fill(sky_color)
+            #light_surface.set_clip(100, 100, 500, 400)
 
             for entity in self.world.get_entities([Positionable, Lightable]):
                 light = entity.get_component(Lightable)
