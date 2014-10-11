@@ -14,6 +14,19 @@
 # along with The Family's treasure tale.  If not, see
 # <http://www.gnu.org/licenses/>.
 
+########################################
+#  __________________________________  #
+# / Welcome to the land of ugliness, \ #
+# \ mooooooo~                        / #
+#  ----------------------------------  #
+#         \   ^__^                     #
+#          \  (oo)\_______             #
+#             (__)\       )\/\         #
+#                 ||----w |            #
+#                 ||     ||            #
+#                                      #
+########################################
+
 from room import create_room
 from building import Room, Building
 from minimap import create_minimap
@@ -31,6 +44,7 @@ from light import Lightable
 from happyend_screen import create_happyend_screen
 from animation import TileMoveAnimation, Animable, FlickerAnimation
 from mouse import Clickable, Button, add_cursor_change_hoverable
+from sound import SoundSystem
 
 
 def create_building(world, scenario_state):
@@ -303,7 +317,7 @@ def create_bubble(world, scenario_state):
     scenario_state["bubble"] = bubble
 
 
-def setup_animation(world, scheduler, end_game, scenario_state):
+def setup_animation(world, scheduler, end_game, scenario_state, sound_system):
     father = scenario_state["father"]
     mother = scenario_state["mother"]
     burglar = scenario_state["burglar"]
@@ -349,6 +363,9 @@ def setup_animation(world, scheduler, end_game, scenario_state):
     def fireplace_unlit():
         scenario_state["fireplace_unlit"] = True
 
+    def pop():
+        sound_system.play("bubble")
+
     burglar.entity.get_component(Activable).toggle()
     minimap.disable()
     bookshelf_disable()
@@ -357,10 +374,13 @@ def setup_animation(world, scheduler, end_game, scenario_state):
     introduction_end = scheduler\
         .at(1)\
         .bubble(father, bubble, "bubble_chest.png", 1)\
+        .call(pop)\
         .after(2)\
         .bubble(mother, bubble, "bubble_smile.png", 1)\
+        .call(pop)\
         .after(2)\
         .bubble(father, bubble, "bubble_idea.png", 1)\
+        .call(pop)\
         .after(1.5)\
         .walk(father, CharacterDirection.UP, 3.5, 2)\
         .after(0.7)\
@@ -428,7 +448,7 @@ def setup_animation(world, scheduler, end_game, scenario_state):
         .walk(burglar, CharacterDirection.DOWN, 3, 1.5)\
         .after(1.5)\
         .bubble(burglar, bubble, "bubble_blind.png", 1)\
-    
+        .call(pop)
 
     introduction_end\
         .after(0.8)\
@@ -466,12 +486,14 @@ def setup_animation(world, scheduler, end_game, scenario_state):
     burglar_steal_step = burglar_find_step\
         .when(lambda: not scenario_state["bookshelf_moved"] or not scenario_state["fireplace_unlit"])\
         .bubble(burglar, bubble, "bubble_question.png", 1)\
+        .call(pop)\
         .after(1)\
         .walk(burglar, CharacterDirection.LEFT, 3, 0.7)\
         .after(0.7)\
         .call(look(burglar, CharacterDirection.UP))\
         .after(0.1)\
         .bubble(burglar, bubble, "bubble_exclamation.png", 1)\
+        .call(pop)\
         .after(1.2)
 
     burglar_steal_step\
@@ -479,6 +501,7 @@ def setup_animation(world, scheduler, end_game, scenario_state):
         .set_image(compartment, "compartment_open_chest.png")\
         .after(0.5)\
         .bubble(burglar, bubble, "bubble_smile_money.png", 1)\
+        .call(pop)\
         .after(1)\
         .call(lambda: transition(
             world,
@@ -490,16 +513,19 @@ def setup_animation(world, scheduler, end_game, scenario_state):
     burglar_steal_step\
         .when(lambda: scenario_state["bookshelf_moved"] and not scenario_state["fireplace_unlit"])\
         .bubble(burglar, bubble, "bubble_question.png", 1)\
+        .call(pop)\
         .after(1)\
         .call(scenario_state["bookshelf_move_right"])\
         .after(1.5)\
         .call(look(burglar, CharacterDirection.UP))\
         .after(0.1)\
         .bubble(burglar, bubble, "bubble_exclamation.png", 1)\
+        .call(pop)\
         .after(1)\
         .set_image(compartment, "compartment_open_chest.png")\
         .after(0.5)\
         .bubble(burglar, bubble, "bubble_smile_money.png", 1)\
+        .call(pop)\
         .after(1)\
         .call(lambda: transition(
             world,
@@ -515,6 +541,7 @@ def setup_animation(world, scheduler, end_game, scenario_state):
         .call(look(burglar, CharacterDirection.UP))\
         .after(0.1)\
         .bubble(burglar, bubble, "bubble_cry.png", 1)\
+        .call(pop)\
         .after(1)\
         .walk(burglar, CharacterDirection.UP, 1, 0.5)\
         .after(0.5)\
@@ -530,6 +557,15 @@ def setup_animation(world, scheduler, end_game, scenario_state):
 
 def create_ingame_screen(world, scheduler, end_game):
     """ Create entities for the ingame screen """
+    sound_system = SoundSystem(
+        {
+            "furniture": "sound/furniture.ogg",
+            "bubble": "sound/pop.ogg",
+            "wind": "sound/wind.ogg",
+            "window": "sound/window.ogg"
+        }
+    )
+
     create_room(world)
     scenario_state = {}
 
@@ -550,4 +586,4 @@ def create_ingame_screen(world, scheduler, end_game):
 
     scenario_state["sky"] = sky
 
-    setup_animation(world, scheduler, end_game, scenario_state)
+    setup_animation(world, scheduler, end_game, scenario_state, sound_system)
