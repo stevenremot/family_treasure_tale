@@ -25,7 +25,7 @@ from animation import AnimationSystem
 from schedule import Scheduler
 from assets import load_assets
 from light import LightSystem
-
+from fear import FearSystem
 
 class Game:
     """Basic game launcher class
@@ -57,6 +57,8 @@ class Game:
         animation_system = AnimationSystem(world)
 
         light_system = LightSystem(world)
+        
+        fear_system = FearSystem(world)
 
         clock.tick(self.fps)
         playing = [True]
@@ -85,6 +87,7 @@ class Game:
             animation_system.update(time_elapsed)
             tile_system.update_tile_positions()
             light_system.update()
+            fear_system.update()
             graphics_system.draw_entities()
 
             pygame.display.set_caption(

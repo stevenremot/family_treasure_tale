@@ -44,6 +44,7 @@ from light import Lightable
 from happyend_screen import create_happyend_screen
 from animation import TileMoveAnimation, Animable, FlickerAnimation
 from mouse import Clickable, Button, add_cursor_change_hoverable
+from fear import Frightenable, Frightening
 from sound import SoundSystem
 
 
@@ -186,7 +187,7 @@ def create_building(world, scenario_state, sound_system):
                     sound_system.play("furniture")
 
                 return move
-
+            
             animable = Animable()
             scenario_state["bookshelf_moved"] = False
             scenario_state["bookshelf_move_left"] =\
@@ -210,9 +211,10 @@ def create_building(world, scenario_state, sound_system):
                 Clickable(
                     toggle_bookshelf(bookshelf),
                     Button.LEFT
-                )
+                ),
+                Frightening()
             )
-
+            
             add_cursor_change_hoverable(bookshelf)
 
     fireplace_anim = Animable()
@@ -278,6 +280,12 @@ def create_mother(world, scenario_state):
         CharacterDirection.LEFT,
         2.5
     )
+    def ghosts():
+        scenario_state["ghosts"] = True
+
+    mother.entity.add_component(
+        Frightenable(ghosts)
+    )
 
     scenario_state["mother"] = mother
 
@@ -334,13 +342,8 @@ def setup_animation(world, scheduler, end_game, scenario_state, sound_system):
 
     sky = scenario_state["sky"]
 
+    scenario_state["ghosts"] = False
     scenario_state["fireplace_unlit"] = False
-
-    def mother_look_up():
-        mother.direction = CharacterDirection.UP
-
-    def mother_look_right():
-        mother.direction = CharacterDirection.RIGHT
 
     def father_release_chest():
         father.animation_name = "boy"
@@ -353,6 +356,12 @@ def setup_animation(world, scheduler, end_game, scenario_state, sound_system):
     def look(character, direction):
         def setter():
             character.direction = direction
+            if character.entity.has_component(Frightenable):
+                frightenable = character.entity.get_component(Frightenable)
+                if direction is CharacterDirection.UP:
+                    frightenable.look_up = True
+                else:
+                    frightenable.look_up = False
 
         return setter
 
@@ -373,7 +382,7 @@ def setup_animation(world, scheduler, end_game, scenario_state, sound_system):
     bookshelf_disable()
 
     # Introduction
-    introduction_end = scheduler\
+    introduction_begin = scheduler\
         .at(1)\
         .bubble(father, bubble, "bubble_chest.png", 1)\
         .call(pop)\
@@ -400,6 +409,21 @@ def setup_animation(world, scheduler, end_game, scenario_state, sound_system):
         .walk(father, CharacterDirection.RIGHT, 8, 4.5)\
         .after(1)\
         .call(look(mother, CharacterDirection.RIGHT))\
+        .after(1)
+
+    #first bad end
+    first_bad_end = introduction_begin\
+        .when(lambda: scenario_state["ghosts"])\
+        .after(1)\
+        .call(lambda: transition(
+            world,
+            scheduler,
+            end_game,
+            create_gameover_screen
+        ))
+
+    introduction_end = introduction_begin\
+        .when(lambda: not scenario_state["ghosts"])\
         .after(1)\
         .walk(mother, CharacterDirection.RIGHT, 6, 3.5)\
         .after(2.5)\
@@ -418,7 +442,7 @@ def setup_animation(world, scheduler, end_game, scenario_state, sound_system):
         .call(sky.to_night)\
         .after(1)\
         .toggle_light(fireplace)\
-        .after(5)\
+        .after(5)
 
     # Burglar comes
     introduction_end\
