@@ -414,7 +414,55 @@ def setup_animation(world, scheduler, end_game, scenario_state, sound_system):
     #first bad end
     first_bad_end = introduction_begin\
         .when(lambda: scenario_state["ghosts"])\
+        .bubble(mother, bubble, "bubble_ghost.png", 1)\
+        .call(pop)\
         .after(1)\
+        .call(look(mother, CharacterDirection.DOWN))\
+        .after(0.3)\
+        .call(look(mother, CharacterDirection.UP))\
+        .after(0.3)\
+        .call(look(mother, CharacterDirection.LEFT))\
+        .after(0.3)\
+        .call(look(mother, CharacterDirection.RIGHT))\
+        .after(1)\
+        .bubble(father, bubble, "bubble_ghost.png", 1)\
+        .call(pop)\
+        .after(1)\
+        .call(look(father, CharacterDirection.DOWN))\
+        .after(0.3)\
+        .call(look(father, CharacterDirection.RIGHT))\
+        .after(0.3)\
+        .call(look(father, CharacterDirection.LEFT))\
+        .after(0.3)\
+        .call(look(father, CharacterDirection.UP))\
+        .after(1)\
+        .walk(mother, CharacterDirection.RIGHT, 6, 1)\
+        .after(0.5)\
+        .walk(father, CharacterDirection.UP, 1.5, 0.3)\
+        .after(0.5)\
+        .walk(father, CharacterDirection.LEFT, 2, 0.4)\
+        .after(0.5)\
+        .walk(mother, CharacterDirection.UP, 3, 0.5)\
+        .after(0.2)\
+        .walk(father, CharacterDirection.DOWN, 3.5, 0.8)\
+        .after(0.5)\
+        .walk(mother, CharacterDirection.LEFT, 2, 0.4)\
+        .after(0.3)\
+        .walk(father, CharacterDirection.RIGHT, 3, 0.7)\
+        .after(0.7)\
+        .toggle(father.entity)\
+        .walk(mother, CharacterDirection.RIGHT, 2, 0.3)\
+        .after(0.3)\
+        .walk(mother, CharacterDirection.DOWN, 6, 1)\
+        .after(1)\
+        .walk(mother, CharacterDirection.RIGHT, 2.5, 0.5)\
+        .after(0.5)\
+        .walk(mother, CharacterDirection.UP, 1.6, 0.3)\
+        .after(0.3)\
+        .call(look(mother, CharacterDirection.RIGHT))\
+        .after(0.3)\
+        .toggle(mother.entity)\
+        .after(2)\
         .call(lambda: transition(
             world,
             scheduler,
