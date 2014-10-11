@@ -14,7 +14,6 @@
 # along with The Family's treasure tale.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-import sys
 from text import create_text_entity, create_hoverable_text_entity,\
     center_horizontally
 from mouse import Clickable, Button

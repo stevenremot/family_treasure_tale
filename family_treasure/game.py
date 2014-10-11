@@ -15,7 +15,6 @@
 # <http://www.gnu.org/licenses/>.
 
 import pygame
-import sys
 
 from tile import TileSystem
 from graphics import Screen, GraphicsSystem
@@ -92,4 +91,3 @@ class Game:
                 "The Family's Treasure Tale --- " + str(clock.get_fps()))
 
         pygame.quit()
-        sys.exit()
