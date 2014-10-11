@@ -32,7 +32,7 @@ class VanishAnimation:
 
         if self.remaining_duration < 1e-6:
             entity.get_component(Activable).toggle()
-        
+
         return self.remaining_duration > 1e-6
 
 class TileMoveAnimation:
@@ -70,8 +70,12 @@ class SpriteAnimation:
         self.current_sprite = 0
         self.current_step = 0
         self.has_started = False
+        self.stopped = False
 
     def update(self, entity, elapsed_time):
+        if self.stopped:
+            return False
+
         update_renderable = False
 
         if not self.has_started:
@@ -99,6 +103,8 @@ class SpriteAnimation:
 
         return self.remaining_duration > 1e-6
 
+    def stop(self):
+        self.stopped = True
 
 class ColorAnimation:
     """An animation that makes a transition to a certain color in a given
@@ -167,7 +173,7 @@ class FlickerAnimation:
         self.elapsed_time = 0.0
         self.step = 1.0 / float(fps)
         self.amplitude = amplitude
-        
+
     def update(self, entity, elapsed_time):
         self.elapsed_time += elapsed_time
 

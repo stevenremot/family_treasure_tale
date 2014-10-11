@@ -19,6 +19,7 @@ from tile import TilePositionable
 from geometry import Positionable
 from ecs import Activable
 
+
 class CharacterDirection:
     LEFT = 'r'
     RIGHT = 'l'
@@ -35,6 +36,7 @@ class Character(object):
         self._direction = base_direction
         self.set_idle_image()
         self.fps = fps
+        self.current_animation = None
 
     def set_idle_image(self):
         """Update the renderable to draw idle image.
@@ -50,6 +52,8 @@ class Character(object):
     @direction.setter
     def direction(self, direction):
         self._direction = direction
+        if self.current_animation is not None:
+            self.current_animation.stop()
         self.set_idle_image()
 
     @property
@@ -77,9 +81,15 @@ class Character(object):
         else:
             vector = (0, distance)
 
+        self.current_animation = SpriteAnimation(
+            duration,
+            self.fps,
+            self.animation_list
+        )
+
         self.entity.get_component(Animable).add_animations(
             TileMoveAnimation(vector, duration),
-            SpriteAnimation(duration, self.fps, self.animation_list)
+            self.current_animation
         )
 
     @property
