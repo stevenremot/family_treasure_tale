@@ -15,12 +15,14 @@
 # <http://www.gnu.org/licenses/>.
 
 import sys
-from text import create_text_entity, create_hoverable_text_entity, center_horizontally
+from text import create_text_entity, create_hoverable_text_entity,\
+    center_horizontally
 from mouse import Clickable, Button
 from game_screen import transition as gamescreen_transition
 from data import filepath
 
-def create_title_screen(world, scheduler):
+
+def create_title_screen(world, scheduler, end_game):
     from ingame_screen import create_ingame_screen
 
     title = create_text_entity(
@@ -48,7 +50,12 @@ def create_title_screen(world, scheduler):
     )
     start.add_component(
         Clickable(
-            lambda: gamescreen_transition(world, scheduler, create_ingame_screen),
+            lambda: gamescreen_transition(
+                world,
+                scheduler,
+                end_game,
+                create_ingame_screen
+            ),
             Button.LEFT
         )
     )
@@ -65,5 +72,5 @@ def create_title_screen(world, scheduler):
         0,
         filepath("bilbo/Bilbo-Regular.otf")
     )
-    exit.add_component(Clickable(lambda: sys.exit(), Button.LEFT))
+    exit.add_component(Clickable(end_game, Button.LEFT))
     center_horizontally(exit)

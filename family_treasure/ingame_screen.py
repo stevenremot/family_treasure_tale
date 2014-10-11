@@ -290,7 +290,7 @@ def create_burglar(world, scenario_state):
     scenario_state["burglar"] = burglar
 
 
-def setup_animation(world, scheduler, scenario_state):
+def setup_animation(world, scheduler, end_game, scenario_state):
     father = scenario_state["father"]
     mother = scenario_state["mother"]
     burglar = scenario_state["burglar"]
@@ -450,7 +450,12 @@ def setup_animation(world, scheduler, scenario_state):
         .when(lambda: not scenario_state["bookshelf_moved"])\
         .set_image(compartment, "compartment_open_chest.png")\
         .after(0.5)\
-        .call(lambda: transition(world, scheduler, create_gameover_screen))
+        .call(lambda: transition(
+            world,
+            scheduler,
+            end_game,
+            create_gameover_screen
+        ))
 
     burglar_steal_step\
         .when(lambda: scenario_state["bookshelf_moved"] and not scenario_state["fireplace_unlit"])\
@@ -458,7 +463,12 @@ def setup_animation(world, scheduler, scenario_state):
         .after(1.5)\
         .set_image(compartment, "compartment_open_chest.png")\
         .after(0.5)\
-        .call(lambda: transition(world, scheduler, create_gameover_screen))
+        .call(lambda: transition(
+            world,
+            scheduler,
+            end_game,
+            create_gameover_screen
+        ))
 
     burglar_find_step\
         .when(lambda: scenario_state["bookshelf_moved"] and scenario_state["fireplace_unlit"])\
@@ -468,10 +478,15 @@ def setup_animation(world, scheduler, scenario_state):
         .after(0.5)\
         .toggle(burglar.entity)\
         .after(0.5)\
-        .call(lambda: transition(world, scheduler, create_happyend_screen))
+        .call(lambda: transition(
+            world,
+            scheduler,
+            end_game,
+            create_happyend_screen
+        ))
 
 
-def create_ingame_screen(world, scheduler):
+def create_ingame_screen(world, scheduler, end_game):
     """ Create entities for the ingame screen """
     create_room(world)
     scenario_state = {}
@@ -492,4 +507,4 @@ def create_ingame_screen(world, scheduler):
 
     scenario_state["sky"] = sky
 
-    setup_animation(world, scheduler, scenario_state)
+    setup_animation(world, scheduler, end_game, scenario_state)

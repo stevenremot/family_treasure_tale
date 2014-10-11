@@ -16,9 +16,9 @@
 
 import pygame
 
-def transition(world, scheduler, create_gamescreen_func):
+def transition(world, scheduler, end_game, create_gamescreen_func):
     """ Remove all the world's entities and setup a new gamescreen"""
     world.clear()
     scheduler.reset()
-    create_gamescreen_func(world, scheduler)
+    create_gamescreen_func(world, scheduler, end_game)
     pygame.mouse.set_cursor(*pygame.cursors.tri_left)

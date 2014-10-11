@@ -48,7 +48,6 @@ class Game:
 
         world = World()
         scheduler = Scheduler()
-        create_title_screen(world, scheduler)
 
         graphics_system = GraphicsSystem(world, screen)
         load_assets(graphics_system)
@@ -61,12 +60,17 @@ class Game:
         light_system = LightSystem(world)
 
         clock.tick(self.fps)
+        playing = [True]
 
-        while 1:
+        def end_game():
+            playing[0] = False
+
+        create_title_screen(world, scheduler, end_game)
+
+        while playing[0]:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    playing[0] = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_system.on_mouse_down(
                         event.pos,
@@ -86,3 +90,6 @@ class Game:
 
             pygame.display.set_caption(
                 "The Family's Treasure Tale --- " + str(clock.get_fps()))
+
+        pygame.quit()
+        sys.exit()

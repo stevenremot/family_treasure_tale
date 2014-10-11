@@ -21,7 +21,7 @@ from title_screen import create_title_screen
 from data import filepath
 
 
-def create_gameover_screen(world, scheduler):
+def create_gameover_screen(world, scheduler, end_game):
     gameover = create_text_entity(
         world,
         "Game Over",
@@ -34,7 +34,12 @@ def create_gameover_screen(world, scheduler):
     )
     gameover.add_component(
         Clickable(
-            lambda: gamescreen_transition(world, scheduler, create_title_screen),
+            lambda: gamescreen_transition(
+                world,
+                scheduler,
+                end_game,
+                create_title_screen
+            ),
             Button.LEFT)
     )
     center_horizontally(gameover)
