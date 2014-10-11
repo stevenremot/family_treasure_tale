@@ -17,7 +17,6 @@
 import pygame
 from geometry import Positionable
 from graphics import Renderable, Colorable
-from sky import Sky
 
 
 class Lightable:
@@ -31,6 +30,7 @@ class Lightable:
         self.outer_light_ellipse = outer_light_ellipse
         self.color = color
         self.toggled = False
+        self.flicker = 0.0
 
     def toggle(self, bool=True):
         self.toggled = bool
@@ -44,6 +44,8 @@ class LightSystem:
         self.world = world
 
     def update(self):
+        from sky import Sky
+
         for sky_entity in self.world.get_entities([Sky]):
             sky_pos = sky_entity.get_component(Positionable)
             sky_color = sky_entity.get_component(Colorable).color
@@ -65,7 +67,7 @@ class LightSystem:
                         light_surface,
                         pos,
                         light.outer_light_ellipse,
-                        self.fade_color(light.color, 3)
+                        self.fade_color(light.color, 3 + light.flicker)
                     )
 
             # Second pass, inner lights
@@ -78,7 +80,7 @@ class LightSystem:
                         light_surface,
                         pos,
                         light.inner_light_ellipse,
-                        light.color
+                        self.fade_color(light.color, 1 + light.flicker)
                     )
 
             sky_rect = pygame.Rect(

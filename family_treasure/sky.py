@@ -22,8 +22,10 @@ day_color = (12, 32, 139, 0)
 night_color = (12, 32, 139, 128)
 duration = 15
 
+
 class Sky:
     pass
+
 
 class SkyHelper:
     """Helper class for sky transitions.
