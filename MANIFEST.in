@@ -2,6 +2,7 @@ include data/window_open.png
 include data/burglar.png
 include data/window.png
 include data/bubble_smile_money.png
+include data/bubble_blind.png
 include data/door2.png
 include data/corner_tile_bl.png
 include data/corner_tile_tl.png
