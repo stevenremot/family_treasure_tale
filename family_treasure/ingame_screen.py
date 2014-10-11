@@ -509,6 +509,8 @@ def setup_animation(world, scheduler, end_game, scenario_state):
         .when(lambda: scenario_state["bookshelf_moved"] and scenario_state["fireplace_unlit"])\
         .walk(burglar, CharacterDirection.RIGHT, 3, 1.5)\
         .after(1.5)\
+        .bubble(burglar, bubble, "bubble_blind.png", 1)\
+        .after(1)\
         .call(look(burglar, CharacterDirection.UP))\
         .after(0.1)\
         .bubble(burglar, bubble, "bubble_cry.png", 1)\
