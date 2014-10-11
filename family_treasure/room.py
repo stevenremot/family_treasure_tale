@@ -20,6 +20,7 @@ from graphics import Renderable
 from animation import TileMoveAnimation, Animable
 from mouse import Clickable, Button, add_cursor_change_hoverable
 
+
 def create_room(
         world,
         sound_system,
@@ -170,7 +171,7 @@ def create_room(
                 )
             )
             stool_toggled[0] = not stool_toggled[0]
-            sound_system.play("furniture")
+            sound_system.play("furniture-short")
 
     stool = world.entity()
     stool.add_components(

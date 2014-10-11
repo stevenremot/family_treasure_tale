@@ -187,7 +187,7 @@ def create_building(world, scenario_state, sound_system):
                     sound_system.play("furniture")
 
                 return move
-            
+
             animable = Animable()
             scenario_state["bookshelf_moved"] = False
             scenario_state["bookshelf_move_left"] =\
@@ -214,7 +214,7 @@ def create_building(world, scenario_state, sound_system):
                 ),
                 Frightening()
             )
-            
+
             add_cursor_change_hoverable(bookshelf)
 
     fireplace_anim = Animable()
@@ -592,6 +592,7 @@ def create_ingame_screen(world, scheduler, end_game):
     sound_system = SoundSystem(
         {
             "furniture": "sound/furniture.ogg",
+            "furniture-short": "sound/furniture-short.ogg",
             "bubble": "sound/pop.ogg",
             "wind": "sound/wind.ogg",
             "window": "sound/window.ogg"
