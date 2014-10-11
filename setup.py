@@ -1,3 +1,4 @@
+# -*- encoding:utf-8 -*-
 import os
 
 # usage: python setup.py command
@@ -11,7 +12,7 @@ import os
 
 
 APP_NAME = 'family_treasure'
-DESCRIPTION = open('README.txt').read()
+DESCRIPTION = open('README.md').read()
 CHANGES = open('CHANGES.txt').read()
 TODO = open('TODO.txt').read()
 
@@ -118,7 +119,7 @@ def add_files(dest,generator):
             dest.append(filename)
 
 # define what is our data
-_DATA_DIR = os.path.join('family_treasure', 'data')
+_DATA_DIR = os.path.join('data')
 data = []
 add_files(data,os.walk(_DATA_DIR))
 
@@ -133,7 +134,7 @@ PACKAGEDATA['package_data'] = {'family_treasure': data_dirs}
 
 
 
-data.extend(glob.glob('*.txt'))
+data.extend(glob.glob('*'))
 #data.append('MANIFEST.in')
 # define what is our source
 src = []
