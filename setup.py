@@ -32,14 +32,7 @@ METADATA = {
             'Intended Audience :: Information Technology',
             'License :: OSI Approved :: GPL License',
             'Operating System :: OS Independent',
-            # 'Programming Language :: Python :: 2',
-            # 'Programming Language :: Python :: 2.5',
-            # 'Programming Language :: Python :: 2.6',
             'Programming Language :: Python :: 2.7',
-            # 'Programming Language :: Python :: 3',
-            # 'Programming Language :: Python :: 3.0',
-            # 'Programming Language :: Python :: 3.1',
-            # 'Programming Language :: Python :: 3.2',
             'Topic :: Software Development :: Libraries :: pygame',
             'Topic :: Games/Entertainment :: Puzzle',
     ],
@@ -146,10 +139,10 @@ src.extend(glob.glob('*.py'))
 
 # build the sdist target
 if cmd not in "py2exe py2app cx_freeze".split():
-    f = open("MANIFEST.in","w")
-    for l in data: f.write("include "+l+"\n")
-    for l in src: f.write("include "+l+"\n")
-    f.close()
+    # f = open("MANIFEST.in","w")
+    # for l in data: f.write("include "+l+"\n")
+    # for l in src: f.write("include "+l+"\n")
+    # f.close()
 
     setup(**PACKAGEDATA)
 
