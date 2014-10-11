@@ -458,19 +458,18 @@ def setup_animation(world, scheduler, end_game, scenario_state):
         .walk(burglar, CharacterDirection.UP, 3, 1.5)\
         .after(1.5)\
         .walk(burglar, CharacterDirection.RIGHT, 3, 1.5)\
-        .after(2)\
-        .bubble(burglar, bubble, "bubble_question.png", 1)\
-        .after(1)\
+        .after(2)
 
     burglar_steal_step = burglar_find_step\
         .when(lambda: not scenario_state["bookshelf_moved"] or not scenario_state["fireplace_unlit"])\
+        .bubble(burglar, bubble, "bubble_question.png", 1)\
+        .after(1)\
         .walk(burglar, CharacterDirection.LEFT, 3, 0.7)\
         .after(0.7)\
         .call(look(burglar, CharacterDirection.UP))\
         .after(0.1)\
         .bubble(burglar, bubble, "bubble_exclamation.png", 1)\
-        .after(1)\
-        .after(0.2)\
+        .after(1.2)
 
     burglar_steal_step\
         .when(lambda: not scenario_state["bookshelf_moved"])\
