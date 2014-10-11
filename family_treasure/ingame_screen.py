@@ -532,13 +532,12 @@ def setup_animation(world, scheduler, end_game, scenario_state, sound_system):
         .set_image(compartment, "compartment_open_chest.png")\
         .after(0.5)\
         .bubble(burglar, bubble, "bubble_smile_money.png", 1)\
-        .call(pop)\
-        .after(1)\
+        .call(lambda: sound_system.play("cash-register"))\
+        .after(1.5)\
         .call(lambda: transition(
             world,
             scheduler,
-            end_game,
-            create_gameover_screen
+            end_game,            create_gameover_screen
         ))
 
     burglar_steal_step\
@@ -557,8 +556,8 @@ def setup_animation(world, scheduler, end_game, scenario_state, sound_system):
         .set_image(compartment, "compartment_open_chest.png")\
         .after(0.5)\
         .bubble(burglar, bubble, "bubble_smile_money.png", 1)\
-        .call(pop)\
-        .after(1)\
+        .call(lambda: sound_system.play("cash-register"))\
+        .after(1.5)\
         .call(lambda: transition(
             world,
             scheduler,
@@ -595,7 +594,8 @@ def create_ingame_screen(world, scheduler, end_game):
             "furniture-short": "sound/furniture-short.ogg",
             "bubble": "sound/pop.ogg",
             "wind": "sound/wind.ogg",
-            "window": "sound/window.ogg"
+            "window": "sound/window.ogg",
+            "cash-register": "sound/cash-register.ogg"
         }
     )
 

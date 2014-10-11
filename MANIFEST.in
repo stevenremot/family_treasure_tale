@@ -34,8 +34,8 @@ include data/fireplace.png
 include data/corner_tile_br.png
 include data/sound/furniture-short.ogg
 include data/sound/window.ogg
+include data/sound/cash-register.ogg
 include data/sound/furniture.ogg
-include data/sound/furniture.wav
 include data/sound/pop.ogg
 include data/sound/wind.ogg
 include data/bilbo/BilboSwashCaps-Regular.otf
