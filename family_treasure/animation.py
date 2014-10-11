@@ -14,8 +14,11 @@
 # along with The Family's treasure tale.  If not, see
 # <http://www.gnu.org/licenses/>.
 
+from random import random
+
 from tile import TilePositionable
 from graphics import Renderable, Colorable
+from light import Lightable
 
 
 class TileMoveAnimation:
@@ -141,8 +144,27 @@ class ColorAnimation:
         self.remaining_duration -= elapsed_time
         return self.remaining_duration > 1e-6
 
-class Animable:
 
+class FlickerAnimation:
+    """An animation to make a light component flicker.
+    """
+
+    def __init__(self, fps):
+        self.elapsed_time = 0.0
+        self.step = 1.0 / float(fps)
+
+    def update(self, entity, elapsed_time):
+        self.elapsed_time += elapsed_time
+
+        if self.elapsed_time >= self.step:
+            lightable = entity.get_component(Lightable)
+            lightable.flicker = random() * 0.25
+            self.elapsed_time %= self.step
+
+        return True
+
+
+class Animable:
     """Component for entities that can carry animations.
     """
 

@@ -1,8 +1,10 @@
 #-*- encoding:utf-8 -*-
 
+
 class ComponentAlreadyExistsError(Exception):
     """Raised when attempting to add a component that already exists.
     """
+
 
 class Entity(object):
     """Represent an entity.
@@ -18,7 +20,8 @@ class Entity(object):
     def add_component(self, component):
         """Add a new component to the entity.
 
-        If the component already exists, a ComponentAlreadyExistsError is raised.
+        If the component already exists, a ComponentAlreadyExistsError
+        is raised.
 
         >>> e = Entity()
         >>> class C:
@@ -31,6 +34,7 @@ class Entity(object):
         ...     print "Success"
         ...
         Success
+
         """
         if self.has_component(component.__class__):
             raise ComponentAlreadyExistsError()
@@ -71,7 +75,8 @@ class Entity(object):
         >>> e.get_component(C) is not None
         True
         """
-        matching_components = [c for c in self.components if c.__class__ is component_class]
+        matching_components = [c for c in self.components
+                               if c.__class__ is component_class]
 
         if matching_components:
             return matching_components[0]
@@ -85,6 +90,7 @@ class Entity(object):
             if not self.has_component(cls):
                 return False
         return True
+
 
 class World(object):
     """An entity bag. Allow requests on them.
@@ -136,11 +142,10 @@ class World(object):
         self.entities[:] = []
 
 
-
 class Activable:
     """Components for entities that can be enabled and disabled.
     """
-    def __init__(self, activated = True):
+    def __init__(self, activated=True):
         self.activated = activated
 
     def toggle(self):

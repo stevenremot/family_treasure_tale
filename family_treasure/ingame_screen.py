@@ -29,7 +29,7 @@ from game_screen import transition
 from gameover_screen import create_gameover_screen
 from light import Lightable
 from happyend_screen import create_happyend_screen
-from animation import TileMoveAnimation, Animable
+from animation import TileMoveAnimation, Animable, FlickerAnimation
 from mouse import Clickable, Button, add_cursor_change_hoverable
 
 
@@ -199,6 +199,11 @@ def create_building(world, scenario_state):
 
             add_cursor_change_hoverable(bookshelf)
 
+    fireplace_anim = Animable()
+    fireplace_anim.add_animation(
+        FlickerAnimation(6)
+    )
+
     fireplace = world.entity()
     fireplace.add_components(
         Positionable(0, 0, 100, 100),
@@ -211,7 +216,8 @@ def create_building(world, scenario_state):
             Positionable(-130, 60, 360, 120),
             Positionable(-230, 30, 560, 200),
             (205, 155, 29, 64)
-        )
+        ),
+        fireplace_anim
     )
 
     scenario_state["fireplace"] = fireplace
@@ -268,6 +274,11 @@ def create_burglar(world, scenario_state):
         CharacterDirection.LEFT,
         2.5
     )
+
+    burglar.entity.get_component(Animable).add_animation(
+        FlickerAnimation(6)
+    )
+
     burglar.entity.add_component(
         Lightable(
             Positionable(-20, 10, 60, 60),
