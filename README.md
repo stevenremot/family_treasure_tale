@@ -9,7 +9,7 @@ Team: The Family's treasure tale
 Members: Alexandre Kazmierowski, Steven Rémot
 
 License: GPL v3, see LICENSE.txt
-
+n
 ## Running the game
 
 On Windows or Mac OS X, locate the "run_game.pyw" file and double-click it.
@@ -42,12 +42,10 @@ Creating a source distribution with:
    python setup.py sdist
 ```
 
-You may also generate Windows executables and OS X applications:
-
-```sh
-   python setup.py py2exe
-   python setup.py py2app
-```
+You can generate a Windows standalone executable using
+[Pyinstaller](http://www.pyinstaller.org). Change the path in
+`family_treasure.spec`, or follow the instructions in the developer
+guide to create a new one.
 
 Upload files to PyWeek with:
 
