@@ -14,10 +14,12 @@
 # along with The Family's treasure tale.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-from animation import Animable
+from animation import Animable, VanishAnimation
 from ecs import Activable
 from graphics import Renderable
 from light import Lightable
+from tile import TilePositionable
+from geometry import Positionable
 
 class Step:
     """Represent a hook in a precise time to execute actions.
@@ -100,7 +102,45 @@ class Step:
         if lightable is None:
             raise "Entity must be lightable"
         lightable.toggle(bool)
+    
+    def bubble(self, character, bubble_entity, bubble_name, duration):
+        """ Draw a bubble over the character for 'duration' seconds
+        """
+        self.hooks.append(
+            lambda: self.execute_bubble(
+                character, bubble_entity, bubble_name, duration
+            )
+        )
         
+        return self
+    
+    def execute_bubble(self, character, bubble_entity, bubble_name, duration, offset = (-60.0, -60.0)):
+        tile_pos = character.entity.get_component(TilePositionable)
+        if tile_pos is None:
+            raise "Character entity must have Positionable component"
+
+        renderable = bubble_entity.get_component(Renderable)
+        animable = bubble_entity.get_component(Animable)
+        activable = bubble_entity.get_component(Activable)
+        bubble_tile_pos = bubble_entity.get_component(TilePositionable)
+        bubble_pos = bubble_entity.get_component(Positionable)
+        
+        if bubble_tile_pos is None:
+            raise "Bubble entity must have Positionable component"
+        if animable is None:
+            raise "Bubble entity must have Animable component"
+        if activable is None or activable.activated:
+            raise "Bubble entity must have a desactivated Activable component"
+        if renderable is None:
+            raise "Bubble entity must have Renderable component"
+        
+        activable.toggle()
+        bubble_tile_pos.x = tile_pos.x + offset[0] / 50
+        bubble_tile_pos.y = tile_pos.y + offset[1] / 50
+        renderable.render_func = lambda brush: brush.draw_image(bubble_name)
+        animable.add_animation(VanishAnimation(duration))
+
+
     def run_hooks(self, steps):
         """Run all the hooks defined before.
 
